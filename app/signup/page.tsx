@@ -26,9 +26,15 @@ export default function SignUpPage() {
         return
       }
 
+      // Get the current origin for redirect URL
+      const redirectUrl = `${window.location.origin}/auth/callback`
+
       const { data, error: signUpError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
+        options: {
+          emailRedirectTo: redirectUrl,
+        },
       })
 
       if (signUpError) {

@@ -18,23 +18,65 @@ export default function AuthCallbackPage() {
 
     const handleAuthCallback = async () => {
       try {
-        // Supabase automatically parses auth tokens from URL hash fragments
-        // Wait a moment for Supabase to process the callback
-        await new Promise(resolve => setTimeout(resolve, 500))
+        // Supabase sends auth tokens in URL hash fragments (#access_token=...)
+        // We need to extract and exchange them for a session
+        
+        // Get the hash from the URL
+        const hashParams = new URLSearchParams(window.location.hash.substring(1))
+        const accessToken = hashParams.get('access_token')
+        const refreshToken = hashParams.get('refresh_token')
+        const type = hashParams.get('type')
 
-        const { data: { session }, error: authError } = await supabase.auth.getSession()
+        // If we have tokens in the URL, Supabase will automatically handle them
+        // We just need to wait for the session to be established
+        if (accessToken || refreshToken) {
+          // Wait for Supabase to process the tokens
+          await new Promise(resolve => setTimeout(resolve, 1000))
+        }
 
-        if (authError) {
-          setError(authError.message || 'Authentication failed. Please try again.')
+        // Check for session
+        if (!supabase) {
+          setError('Supabase is not configured. Please contact support.')
+          setLoading(false)
+          return
+        }
+
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+
+        if (sessionError) {
+          setError(sessionError.message || 'Authentication failed. Please try again.')
           setLoading(false)
           return
         }
 
         if (session) {
+          // Successfully authenticated, redirect to dashboard
           router.push('/dashboard')
         } else {
-          setError('Authentication session not found. Please try signing in again.')
-          setLoading(false)
+          // Listen for auth state changes in case session is being set asynchronously
+          if (supabase) {
+            const {
+              data: { subscription },
+            } = supabase.auth.onAuthStateChange((event, session) => {
+              if (event === 'SIGNED_IN' && session) {
+                router.push('/dashboard')
+              } else if (event === 'TOKEN_REFRESHED' && session) {
+                router.push('/dashboard')
+              }
+            })
+
+            // Set timeout to show error if no session is established
+            setTimeout(() => {
+              subscription.unsubscribe()
+              if (!session) {
+                setError('Email confirmation failed. The link may have expired. Please try signing up again.')
+                setLoading(false)
+              }
+            }, 3000)
+          } else {
+            setError('Supabase is not configured. Please contact support.')
+            setLoading(false)
+          }
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An unexpected error occurred')
