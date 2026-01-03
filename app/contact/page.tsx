@@ -23,7 +23,7 @@ export default function ContactPage() {
             <div className="text-4xl mb-4">📧</div>
             <h3 className="text-2xl font-bold mb-3 text-gray-900">Contact Pramana Support</h3>
             <p className="text-gray-600 mb-4">
-              Send an email to the Pramana support team and we'll get back to you within 24 hours.
+              Send an email to the Pramana support team. The Pramana team will get back to you within 24–48 hours.
             </p>
             <a
               href="mailto:support@shortsos.com"
@@ -54,7 +54,7 @@ export default function ContactPage() {
             <div>
               <h3 className="text-xl font-semibold mb-2 text-gray-900">How quickly does Pramana respond?</h3>
               <p className="text-gray-600">
-                The Pramana support team aims to respond to all inquiries within 24 hours during business days. For urgent matters, please mention it in your email subject line.
+                The Pramana team will get back to you within 24–48 hours. For urgent matters, please mention it in your email subject line or use the support form.
               </p>
             </div>
             <div>

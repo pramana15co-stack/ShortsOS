@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export const metadata = {
   title: 'About Pramana - ShortsOS',
-  description: 'Learn about Pramana and our mission to help YouTube Shorts creators succeed.',
+  description: 'Learn about Pramana, a company building practical tools for modern creators. Discover how Pramana helps YouTube Shorts creators succeed.',
 }
 
 export default function AboutPage() {
@@ -14,78 +14,114 @@ export default function AboutPage() {
             About <span className="gradient-text">Pramana</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Pramana is on a mission to help creators master YouTube Shorts without the overwhelm.
+            Pramana builds practical tools for modern creators.
           </p>
         </div>
 
         <div className="space-y-8 mb-12">
+          {/* Who Pramana Is */}
           <div className="glass-effect rounded-2xl p-8 premium-shadow">
-            <h2 className="text-3xl font-bold mb-4 text-gray-900">Our Mission</h2>
+            <h2 className="text-3xl font-bold mb-4 text-gray-900">Who Pramana Is</h2>
             <p className="text-gray-700 leading-relaxed text-lg">
-              YouTube Shorts creators face a unique challenge: they need to plan, create, and optimize content quickly, 
-              but most tools are either too complex, too expensive, or don't understand the Shorts format. 
-              Pramana built ShortsOS to solve this problem.
+              Pramana is a technology company focused on building practical, accessible tools for content creators. 
+              The company specializes in creating software solutions that address real challenges faced by modern creators 
+              in planning, optimizing, and growing their content.
             </p>
             <p className="text-gray-700 leading-relaxed text-lg mt-4">
-              Pramana believes every creator should have access to professional planning and optimization tools, 
-              regardless of their budget or experience level. That's why our core features are free forever.
+              Pramana's approach combines deep understanding of creator workflows with a commitment to simplicity, 
+              ensuring that powerful tools remain accessible regardless of technical expertise or budget.
             </p>
           </div>
 
+          {/* What Problem Pramana Solves */}
           <div className="glass-effect rounded-2xl p-8 premium-shadow">
-            <h2 className="text-3xl font-bold mb-4 text-gray-900">What Makes Us Different</h2>
-            <ul className="space-y-4">
-              <li className="flex items-start">
-                <span className="text-primary-600 mr-3 text-xl">✓</span>
-                <div>
-                  <strong className="text-gray-900">100% Free Core Features</strong>
-                  <p className="text-gray-600">No credit card required. No time limits. Start creating today.</p>
-                </div>
-              </li>
-              <li className="flex items-start">
-                <span className="text-primary-600 mr-3 text-xl">✓</span>
-                <div>
-                  <strong className="text-gray-900">Built for Shorts</strong>
-                  <p className="text-gray-600">Every tool is designed specifically for YouTube Shorts, not adapted from long-form content tools.</p>
-                </div>
-              </li>
-              <li className="flex items-start">
-                <span className="text-primary-600 mr-3 text-xl">✓</span>
-                <div>
-                  <strong className="text-gray-900">No Overengineering</strong>
-                  <p className="text-gray-600">Simple, focused tools that solve real problems without unnecessary complexity.</p>
-                </div>
-              </li>
-              <li className="flex items-start">
-                <span className="text-primary-600 mr-3 text-xl">✓</span>
-                <div>
-                  <strong className="text-gray-900">Transparent & Honest</strong>
-                  <p className="text-gray-600">Clear pricing, honest communication, and no hidden fees or surprises.</p>
-                </div>
-              </li>
+            <h2 className="text-3xl font-bold mb-4 text-gray-900">What Problem Pramana Solves</h2>
+            <p className="text-gray-700 leading-relaxed text-lg mb-4">
+              YouTube Shorts creators face a critical challenge: the need to plan, create, and optimize content quickly 
+              and effectively, but existing tools fall short in several ways:
+            </p>
+            <ul className="space-y-3 text-gray-700 ml-6 list-disc">
+              <li>Tools are often too complex, requiring extensive learning curves</li>
+              <li>Pricing models create barriers for creators just starting out</li>
+              <li>Most solutions are adapted from long-form content tools, not built for Shorts</li>
+              <li>Lack of format-specific guidance and proven templates</li>
+              <li>Overwhelming feature sets that distract from core needs</li>
             </ul>
+            <p className="text-gray-700 leading-relaxed text-lg mt-4">
+              Pramana addresses these gaps by providing purpose-built tools designed specifically for the YouTube Shorts format, 
+              with a focus on simplicity, accessibility, and actionable insights.
+            </p>
           </div>
 
+          {/* Why This Product Exists */}
           <div className="glass-effect rounded-2xl p-8 premium-shadow">
-            <h2 className="text-3xl font-bold mb-4 text-gray-900">Our Values</h2>
-            <div className="grid md:grid-cols-2 gap-6">
+            <h2 className="text-3xl font-bold mb-4 text-gray-900">Why ShortsOS Exists</h2>
+            <p className="text-gray-700 leading-relaxed text-lg">
+              ShortsOS was created because Pramana identified a fundamental disconnect between what creators need and 
+              what existing tools provide. The platform exists to bridge that gap.
+            </p>
+            <p className="text-gray-700 leading-relaxed text-lg mt-4">
+              ShortsOS represents Pramana's commitment to making professional-grade planning and optimization tools 
+              available to all creators, not just those with large budgets or technical expertise. The platform 
+              demonstrates that powerful tools can be both simple and free, challenging the industry standard 
+              of complex, expensive solutions.
+            </p>
+            <p className="text-gray-700 leading-relaxed text-lg mt-4">
+              By focusing exclusively on YouTube Shorts, ShortsOS delivers format-specific insights, templates, 
+              and workflows that generic content tools cannot provide. This specialization enables creators to 
+              make better decisions faster, without the noise of irrelevant features.
+            </p>
+          </div>
+
+          {/* Commitment to Creators */}
+          <div className="glass-effect rounded-2xl p-8 premium-shadow">
+            <h2 className="text-3xl font-bold mb-4 text-gray-900">Pramana's Commitment to Creators</h2>
+            <p className="text-gray-700 leading-relaxed text-lg mb-4">
+              Pramana's commitment to creators is reflected in both product decisions and company values:
+            </p>
+            <div className="grid md:grid-cols-2 gap-6 mt-6">
               <div>
-                <h3 className="font-semibold text-gray-900 mb-2">Creator-First</h3>
-                <p className="text-gray-600">Every decision Pramana makes prioritizes what helps creators succeed.</p>
+                <h3 className="font-semibold text-gray-900 mb-2">Free Core Features</h3>
+                <p className="text-gray-600">
+                  Essential planning and optimization tools remain free forever, ensuring access regardless of budget.
+                </p>
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900 mb-2">Transparency</h3>
-                <p className="text-gray-600">Clear communication, honest pricing, and open about our limitations.</p>
+                <h3 className="font-semibold text-gray-900 mb-2">Creator-First Development</h3>
+                <p className="text-gray-600">
+                  Product decisions prioritize creator success over revenue optimization or feature bloat.
+                </p>
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900 mb-2">Simplicity</h3>
-                <p className="text-gray-600">Complex problems deserve simple solutions, not complex tools.</p>
+                <h3 className="font-semibold text-gray-900 mb-2">Transparent Communication</h3>
+                <p className="text-gray-600">
+                  Clear pricing, honest limitations, and open dialogue about product direction and decisions.
+                </p>
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900 mb-2">Value First</h3>
-                <p className="text-gray-600">Pramana believes you should see value before paying, not the other way around.</p>
+                <h3 className="font-semibold text-gray-900 mb-2">Value Before Payment</h3>
+                <p className="text-gray-600">
+                  Creators experience value and see results before any payment is required, not after.
+                </p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-2">Continuous Improvement</h3>
+                <p className="text-gray-600">
+                  Regular updates based on creator feedback, with a focus on solving real problems, not adding features for their own sake.
+                </p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-2">No Data Exploitation</h3>
+                <p className="text-gray-600">
+                  Creator data is protected, not monetized. Privacy and security are fundamental, not afterthoughts.
+                </p>
               </div>
             </div>
+            <p className="text-gray-700 leading-relaxed text-lg mt-6">
+              This commitment extends beyond product features to how Pramana operates as a company: 
+              transparent pricing, responsive support, and a genuine focus on helping creators succeed 
+              rather than extracting maximum value from them.
+            </p>
           </div>
         </div>
 
