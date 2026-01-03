@@ -51,29 +51,33 @@ export default function LoginPage() {
     <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 py-20">
       <div className="container mx-auto px-4 max-w-md">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
-            Sign In
+        <div className="text-center mb-8 animate-fade-in">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-primary-200 rounded-full mb-6">
+            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            <span className="text-sm font-medium text-gray-700">Welcome Back</span>
+          </div>
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900">
+            Sign In to <span className="gradient-text">ShortsOS</span>
           </h1>
           <p className="text-xl text-gray-600">
-            Welcome back! Sign in to continue building your YouTube Shorts channel
+            Continue building your YouTube Shorts channel with powerful planning tools
           </p>
         </div>
 
         {/* Sign In Form */}
-        <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-md p-8">
+        <form onSubmit={handleSubmit} className="glass-effect rounded-2xl p-8 md:p-10 premium-shadow animate-slide-up">
           <div className="space-y-6">
             {/* Email Input */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email <span className="text-red-500">*</span>
+              <label htmlFor="email" className="block text-sm font-semibold text-gray-900 mb-2">
+                Email Address <span className="text-red-500">*</span>
               </label>
               <input
                 type="email"
                 id="email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 placeholder-gray-400"
                 placeholder="your.email@example.com"
                 required
                 disabled={loading}
@@ -82,7 +86,7 @@ export default function LoginPage() {
 
             {/* Password Input */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="password" className="block text-sm font-semibold text-gray-900 mb-2">
                 Password <span className="text-red-500">*</span>
               </label>
               <input
@@ -90,7 +94,7 @@ export default function LoginPage() {
                 id="password"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 placeholder-gray-400"
                 placeholder="Enter your password"
                 required
                 disabled={loading}
@@ -108,7 +112,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-primary-600 to-accent-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              className="w-full bg-gradient-to-r from-primary-600 to-accent-600 text-white px-6 py-4 rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 text-lg"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -126,12 +130,18 @@ export default function LoginPage() {
         </form>
 
         {/* Sign Up Link */}
-        <div className="mt-6 text-center">
-          <p className="text-gray-600">
+        <div className="mt-8 text-center">
+          <p className="text-gray-600 mb-2">
             Don&apos;t have an account?{' '}
-            <Link href="/signup" className="text-primary-600 hover:text-primary-700 font-semibold">
-              Sign up
+            <Link href="/signup" className="text-primary-600 hover:text-primary-700 font-semibold hover:underline">
+              Create an account
             </Link>
+          </p>
+          <p className="text-sm text-gray-500">
+            By signing in, you agree to our{' '}
+            <Link href="/terms" className="text-primary-600 hover:underline">Terms of Service</Link>
+            {' '}and{' '}
+            <Link href="/privacy" className="text-primary-600 hover:underline">Privacy Policy</Link>
           </p>
         </div>
       </div>

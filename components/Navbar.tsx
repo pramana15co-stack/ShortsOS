@@ -271,12 +271,20 @@ export default function Navbar() {
                 Logout
               </button>
             ) : (
-              <Link
-                href="/signup"
-                className="ml-2 px-6 py-2.5 bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200"
-              >
-                Get Started
-              </Link>
+              <>
+                <Link
+                  href="/login"
+                  className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all duration-200"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/signup"
+                  className="ml-2 px-6 py-2.5 bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200"
+                >
+                  Get Started
+                </Link>
+              </>
             )}
           </div>
 
@@ -367,9 +375,14 @@ export default function Navbar() {
                 Logout
               </button>
             ) : (
-              <Link href="/signup" className="block px-4 py-3 bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-lg font-semibold text-center">
-                Get Started
-              </Link>
+              <>
+                <Link href="/login" className="block px-4 py-3 rounded-lg hover:bg-primary-50 font-semibold text-primary-600 text-center">
+                  Sign In
+                </Link>
+                <Link href="/signup" className="block px-4 py-3 bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-lg font-semibold text-center">
+                  Get Started
+                </Link>
+              </>
             )}
           </div>
         )}
