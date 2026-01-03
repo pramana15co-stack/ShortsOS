@@ -1,8 +1,8 @@
 import Link from 'next/link'
 
 export const metadata = {
-  title: 'Contact Pramana Support - ShortsOS',
-  description: 'Get in touch with the Pramana team. The Pramana team is here to help you succeed with YouTube Shorts.',
+  title: 'Contact Pramana15 Support - ShortsOS',
+  description: 'Get in touch with the Pramana15 team. The Pramana15 team is here to help you succeed with YouTube Shorts.',
 }
 
 export default function ContactPage() {
@@ -14,16 +14,16 @@ export default function ContactPage() {
             Get in <span className="gradient-text">Touch</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Have questions? Need help? The Pramana team is here to support your YouTube Shorts journey.
+            Have questions? Need help? The Pramana15 team is here to support your YouTube Shorts journey.
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8 mb-12">
           <div className="glass-effect rounded-2xl p-8 premium-shadow">
             <div className="text-4xl mb-4">📧</div>
-            <h3 className="text-2xl font-bold mb-3 text-gray-900">Contact Pramana Support</h3>
+            <h3 className="text-2xl font-bold mb-3 text-gray-900">Contact Pramana15 Support</h3>
             <p className="text-gray-600 mb-4">
-              Send an email to the Pramana support team. The Pramana team will get back to you within 24–48 hours.
+              Send an email to the Pramana15 support team. The Pramana15 team will get back to you within 24–48 hours.
             </p>
             <a
               href="mailto:support@shortsos.com"
@@ -52,21 +52,21 @@ export default function ContactPage() {
           <h2 className="text-3xl font-bold mb-6 text-gray-900">Frequently Asked Questions</h2>
           <div className="space-y-6">
             <div>
-              <h3 className="text-xl font-semibold mb-2 text-gray-900">How quickly does Pramana respond?</h3>
+              <h3 className="text-xl font-semibold mb-2 text-gray-900">How quickly does Pramana15 respond?</h3>
               <p className="text-gray-600">
-                The Pramana team will get back to you within 24–48 hours. For urgent matters, please mention it in your email subject line or use the support form.
+                The Pramana15 team will get back to you within 24–48 hours. For urgent matters, please mention it in your email subject line or use the support form.
               </p>
             </div>
             <div>
               <h3 className="text-xl font-semibold mb-2 text-gray-900">Do you offer custom solutions?</h3>
               <p className="text-gray-600">
-                Pramana is always open to discussing custom features or enterprise solutions. Reach out to discuss your needs.
+                Pramana15 is always open to discussing custom features or enterprise solutions. Reach out to discuss your needs.
               </p>
             </div>
             <div>
               <h3 className="text-xl font-semibold mb-2 text-gray-900">Can I request a feature?</h3>
               <p className="text-gray-600">
-                Absolutely! The Pramana team values feedback from creators about what features would help them most. Use our feedback form or contact Pramana support directly.
+                Absolutely! The Pramana15 team values feedback from creators about what features would help them most. Use our feedback form or contact Pramana15 support directly.
               </p>
             </div>
           </div>

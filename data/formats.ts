@@ -275,3 +275,6 @@ The winner is [option] because [reason]"
 export function getFormatBySlug(slug: string): ShortsFormat | undefined {
   return formats.find(format => format.slug === slug)
 }
+
+
+

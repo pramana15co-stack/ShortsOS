@@ -156,11 +156,11 @@ export default function FeedbackFormPage() {
               Thank You!
             </h2>
             <p className="text-xl text-gray-600 mb-6">
-              Your feedback has been received. The Pramana team reads every submission and uses it to make ShortsOS better.
+              Your feedback has been received. The Pramana15 team reads every submission and uses it to make ShortsOS better.
             </p>
             <div className="bg-primary-50 rounded-lg p-6 mb-8 max-w-2xl mx-auto">
               <p className="text-gray-700 leading-relaxed">
-                The Pramana team is constantly improving based on feedback from creators like you. 
+                The Pramana15 team is constantly improving based on feedback from creators like you. 
                 Your insights help us understand what's working, what's confusing, and what features matter most.
               </p>
             </div>

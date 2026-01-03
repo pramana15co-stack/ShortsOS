@@ -117,9 +117,9 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-bold mb-4 text-gray-900">9. Contact Pramana</h2>
+            <h2 className="text-2xl font-bold mb-4 text-gray-900">9. Contact Pramana15</h2>
             <p className="text-gray-700 leading-relaxed">
-              Questions about these terms? Contact Pramana support at{' '}
+              Questions about these terms? Contact Pramana15 support at{' '}
               <a href="mailto:support@shortsos.com" className="text-primary-600 hover:underline">support@shortsos.com</a>
             </p>
           </section>

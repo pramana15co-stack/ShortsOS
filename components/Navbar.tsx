@@ -1,13 +1,21 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { useAuth } from '@/app/providers/AuthProvider'
 
 export default function Navbar() {
   const pathname = usePathname()
+  const router = useRouter()
+  const { user, signOut } = useAuth()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+
+  const handleLogout = async () => {
+    await signOut()
+    router.push('/')
+  }
 
   const toolsMenu = [
     { href: '/planner', label: 'Planner', desc: 'Get personalized recommendations' },
@@ -58,16 +66,52 @@ export default function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-1">
-            <Link
-              href="/dashboard"
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                pathname === '/dashboard'
-                  ? 'bg-primary-600 text-white shadow-lg'
-                  : 'text-gray-700 hover:bg-primary-50 hover:text-primary-600'
-              }`}
-            >
-              Dashboard
-            </Link>
+            {user ? (
+              <>
+                {/* Highlighted navigation for logged-in users */}
+                <Link
+                  href="/dashboard"
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
+                    pathname === '/dashboard'
+                      ? 'bg-primary-600 text-white shadow-lg'
+                      : 'text-primary-600 hover:bg-primary-50 font-semibold'
+                  }`}
+                >
+                  Dashboard
+                </Link>
+                <Link
+                  href="/planner"
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
+                    pathname === '/planner'
+                      ? 'bg-primary-600 text-white shadow-lg'
+                      : 'text-primary-600 hover:bg-primary-50 font-semibold'
+                  }`}
+                >
+                  Planner
+                </Link>
+                <Link
+                  href="/formats"
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
+                    pathname === '/formats'
+                      ? 'bg-primary-600 text-white shadow-lg'
+                      : 'text-primary-600 hover:bg-primary-50 font-semibold'
+                  }`}
+                >
+                  Formats
+                </Link>
+              </>
+            ) : (
+              <Link
+                href="/dashboard"
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  pathname === '/dashboard'
+                    ? 'bg-primary-600 text-white shadow-lg'
+                    : 'text-gray-700 hover:bg-primary-50 hover:text-primary-600'
+                }`}
+              >
+                Dashboard
+              </Link>
+            )}
 
             {/* Tools Dropdown */}
             <div className="relative group">
@@ -219,12 +263,21 @@ export default function Navbar() {
               Pricing
             </Link>
 
-            <Link
-              href="/dashboard"
-              className="ml-2 px-6 py-2.5 bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200"
-            >
-              Get Started
-            </Link>
+            {user ? (
+              <button
+                onClick={handleLogout}
+                className="ml-2 px-4 py-2 text-sm font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200"
+              >
+                Logout
+              </button>
+            ) : (
+              <Link
+                href="/signup"
+                className="ml-2 px-6 py-2.5 bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200"
+              >
+                Get Started
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -245,7 +298,42 @@ export default function Navbar() {
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <div className="lg:hidden py-4 space-y-2 animate-slide-down">
-            <Link href="/dashboard" className="block px-4 py-3 rounded-lg hover:bg-primary-50">Dashboard</Link>
+            {user ? (
+              <>
+                <Link 
+                  href="/dashboard" 
+                  className={`block px-4 py-3 rounded-lg font-semibold ${
+                    pathname === '/dashboard' 
+                      ? 'bg-primary-600 text-white' 
+                      : 'hover:bg-primary-50 text-primary-600'
+                  }`}
+                >
+                  Dashboard
+                </Link>
+                <Link 
+                  href="/planner" 
+                  className={`block px-4 py-3 rounded-lg font-semibold ${
+                    pathname === '/planner' 
+                      ? 'bg-primary-600 text-white' 
+                      : 'hover:bg-primary-50 text-primary-600'
+                  }`}
+                >
+                  Planner
+                </Link>
+                <Link 
+                  href="/formats" 
+                  className={`block px-4 py-3 rounded-lg font-semibold ${
+                    pathname === '/formats' 
+                      ? 'bg-primary-600 text-white' 
+                      : 'hover:bg-primary-50 text-primary-600'
+                  }`}
+                >
+                  Formats
+                </Link>
+              </>
+            ) : (
+              <Link href="/dashboard" className="block px-4 py-3 rounded-lg hover:bg-primary-50">Dashboard</Link>
+            )}
             <div className="px-4 py-2 font-semibold text-gray-500 text-sm">Tools</div>
             {toolsMenu.map((item) => (
               <Link key={item.href} href={item.href} className="block px-8 py-2 rounded-lg hover:bg-primary-50 text-sm">
@@ -271,9 +359,18 @@ export default function Navbar() {
               </Link>
             ))}
             <Link href="/pricing" className="block px-4 py-3 rounded-lg hover:bg-accent-50 font-semibold">Pricing</Link>
-            <Link href="/dashboard" className="block px-4 py-3 bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-lg font-semibold text-center">
-              Get Started
-            </Link>
+            {user ? (
+              <button
+                onClick={handleLogout}
+                className="block w-full px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-lg font-semibold text-center transition-all duration-200"
+              >
+                Logout
+              </button>
+            ) : (
+              <Link href="/signup" className="block px-4 py-3 bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-lg font-semibold text-center">
+                Get Started
+              </Link>
+            )}
           </div>
         )}
       </div>

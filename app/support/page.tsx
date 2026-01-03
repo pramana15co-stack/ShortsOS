@@ -2,12 +2,11 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import type { Metadata } from 'next'
-
-// Note: Metadata export doesn't work with 'use client', but we'll keep the structure
-// In a real app, you'd use a layout.tsx or move metadata to a server component wrapper
+import { useAuth } from '@/app/providers/AuthProvider'
+import { saveSupportMessage } from '@/lib/saveSupportMessage'
 
 export default function SupportPage() {
+  const { user } = useAuth()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -16,27 +15,32 @@ export default function SupportPage() {
   })
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError(null)
     setIsSubmitting(true)
 
-    // In production, this would be sent to a backend endpoint
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Support request submitted:', {
+    try {
+      const result = await saveSupportMessage({
         name: formData.name,
         email: formData.email,
         subject: formData.subject,
         message: formData.message,
-        timestamp: new Date().toISOString(),
+        user_id: user?.id,
       })
+
+      if (result.success) {
+        setIsSubmitted(true)
+      } else {
+        setError(result.error || 'Failed to submit support request. Please try again.')
+      }
+    } catch (err) {
+      setError('An unexpected error occurred. Please try again.')
+    } finally {
+      setIsSubmitting(false)
     }
-
-    // Simulate API call delay for better UX
-    await new Promise(resolve => setTimeout(resolve, 500))
-
-    setIsSubmitting(false)
-    setIsSubmitted(true)
   }
 
   const handleChange = (field: keyof typeof formData, value: string) => {
@@ -59,10 +63,10 @@ export default function SupportPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-5xl md:text-6xl font-extrabold mb-4 text-gray-900">
-            Contact <span className="gradient-text">Pramana Support</span>
+            Contact <span className="gradient-text">Pramana15 Support</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            The Pramana support team is here to help. Submit your inquiry and the team will respond promptly.
+            The Pramana15 support team is here to help. Submit your inquiry and the team will respond promptly.
           </p>
         </div>
 
@@ -136,6 +140,13 @@ export default function SupportPage() {
                 </div>
               </div>
 
+              {/* Error Message */}
+              {error && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                  {error}
+                </div>
+              )}
+
               {/* Submit Button */}
               <div className="pt-4">
                 <button
@@ -146,7 +157,7 @@ export default function SupportPage() {
                   {isSubmitting ? 'Submitting...' : 'Submit Support Request'}
                 </button>
                 <p className="text-sm text-gray-500 text-center mt-4">
-                  By submitting this form, you agree to Pramana's privacy policy.
+                  By submitting this form, you agree to Pramana15's privacy policy.
                 </p>
               </div>
             </div>
@@ -164,12 +175,12 @@ export default function SupportPage() {
                 Support Request Received
               </h2>
               <p className="text-xl text-gray-600 mb-6">
-                The Pramana team will get back to you within 24–48 hours.
+                The Pramana15 team will get back to you within 24–48 hours.
               </p>
               <div className="bg-primary-50 rounded-lg p-6 mb-8 max-w-2xl mx-auto">
                 <p className="text-gray-700 leading-relaxed">
                   Your support request has been logged and assigned a ticket number. 
-                  The Pramana support team will review your inquiry and respond via email 
+                  The Pramana15 support team will review your inquiry and respond via email 
                   at the address you provided.
                 </p>
               </div>

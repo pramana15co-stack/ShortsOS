@@ -55,12 +55,12 @@ export default function Footer() {
           <div>
             <h3 className="font-semibold text-white mb-4">Company</h3>
             <p className="text-sm text-gray-400 mb-4 leading-relaxed">
-              Pramana builds practical tools for modern creators.
+              Pramana15 builds practical tools for modern creators.
             </p>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/about" className="hover:text-primary-400 transition-colors">
-                  About Pramana
+                  About Pramana15
                 </Link>
               </li>
               <li>
@@ -106,7 +106,7 @@ export default function Footer() {
                 href="/about" 
                 className="font-semibold text-white hover:text-primary-400 transition-colors"
               >
-                Pramana
+                Pramana15
               </Link>
             </div>
           </div>
