@@ -230,6 +230,13 @@ export default function Home() {
             href="/feedback"
             delay="0.6s"
           />
+          <FeatureCard
+            title="Creator Tools Directory"
+            description="Discover the best free and paid tools for video editing, scripts, and content creation."
+            icon="🛠️"
+            href="/tools"
+            delay="0.7s"
+          />
         </div>
       </section>
 

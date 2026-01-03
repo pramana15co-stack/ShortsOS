@@ -86,6 +86,14 @@ export default function Dashboard() {
             color="from-rose-500 to-pink-600"
             delay="0.9s"
           />
+          <DashboardCard
+            title="Creator Tools"
+            description="Best tools for video & scripts"
+            href="/tools"
+            icon="🛠️"
+            color="from-indigo-500 to-purple-600"
+            delay="1.0s"
+          />
         </div>
 
         {/* Quick Stats */}

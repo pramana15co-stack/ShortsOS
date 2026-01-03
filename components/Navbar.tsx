@@ -28,6 +28,11 @@ export default function Navbar() {
     { href: '/analytics', label: 'Analytics Insights', desc: 'Data-driven decisions' },
   ]
 
+  const resourcesMenu = [
+    { href: '/tools', label: 'Creator Tools', desc: 'Video & script tools' },
+    { href: '/feedback-form', label: 'Feedback', desc: 'Share your thoughts' },
+  ]
+
   const toggleDropdown = (menu: string) => {
     setOpenDropdown(openDropdown === menu ? null : menu)
   }
@@ -167,6 +172,40 @@ export default function Navbar() {
               )}
             </div>
 
+            {/* Resources Dropdown */}
+            <div className="relative group">
+              <button
+                onClick={() => toggleDropdown('resources')}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-1 ${
+                  pathname.startsWith('/tools') || pathname.startsWith('/feedback-form')
+                    ? 'bg-primary-600 text-white shadow-lg'
+                    : 'text-gray-700 hover:bg-primary-50 hover:text-primary-600'
+                }`}
+              >
+                Resources
+                <svg className="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              {openDropdown === 'resources' && (
+                <div className="absolute top-full left-0 mt-2 w-72 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden animate-slide-down">
+                  <div className="p-2">
+                    {resourcesMenu.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setOpenDropdown(null)}
+                        className="block px-4 py-3 rounded-lg hover:bg-primary-50 transition-all duration-200 group"
+                      >
+                        <div className="font-semibold text-gray-900 group-hover:text-primary-600">{item.label}</div>
+                        <div className="text-xs text-gray-500 mt-0.5">{item.desc}</div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
             <Link
               href="/pricing"
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
@@ -219,6 +258,12 @@ export default function Navbar() {
             ))}
             <div className="px-4 py-2 font-semibold text-gray-500 text-sm">Manage</div>
             {manageMenu.map((item) => (
+              <Link key={item.href} href={item.href} className="block px-8 py-2 rounded-lg hover:bg-primary-50 text-sm">
+                {item.label}
+              </Link>
+            ))}
+            <div className="px-4 py-2 font-semibold text-gray-500 text-sm">Resources</div>
+            {resourcesMenu.map((item) => (
               <Link key={item.href} href={item.href} className="block px-8 py-2 rounded-lg hover:bg-primary-50 text-sm">
                 {item.label}
               </Link>
