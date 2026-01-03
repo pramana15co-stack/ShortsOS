@@ -76,7 +76,7 @@ export default function FormatDetailPage({ params }: PageProps) {
             </Link>
           </div>
           <p className="text-gray-600 mb-4 text-sm">
-            The first 3 seconds are critical. Here's how to structure your hook:
+            The first 3 seconds are critical. Here&apos;s how to structure your hook:
           </p>
           <ul className="space-y-3">
             {format.hookStructure.map((step, idx) => (

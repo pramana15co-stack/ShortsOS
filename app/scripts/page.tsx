@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { generateScript, ScriptInput } from '@/lib/scriptTemplates'
 import { formats } from '@/data/formats'
 

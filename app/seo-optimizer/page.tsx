@@ -228,7 +228,7 @@ export default function SEOOptimizer() {
             </div>
           ) : (
             <div className="text-center text-gray-500 py-12">
-              Enter your video details and click "Analyze SEO" to get started
+              Enter your video details and click &quot;Analyze SEO&quot; to get started
             </div>
           )}
         </div>
