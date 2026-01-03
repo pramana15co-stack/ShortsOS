@@ -54,10 +54,13 @@ export default function Footer() {
           {/* Company */}
           <div>
             <h3 className="font-semibold text-white mb-4">Company</h3>
+            <p className="text-sm text-gray-400 mb-4 leading-relaxed">
+              Pramana builds practical tools for modern creators.
+            </p>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link href="/about" className="hover:text-primary-400 transition-colors">
-                  About Us
+                  About Pramana
                 </Link>
               </li>
               <li>
@@ -98,9 +101,13 @@ export default function Footer() {
               © {currentYear} ShortsOS. All rights reserved.
             </p>
             <div className="flex items-center gap-2 text-sm text-gray-400">
-              <span>Made with</span>
-              <span className="text-red-500">❤️</span>
-              <span>for creators</span>
+              <span>Built by</span>
+              <Link 
+                href="/about" 
+                className="font-semibold text-white hover:text-primary-400 transition-colors"
+              >
+                Pramana
+              </Link>
             </div>
           </div>
         </div>

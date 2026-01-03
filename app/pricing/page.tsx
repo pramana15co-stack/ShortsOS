@@ -44,10 +44,10 @@ export default function PricingPage() {
           <div className="glass-effect rounded-2xl p-8 max-w-3xl mx-auto premium-shadow animate-slide-up">
             <div className="flex items-center justify-center gap-3 mb-4">
               <div className="text-4xl">💰</div>
-              <h2 className="text-2xl font-bold text-gray-900">Our Philosophy: Value First, Pay Later</h2>
+              <h2 className="text-2xl font-bold text-gray-900">Pramana&apos;s Philosophy: Value First, Pay Later</h2>
             </div>
             <p className="text-gray-700 text-lg leading-relaxed">
-              We believe you should see real value and growth before paying for tools. 
+              Pramana believes you should see real value and growth before paying for tools. 
               That&apos;s why our free tier includes everything you need to learn, plan, and start building a successful YouTube Shorts channel.
             </p>
           </div>
@@ -219,11 +219,11 @@ export default function PricingPage() {
             {[
               {
                 q: 'Why is the free tier so comprehensive?',
-                a: 'We believe creators should be able to learn, plan, and start building their channel without paying upfront. Our free tier includes everything you need to create successful YouTube Shorts. Paid tiers are for when you\'re ready to scale and need advanced features.',
+                a: 'Pramana believes creators should be able to learn, plan, and start building their channel without paying upfront. Our free tier includes everything you need to create successful YouTube Shorts. Paid tiers are for when you\'re ready to scale and need advanced features.',
               },
               {
                 q: 'When will Pro and Agency launch?',
-                a: 'We\'re building Pro features now and plan to launch soon. Agency tier will come later as we add team collaboration features. Join the waitlist to be notified when each tier launches.',
+                a: 'Pramana is building Pro features now and plans to launch soon. Agency tier will come later as we add team collaboration features. Join the waitlist to be notified when each tier launches.',
               },
               {
                 q: 'Do I need to pay to succeed?',

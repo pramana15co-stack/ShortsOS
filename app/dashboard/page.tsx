@@ -6,7 +6,7 @@ export default function Dashboard() {
       <div className="container mx-auto px-4">
         <div className="mb-12 animate-fade-in">
           <h1 className="text-5xl md:text-6xl font-extrabold mb-4 text-gray-900">
-            Welcome to Your <span className="gradient-text">Command Center</span>
+            Welcome to ShortsOS, <span className="gradient-text">Built by Pramana</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl">
             Everything you need to plan, create, and grow your YouTube Shorts channel. Build a successful channel with proven strategies.

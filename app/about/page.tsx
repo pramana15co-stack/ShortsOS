@@ -1,8 +1,8 @@
 import Link from 'next/link'
 
 export const metadata = {
-  title: 'About Us - ShortsOS',
-  description: 'Learn about ShortsOS - our mission to help YouTube Shorts creators succeed.',
+  title: 'About Pramana - ShortsOS',
+  description: 'Learn about Pramana and our mission to help YouTube Shorts creators succeed.',
 }
 
 export default function AboutPage() {
@@ -11,10 +11,10 @@ export default function AboutPage() {
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="text-center mb-12">
           <h1 className="text-5xl md:text-6xl font-extrabold mb-4 text-gray-900">
-            About <span className="gradient-text">ShortsOS</span>
+            About <span className="gradient-text">Pramana</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            We're on a mission to help creators master YouTube Shorts without the overwhelm.
+            Pramana is on a mission to help creators master YouTube Shorts without the overwhelm.
           </p>
         </div>
 
@@ -24,10 +24,10 @@ export default function AboutPage() {
             <p className="text-gray-700 leading-relaxed text-lg">
               YouTube Shorts creators face a unique challenge: they need to plan, create, and optimize content quickly, 
               but most tools are either too complex, too expensive, or don't understand the Shorts format. 
-              ShortsOS was built to solve this problem.
+              Pramana built ShortsOS to solve this problem.
             </p>
             <p className="text-gray-700 leading-relaxed text-lg mt-4">
-              We believe every creator should have access to professional planning and optimization tools, 
+              Pramana believes every creator should have access to professional planning and optimization tools, 
               regardless of their budget or experience level. That's why our core features are free forever.
             </p>
           </div>
@@ -71,7 +71,7 @@ export default function AboutPage() {
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <h3 className="font-semibold text-gray-900 mb-2">Creator-First</h3>
-                <p className="text-gray-600">Every decision we make prioritizes what helps creators succeed.</p>
+                <p className="text-gray-600">Every decision Pramana makes prioritizes what helps creators succeed.</p>
               </div>
               <div>
                 <h3 className="font-semibold text-gray-900 mb-2">Transparency</h3>
@@ -83,7 +83,7 @@ export default function AboutPage() {
               </div>
               <div>
                 <h3 className="font-semibold text-gray-900 mb-2">Value First</h3>
-                <p className="text-gray-600">We believe you should see value before paying, not the other way around.</p>
+                <p className="text-gray-600">Pramana believes you should see value before paying, not the other way around.</p>
               </div>
             </div>
           </div>
