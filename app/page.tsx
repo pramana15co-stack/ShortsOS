@@ -30,16 +30,16 @@ export default function Home() {
           </div>
 
           <h1 className="text-6xl md:text-7xl lg:text-8xl font-extrabold mb-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-            <span className="block text-gray-900">Turn Your YouTube Shorts</span>
-            <span className="block gradient-text mt-2">Into a Money Machine</span>
+            <span className="block text-gray-900">Master YouTube Shorts</span>
+            <span className="block gradient-text mt-2">Without the Overwhelm</span>
           </h1>
           
           <p className="text-xl md:text-2xl text-gray-600 mb-4 max-w-3xl mx-auto animate-slide-up" style={{ animationDelay: '0.2s' }}>
-            The all-in-one platform that helps creators earn <span className="font-bold text-primary-600">₹2-3 Lakh per month</span> from YouTube Shorts
+            The all-in-one platform that helps creators <span className="font-bold text-primary-600">plan, optimize, and grow</span> their YouTube Shorts channels faster
           </p>
           
           <p className="text-lg text-gray-500 mb-12 max-w-2xl mx-auto animate-slide-up" style={{ animationDelay: '0.3s' }}>
-            Plan smarter, optimize better, grow faster. Join thousands of creators building profitable Shorts channels.
+            Join thousands of creators using proven formats, smart planning, and data-driven insights to build successful Shorts channels.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up" style={{ animationDelay: '0.4s' }}>
@@ -47,7 +47,7 @@ export default function Home() {
               href="/dashboard" 
               className="group relative px-8 py-4 bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 overflow-hidden"
             >
-              <span className="relative z-10">Start Earning Free →</span>
+              <span className="relative z-10">Get Started Free →</span>
               <div className="absolute inset-0 bg-gradient-to-r from-accent-600 to-primary-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </Link>
             <Link 
@@ -86,23 +86,93 @@ export default function Home() {
       <section className="relative container mx-auto px-4 py-20">
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           <StatCard
-            number="₹2-3L"
-            label="Average Monthly Earnings"
-            desc="Creators using our system"
-            delay="0.1s"
-          />
-          <StatCard
             number="10x"
             label="Faster Growth"
             desc="Compared to going solo"
+            delay="0.1s"
+          />
+          <StatCard
+            number="50K+"
+            label="Content Ideas Generated"
+            desc="Never run out of topics"
             delay="0.2s"
           />
           <StatCard
             number="100%"
             label="Free to Start"
-            desc="Earn first, pay later"
+            desc="No credit card required"
             delay="0.3s"
           />
+        </div>
+      </section>
+
+      {/* Problem-Solution Section */}
+      <section className="relative container mx-auto px-4 py-20">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
+              Tired of <span className="gradient-text">Guessing What Works</span>?
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Most beginners struggle with these problems. We solve them all.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-8 mb-12">
+            <div className="glass-effect rounded-2xl p-8 premium-shadow hover-lift">
+              <div className="text-4xl mb-4">❌</div>
+              <h3 className="text-2xl font-bold mb-3 text-gray-900">The Old Way</h3>
+              <ul className="space-y-3 text-gray-600">
+                <li className="flex items-start">
+                  <span className="mr-2">•</span>
+                  <span>Post randomly without a plan</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2">•</span>
+                  <span>Guess which formats work</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2">•</span>
+                  <span>Spend hours writing scripts</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2">•</span>
+                  <span>No idea why videos fail</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2">•</span>
+                  <span>Weak hooks that lose viewers</span>
+                </li>
+              </ul>
+            </div>
+            
+            <div className="glass-effect rounded-2xl p-8 premium-shadow hover-lift border-2 border-primary-200">
+              <div className="text-4xl mb-4">✅</div>
+              <h3 className="text-2xl font-bold mb-3 text-gray-900">With ShortsOS</h3>
+              <ul className="space-y-3 text-gray-600">
+                <li className="flex items-start">
+                  <span className="mr-2">•</span>
+                  <span>Smart planner suggests best formats</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2">•</span>
+                  <span>6 proven formats with complete guides</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2">•</span>
+                  <span>Generate scripts in seconds</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2">•</span>
+                  <span>Performance feedback explains results</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2">•</span>
+                  <span>Hook generator creates viral openings</span>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -110,10 +180,10 @@ export default function Home() {
       <section className="relative container mx-auto px-4 py-20">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
-            Everything You Need to <span className="gradient-text">Earn More</span>
+            Everything You Need to <span className="gradient-text">Succeed</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Professional tools used by creators earning ₹2-3 Lakh per month
+            Professional tools used by successful creators to plan, create, and grow their channels
           </p>
         </div>
         
@@ -127,35 +197,35 @@ export default function Home() {
           />
           <FeatureCard
             title="Format Library"
-            description="6 proven formats with complete guides. Learn what works for creators earning ₹2-3L/month."
+            description="6 proven formats with complete guides, scripts, and best practices. Learn what actually works."
             icon="📚"
             href="/formats"
             delay="0.2s"
           />
           <FeatureCard
             title="Hook Generator"
-            description="Create viral-worthy hooks in seconds. Increase retention and boost your earnings."
+            description="Create viral-worthy hooks in seconds. Increase retention and keep viewers watching longer."
             icon="🎣"
             href="/hooks"
             delay="0.3s"
           />
           <FeatureCard
             title="Script Generator"
-            description="Complete 30-45 second scripts ready to film. Save hours, create more content."
+            description="Complete 30-45 second scripts ready to film. Save hours, create more content consistently."
             icon="📝"
             href="/scripts"
             delay="0.4s"
           />
           <FeatureCard
             title="SEO Optimizer"
-            description="Maximize discoverability. Better SEO = more views = more money."
+            description="Maximize discoverability with optimized titles, descriptions, and tags. Get more views."
             icon="🔍"
             href="/seo-optimizer"
             delay="0.5s"
           />
           <FeatureCard
             title="Performance Analytics"
-            description="Understand what works. Double down on winning content strategies."
+            description="Understand what works. Get actionable insights to improve your content strategy."
             icon="📊"
             href="/feedback"
             delay="0.6s"
@@ -168,10 +238,10 @@ export default function Home() {
         <div className="max-w-4xl mx-auto text-center">
           <div className="glass-effect rounded-3xl p-12 premium-shadow">
             <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">
-              Ready to Build Your <span className="gradient-text">₹2-3 Lakh/Month</span> Channel?
+              Ready to <span className="gradient-text">Grow Your Channel</span>?
             </h2>
             <p className="text-xl text-gray-600 mb-8">
-              Join creators who are using ShortsOS to plan, optimize, and scale their YouTube Shorts channels.
+              Join thousands of creators using ShortsOS to plan smarter, create better content, and grow their YouTube Shorts channels faster.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
@@ -188,7 +258,7 @@ export default function Home() {
               </Link>
             </div>
             <p className="mt-6 text-sm text-gray-500">
-              No credit card • No time limits • Start earning today
+              No credit card • No time limits • Start creating today
             </p>
           </div>
         </div>

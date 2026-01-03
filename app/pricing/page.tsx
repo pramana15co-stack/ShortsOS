@@ -39,16 +39,16 @@ export default function PricingPage() {
             Simple, <span className="gradient-text">Transparent</span> Pricing
           </h1>
           <p className="text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Start free. Earn ₹2-3 Lakh per month. Pay when you&apos;re ready to scale.
+            Start free. Build your channel. Upgrade when you&apos;re ready to scale.
           </p>
           <div className="glass-effect rounded-2xl p-8 max-w-3xl mx-auto premium-shadow animate-slide-up">
             <div className="flex items-center justify-center gap-3 mb-4">
               <div className="text-4xl">💰</div>
-              <h2 className="text-2xl font-bold text-gray-900">Our Philosophy: Earn First, Then Pay</h2>
+              <h2 className="text-2xl font-bold text-gray-900">Our Philosophy: Value First, Pay Later</h2>
             </div>
             <p className="text-gray-700 text-lg leading-relaxed">
-              We believe you should make money from YouTube Shorts before paying for tools. 
-              That&apos;s why our free tier includes everything you need to learn, plan, and start earning ₹2-3 Lakh per month.
+              We believe you should see real value and growth before paying for tools. 
+              That&apos;s why our free tier includes everything you need to learn, plan, and start building a successful YouTube Shorts channel.
             </p>
           </div>
         </div>
@@ -219,15 +219,15 @@ export default function PricingPage() {
             {[
               {
                 q: 'Why is the free tier so comprehensive?',
-                a: 'We believe creators should be able to learn, plan, and start earning ₹2-3 Lakh per month without paying upfront. Our free tier includes everything you need to create successful YouTube Shorts. Paid tiers are for when you\'re ready to scale and need advanced features.',
+                a: 'We believe creators should be able to learn, plan, and start building their channel without paying upfront. Our free tier includes everything you need to create successful YouTube Shorts. Paid tiers are for when you\'re ready to scale and need advanced features.',
               },
               {
                 q: 'When will Pro and Agency launch?',
                 a: 'We\'re building Pro features now and plan to launch soon. Agency tier will come later as we add team collaboration features. Join the waitlist to be notified when each tier launches.',
               },
               {
-                q: 'Do I need to pay to make money?',
-                a: 'Absolutely not! The free tier has everything you need to plan, create, and optimize your Shorts. Many successful creators earning ₹2-3 Lakh per month use only the free features. Paid tiers are optional upgrades for scaling.',
+                q: 'Do I need to pay to succeed?',
+                a: 'Absolutely not! The free tier has everything you need to plan, create, and optimize your Shorts. Many successful creators use only the free features to build their channels. Paid tiers are optional upgrades for scaling and advanced features.',
               },
               {
                 q: 'What happens to my data if I upgrade?',
@@ -245,10 +245,10 @@ export default function PricingPage() {
         {/* CTA Section */}
         <div className="max-w-4xl mx-auto text-center">
           <div className="glass-effect rounded-3xl p-12 premium-shadow animate-fade-in">
-            <h2 className="text-4xl font-bold mb-4 text-gray-900">Ready to Start Earning?</h2>
+            <h2 className="text-4xl font-bold mb-4 text-gray-900">Ready to Start Creating?</h2>
             <p className="text-xl mb-8 text-gray-600 max-w-2xl mx-auto">
               Start with our free tier. No credit card required. No time limits. 
-              Build your channel, earn ₹2-3 Lakh per month, then upgrade when you&apos;re ready to scale.
+              Build your channel, grow your audience, then upgrade when you&apos;re ready to scale with advanced features.
             </p>
             <Link
               href="/dashboard"

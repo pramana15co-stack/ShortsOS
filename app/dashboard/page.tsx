@@ -9,7 +9,7 @@ export default function Dashboard() {
             Welcome to Your <span className="gradient-text">Command Center</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl">
-            Everything you need to plan, create, and grow your YouTube Shorts channel. Start earning ₹2-3 Lakh per month.
+            Everything you need to plan, create, and grow your YouTube Shorts channel. Build a successful channel with proven strategies.
           </p>
         </div>
 
