@@ -31,6 +31,8 @@ export default function Navbar() {
   const resourcesMenu = [
     { href: '/tools', label: 'Creator Tools', desc: 'Video & script tools' },
     { href: '/feedback-form', label: 'Feedback', desc: 'Share your thoughts' },
+    { href: '/contact', label: 'Contact', desc: 'Get support' },
+    { href: '/about', label: 'About', desc: 'Learn about us' },
   ]
 
   const toggleDropdown = (menu: string) => {

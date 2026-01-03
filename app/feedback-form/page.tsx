@@ -16,13 +16,16 @@ export default function FeedbackFormPage() {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Log to console (in production, this could be sent to a static endpoint)
-    console.log('Feedback submitted:', {
-      goal: formData.goal,
-      confusion: formData.confusion,
-      helpfulFeature: formData.helpfulFeature,
-      timestamp: new Date().toISOString(),
-    })
+    // In production, this would be sent to a backend endpoint
+    // For now, we silently handle the submission
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Feedback submitted:', {
+        goal: formData.goal,
+        confusion: formData.confusion,
+        helpfulFeature: formData.helpfulFeature,
+        timestamp: new Date().toISOString(),
+      })
+    }
 
     // Simulate API call delay for better UX
     await new Promise(resolve => setTimeout(resolve, 500))
