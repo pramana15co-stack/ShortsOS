@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { generateHooks, HookInput, Emotion, AudienceLevel, GeneratedHook } from '@/lib/hookTemplates'
 
 export default function HooksPage() {
