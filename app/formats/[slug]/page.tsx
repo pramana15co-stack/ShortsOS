@@ -56,9 +56,54 @@ export default function FormatDetailPage({ params }: PageProps) {
             <span className="text-3xl mr-3">💡</span>
             Why This Format Works
           </h2>
-          <p className="text-gray-700 leading-relaxed">
+          <p className="text-gray-700 leading-relaxed mb-4">
             {format.whyItWorks}
           </p>
+          
+          {/* Video Examples Section */}
+          <div className="mt-6 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+            <h3 className="font-semibold text-gray-900 mb-3 flex items-center">
+              <svg className="w-5 h-5 mr-2 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
+              </svg>
+              See This Format in Action
+            </h3>
+            <p className="text-sm text-gray-700 mb-3">
+              Watch these successful examples to understand how top creators use this format:
+            </p>
+            <div className="space-y-2">
+              <div className="flex items-start gap-3 p-3 bg-white rounded border border-blue-200">
+                <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded flex items-center justify-center">
+                  <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-gray-900">Search YouTube Shorts</p>
+                  <p className="text-xs text-gray-600 mt-1">
+                    Search &quot;{format.name} shorts&quot; or &quot;{format.bestNiches[0]} {format.name}&quot; on YouTube to see real examples
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 p-3 bg-white rounded border border-blue-200">
+                <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded flex items-center justify-center">
+                  <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                    <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-gray-900">Study Top Performers</p>
+                  <p className="text-xs text-gray-600 mt-1">
+                    Look for videos with 100K+ views using this format to understand what works
+                  </p>
+                </div>
+              </div>
+            </div>
+            <p className="text-xs text-gray-500 mt-3 italic">
+              💡 Pro Tip: Pay attention to the first 3 seconds, pacing, and how they structure the content
+            </p>
+          </div>
         </section>
 
         {/* Hook Structure */}
@@ -150,6 +195,66 @@ export default function FormatDetailPage({ params }: PageProps) {
               </li>
             ))}
           </ul>
+        </section>
+
+        {/* Success Tips */}
+        <section className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl shadow-md p-6 border-l-4 border-green-500">
+          <h2 className="text-2xl font-semibold mb-4 text-gray-900 flex items-center">
+            <span className="text-3xl mr-3">✅</span>
+            Pro Tips for Success
+          </h2>
+          <div className="space-y-4">
+            <div className="bg-white rounded-lg p-4">
+              <h3 className="font-semibold text-gray-900 mb-2">1. Hook Optimization</h3>
+              <p className="text-sm text-gray-700">
+                Your first 3 seconds determine if viewers stay. Use our <Link href="/hooks" className="text-primary-600 hover:underline font-medium">Hook Generator</Link> to create multiple variations and test which performs best.
+              </p>
+            </div>
+            <div className="bg-white rounded-lg p-4">
+              <h3 className="font-semibold text-gray-900 mb-2">2. Consistency is Key</h3>
+              <p className="text-sm text-gray-700">
+                Post regularly using this format. Use our <Link href="/planner" className="text-primary-600 hover:underline font-medium">Planner</Link> to schedule your content and maintain consistency.
+              </p>
+            </div>
+            <div className="bg-white rounded-lg p-4">
+              <h3 className="font-semibold text-gray-900 mb-2">3. Track Performance</h3>
+              <p className="text-sm text-gray-700">
+                Monitor which variations of this format perform best. Use our <Link href="/feedback" className="text-primary-600 hover:underline font-medium">Performance Feedback</Link> tool to analyze what works.
+              </p>
+            </div>
+            <div className="bg-white rounded-lg p-4">
+              <h3 className="font-semibold text-gray-900 mb-2">4. Customize, Don&apos;t Copy</h3>
+              <p className="text-sm text-gray-700">
+                Use this format as a structure, but add your unique voice and perspective. Authenticity beats imitation every time.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Related Resources */}
+        <section className="bg-white rounded-xl shadow-md p-6">
+          <h2 className="text-2xl font-semibold mb-4 text-gray-900 flex items-center">
+            <span className="text-3xl mr-3">📚</span>
+            Additional Resources
+          </h2>
+          <div className="grid md:grid-cols-2 gap-4">
+            <Link href="/hooks" className="p-4 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:shadow-md transition">
+              <h3 className="font-semibold text-gray-900 mb-2">Generate Hooks</h3>
+              <p className="text-sm text-gray-600">Create compelling opening hooks specifically for this format</p>
+            </Link>
+            <Link href="/scripts" className="p-4 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:shadow-md transition">
+              <h3 className="font-semibold text-gray-900 mb-2">Create Full Script</h3>
+              <p className="text-sm text-gray-600">Generate a complete script using this format structure</p>
+            </Link>
+            <Link href="/planner" className="p-4 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:shadow-md transition">
+              <h3 className="font-semibold text-gray-900 mb-2">Get Personalized Plan</h3>
+              <p className="text-sm text-gray-600">Get format recommendations based on your niche and goals</p>
+            </Link>
+            <Link href="/content-ideas" className="p-4 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:shadow-md transition">
+              <h3 className="font-semibold text-gray-900 mb-2">Generate Content Ideas</h3>
+              <p className="text-sm text-gray-600">Never run out of topics for this format</p>
+            </Link>
+          </div>
         </section>
       </div>
 

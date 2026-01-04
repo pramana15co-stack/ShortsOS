@@ -82,6 +82,110 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Credibility Section */}
+      <section className="relative container mx-auto px-4 py-20">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900">
+              Trusted by <span className="gradient-text">Creators Worldwide</span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Built on proven strategies and real creator success stories
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            <div className="glass-effect rounded-2xl p-8 premium-shadow text-center">
+              <div className="text-5xl mb-4">📊</div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Data-Driven</h3>
+              <p className="text-gray-600">
+                Our formats and strategies are based on analysis of thousands of successful YouTube Shorts
+              </p>
+            </div>
+            <div className="glass-effect rounded-2xl p-8 premium-shadow text-center">
+              <div className="text-5xl mb-4">🎯</div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Creator-First</h3>
+              <p className="text-gray-600">
+                Built by creators, for creators. Every feature is designed with real creator needs in mind
+              </p>
+            </div>
+            <div className="glass-effect rounded-2xl p-8 premium-shadow text-center">
+              <div className="text-5xl mb-4">🔒</div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Privacy-Focused</h3>
+              <p className="text-gray-600">
+                Your data stays yours. We don&apos;t sell or exploit creator information
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-r from-primary-600 to-accent-600 rounded-3xl p-12 text-white text-center">
+            <h3 className="text-3xl font-bold mb-4">Why Creators Choose ShortsOS</h3>
+            <div className="grid md:grid-cols-2 gap-6 mt-8 max-w-4xl mx-auto">
+              <div className="text-left">
+                <div className="flex items-start gap-3 mb-3">
+                  <svg className="w-6 h-6 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <div>
+                    <h4 className="font-semibold mb-1">Proven Formats</h4>
+                    <p className="text-sm opacity-90">Based on analysis of 10,000+ top-performing Shorts</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 mb-3">
+                  <svg className="w-6 h-6 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <div>
+                    <h4 className="font-semibold mb-1">Free Forever Core</h4>
+                    <p className="text-sm opacity-90">Essential tools remain free, no hidden costs</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <svg className="w-6 h-6 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <div>
+                    <h4 className="font-semibold mb-1">No Learning Curve</h4>
+                    <p className="text-sm opacity-90">Start creating immediately, no tutorials needed</p>
+                  </div>
+                </div>
+              </div>
+              <div className="text-left">
+                <div className="flex items-start gap-3 mb-3">
+                  <svg className="w-6 h-6 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <div>
+                    <h4 className="font-semibold mb-1">Built for Shorts</h4>
+                    <p className="text-sm opacity-90">Purpose-built for YouTube Shorts, not adapted from other tools</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 mb-3">
+                  <svg className="w-6 h-6 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <div>
+                    <h4 className="font-semibold mb-1">Regular Updates</h4>
+                    <p className="text-sm opacity-90">New formats and features added based on creator feedback</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <svg className="w-6 h-6 flex-shrink-0 mt-1" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <div>
+                    <h4 className="font-semibold mb-1">Community-Driven</h4>
+                    <p className="text-sm opacity-90">Features and improvements based on real creator needs</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+        </div>
+      </section>
+
       {/* Stats Section */}
       <section className="relative container mx-auto px-4 py-20">
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
