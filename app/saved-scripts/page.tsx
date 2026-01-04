@@ -9,7 +9,7 @@ import EmptyState from '@/components/EmptyState'
 
 export default function SavedScriptsPage() {
   useRequireAuth()
-  const { user } = useAuth()
+  const { user, loading } = useAuth()
   const [scripts, setScripts] = useState<SavedScript[]>([])
   const [loadingScripts, setLoadingScripts] = useState(true)
   const [deletingId, setDeletingId] = useState<string | null>(null)

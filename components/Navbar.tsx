@@ -116,8 +116,8 @@ export default function Navbar() {
               </Link>
             )}
 
-                {/* Tools Dropdown */}
-                <div className="relative">
+            {/* Tools Dropdown */}
+            <div className="relative">
                   <button
                     onClick={() => toggleDropdown('tools')}
                     className={`px-3 py-1.5 text-sm font-medium transition-colors flex items-center gap-1 ${
@@ -155,8 +155,6 @@ export default function Navbar() {
                     </div>
                   )}
                 </div>
-              </>
-            )}
 
             {/* Resources Dropdown */}
             <div className="relative">

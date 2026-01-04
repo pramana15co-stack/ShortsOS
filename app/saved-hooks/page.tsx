@@ -9,7 +9,7 @@ import EmptyState from '@/components/EmptyState'
 
 export default function SavedHooksPage() {
   useRequireAuth()
-  const { user } = useAuth()
+  const { user, loading } = useAuth()
   const [hooks, setHooks] = useState<SavedHook[]>([])
   const [loadingHooks, setLoadingHooks] = useState(true)
   const [deletingId, setDeletingId] = useState<string | null>(null)

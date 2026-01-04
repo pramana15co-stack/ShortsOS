@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import ChatWidget from '@/components/ChatWidget'
 import AuthProvider from './providers/AuthProvider'
 
-const inter = Inter({ subsets: ['latin'] })
+// Use system fonts for better deployment reliability
+const fontClass = 'font-sans'
 
 export const metadata: Metadata = {
   title: 'ShortsOS - Plan, Optimize & Grow Your YouTube Shorts',
@@ -36,7 +36,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={fontClass}>
         <AuthProvider>
           <Navbar />
           {children}
