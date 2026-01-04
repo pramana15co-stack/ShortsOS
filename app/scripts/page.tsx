@@ -102,7 +102,7 @@ export default function ScriptsPage() {
           Script Generator
         </h1>
         <p className="text-xl text-gray-600">
-          Generate complete 30-45 second scripts for your YouTube Shorts. Based on proven formats with hook, body, and CTA.
+          Create structured scripts for your YouTube Shorts using proven format templates. Customize templates with your topic and format choice.
         </p>
       </div>
 
@@ -163,7 +163,7 @@ export default function ScriptsPage() {
               type="submit"
               className="w-full bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition text-lg"
             >
-              Generate Script
+              Create Script
             </button>
           </div>
         </form>

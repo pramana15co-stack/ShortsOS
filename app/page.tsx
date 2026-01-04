@@ -26,20 +26,20 @@ export default function Home() {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-primary-200 rounded-full mb-8 animate-slide-up">
             <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-            <span className="text-sm font-medium text-gray-700">Free Forever • No Credit Card Required</span>
+            <span className="text-sm font-medium text-gray-700">Free Planning Tools • No Credit Card Required</span>
           </div>
 
-          <h1 className="text-6xl md:text-7xl lg:text-8xl font-extrabold mb-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
-            <span className="block text-gray-900">Master YouTube Shorts</span>
-            <span className="block gradient-text mt-2">Without the Overwhelm</span>
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+            <span className="block text-gray-900">Plan and Execute</span>
+            <span className="block text-primary-600 mt-2">Better Shorts Content</span>
           </h1>
           
-          <p className="text-xl md:text-2xl text-gray-600 mb-4 max-w-3xl mx-auto animate-slide-up" style={{ animationDelay: '0.2s' }}>
-            The all-in-one platform that helps creators <span className="font-bold text-primary-600">plan, optimize, and grow</span> their YouTube Shorts channels faster
+          <p className="text-xl md:text-2xl text-gray-700 mb-4 max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: '0.2s' }}>
+            Decision and execution intelligence for YouTube Shorts creators. Structure your planning, choose proven formats, and execute with clarity.
           </p>
           
-          <p className="text-lg text-gray-500 mb-12 max-w-2xl mx-auto animate-slide-up" style={{ animationDelay: '0.3s' }}>
-            Join thousands of creators using proven formats, smart planning, and data-driven insights to build successful Shorts channels.
+          <p className="text-lg text-gray-600 mb-12 max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: '0.3s' }}>
+            Templates, formats, and planning tools based on analysis of successful Shorts. No video generation. Just better decisions and clearer execution.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up" style={{ animationDelay: '0.4s' }}>
@@ -86,11 +86,11 @@ export default function Home() {
       <section className="relative container mx-auto px-4 py-20">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900">
-              Trusted by <span className="gradient-text">Creators Worldwide</span>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
+              Decision Intelligence for Shorts Creators
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Built on proven strategies and real creator success stories
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Structured planning tools and proven formats to help you make better content decisions
             </p>
           </div>
 
@@ -119,7 +119,7 @@ export default function Home() {
           </div>
 
           <div className="bg-gradient-to-r from-primary-600 to-accent-600 rounded-3xl p-12 text-white text-center">
-            <h3 className="text-3xl font-bold mb-4">Why Creators Choose ShortsOS</h3>
+            <h3 className="text-2xl font-bold mb-4">What ShortsOS Provides</h3>
             <div className="grid md:grid-cols-2 gap-6 mt-8 max-w-4xl mx-auto">
               <div className="text-left">
                 <div className="flex items-start gap-3 mb-3">
@@ -145,8 +145,8 @@ export default function Home() {
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   <div>
-                    <h4 className="font-semibold mb-1">No Learning Curve</h4>
-                    <p className="text-sm opacity-90">Start creating immediately, no tutorials needed</p>
+                    <h4 className="font-semibold mb-1">Structured Templates</h4>
+                    <p className="text-sm opacity-90">Ready-to-use templates you can customize for your content</p>
                   </div>
                 </div>
               </div>
@@ -165,8 +165,8 @@ export default function Home() {
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   <div>
-                    <h4 className="font-semibold mb-1">Regular Updates</h4>
-                    <p className="text-sm opacity-90">New formats and features added based on creator feedback</p>
+                    <h4 className="font-semibold mb-1">Based on Data</h4>
+                    <p className="text-sm opacity-90">Formats and templates derived from analysis of successful Shorts</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -174,8 +174,8 @@ export default function Home() {
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   <div>
-                    <h4 className="font-semibold mb-1">Community-Driven</h4>
-                    <p className="text-sm opacity-90">Features and improvements based on real creator needs</p>
+                    <h4 className="font-semibold mb-1">Clear Structure</h4>
+                    <p className="text-sm opacity-90">Organized formats and templates for consistent planning and execution</p>
                   </div>
                 </div>
               </div>
@@ -190,15 +190,15 @@ export default function Home() {
       <section className="relative container mx-auto px-4 py-20">
         <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           <StatCard
-            number="10x"
-            label="Faster Growth"
-            desc="Compared to going solo"
+            number="6"
+            label="Proven Formats"
+            desc="Based on successful Shorts analysis"
             delay="0.1s"
           />
           <StatCard
-            number="50K+"
-            label="Content Ideas Generated"
-            desc="Never run out of topics"
+            number="100%"
+            label="Free Planning Tools"
+            desc="Core features always free"
             delay="0.2s"
           />
           <StatCard
@@ -214,11 +214,11 @@ export default function Home() {
       <section className="relative container mx-auto px-4 py-20">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
-              Tired of <span className="gradient-text">Guessing What Works</span>?
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
+              Better Decisions, Clearer Execution
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Most beginners struggle with these problems. We solve them all.
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Structured planning and proven formats to help you make informed content decisions
             </p>
           </div>
           
@@ -256,23 +256,23 @@ export default function Home() {
               <ul className="space-y-3 text-gray-600">
                 <li className="flex items-start">
                   <span className="mr-2">•</span>
-                  <span>Smart planner suggests best formats</span>
+                  <span>Planner recommends formats based on your goals</span>
                 </li>
                 <li className="flex items-start">
                   <span className="mr-2">•</span>
-                  <span>6 proven formats with complete guides</span>
+                  <span>Proven formats with structured templates</span>
                 </li>
                 <li className="flex items-start">
                   <span className="mr-2">•</span>
-                  <span>Generate scripts in seconds</span>
+                  <span>Script templates you can customize</span>
                 </li>
                 <li className="flex items-start">
                   <span className="mr-2">•</span>
-                  <span>Performance feedback explains results</span>
+                  <span>Performance analysis to understand results</span>
                 </li>
                 <li className="flex items-start">
                   <span className="mr-2">•</span>
-                  <span>Hook generator creates viral openings</span>
+                  <span>Hook templates based on successful patterns</span>
                 </li>
               </ul>
             </div>
@@ -283,53 +283,53 @@ export default function Home() {
       {/* Features Grid */}
       <section className="relative container mx-auto px-4 py-20">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
-            Everything You Need to <span className="gradient-text">Succeed</span>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
+            Planning and Execution Tools
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Professional tools used by successful creators to plan, create, and grow their channels
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Structured formats, templates, and planning tools to help you make better content decisions
           </p>
         </div>
         
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           <FeatureCard
-            title="Smart Planner"
-            description="Get personalized format recommendations based on your niche and goals. Start earning faster."
+            title="Content Planner"
+            description="Get format recommendations based on your niche and goals. Structured planning for better decisions."
             icon="🎯"
             href="/planner"
             delay="0.1s"
           />
           <FeatureCard
             title="Format Library"
-            description="6 proven formats with complete guides, scripts, and best practices. Learn what actually works."
+            description="Proven formats with structured templates, pacing guidelines, and execution guides."
             icon="📚"
             href="/formats"
             delay="0.2s"
           />
           <FeatureCard
-            title="Hook Generator"
-            description="Create viral-worthy hooks in seconds. Increase retention and keep viewers watching longer."
+            title="Hook Templates"
+            description="Structured hook templates based on successful patterns. Customize for your content."
             icon="🎣"
             href="/hooks"
             delay="0.3s"
           />
           <FeatureCard
-            title="Script Generator"
-            description="Complete 30-45 second scripts ready to film. Save hours, create more content consistently."
+            title="Script Templates"
+            description="Format-based script templates you can customize. Structured for 30-60 second Shorts."
             icon="📝"
             href="/scripts"
             delay="0.4s"
           />
           <FeatureCard
-            title="SEO Optimizer"
-            description="Maximize discoverability with optimized titles, descriptions, and tags. Get more views."
+            title="SEO Guidance"
+            description="Structured guidance for titles, descriptions, and tags based on successful Shorts patterns."
             icon="🔍"
             href="/seo-optimizer"
             delay="0.5s"
           />
           <FeatureCard
-            title="Performance Analytics"
-            description="Understand what works. Get actionable insights to improve your content strategy."
+            title="Performance Analysis"
+            description="Analyze your video performance. Understand what worked and what didn't."
             icon="📊"
             href="/feedback"
             delay="0.6s"
@@ -348,24 +348,24 @@ export default function Home() {
       <section className="relative container mx-auto px-4 py-32">
         <div className="max-w-4xl mx-auto text-center">
           <div className="glass-effect rounded-3xl p-12 premium-shadow">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">
-              Ready to <span className="gradient-text">Grow Your Channel</span>?
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">
+              Start Planning Better Content
             </h2>
-            <p className="text-xl text-gray-600 mb-8">
-              Join thousands of creators using ShortsOS to plan smarter, create better content, and grow their YouTube Shorts channels faster.
+            <p className="text-lg text-gray-600 mb-8">
+              Use structured formats and planning tools to make better content decisions. Free to start, no credit card required.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/dashboard"
-                className="px-10 py-5 bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300"
+                className="px-10 py-5 bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-xl font-semibold text-lg hover:shadow-lg transition-all duration-200"
               >
-                Start Free Forever →
+                Get Started →
               </Link>
               <Link
                 href="/pricing"
-                className="px-10 py-5 glass-effect border-2 border-primary-200 text-primary-700 rounded-xl font-semibold text-lg hover:border-primary-400 transition-all duration-300"
+                className="px-10 py-5 glass-effect border-2 border-primary-200 text-primary-700 rounded-xl font-semibold text-lg hover:border-primary-400 transition-all duration-200"
               >
-                View Plans
+                See Pricing
               </Link>
             </div>
             <p className="mt-6 text-sm text-gray-500">

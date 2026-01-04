@@ -73,7 +73,7 @@ export default function HooksPage() {
           Hook Generator
         </h1>
         <p className="text-xl text-gray-600">
-          Generate compelling opening hooks for your YouTube Shorts. Each hook is optimized for the first 3-8 seconds.
+          Access structured hook templates for your YouTube Shorts. Templates are based on successful patterns and optimized for the first 3-8 seconds.
         </p>
       </div>
 
@@ -178,7 +178,7 @@ export default function HooksPage() {
               type="submit"
               className="w-full bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition text-lg"
             >
-              Generate Hooks
+              Get Hook Templates
             </button>
           </div>
         </form>
