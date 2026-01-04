@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/app/providers/AuthProvider'
 
@@ -11,14 +11,16 @@ import { useAuth } from '@/app/providers/AuthProvider'
 export function useRequireAuth() {
   const { user, loading } = useAuth()
   const router = useRouter()
+  const [isRedirecting, setIsRedirecting] = useState(false)
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (!loading && !user && !isRedirecting) {
+      setIsRedirecting(true)
       router.push('/login')
     }
-  }, [user, loading, router])
+  }, [user, loading, router, isRedirecting])
 
-  return { user, loading, isAuthenticated: !!user }
+  return { user, loading: loading || isRedirecting, isAuthenticated: !!user }
 }
 
 
