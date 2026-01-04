@@ -4,12 +4,14 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabaseClient'
+import { getAuthErrorMessage, isValidEmail, sanitizeEmail } from '@/lib/authHelpers'
 
 export default function LoginPage() {
   const router = useRouter()
   const [formData, setFormData] = useState({
     email: '',
     password: '',
+    rememberMe: false,
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -17,6 +19,23 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
+
+    // Client-side validation
+    if (!formData.email.trim()) {
+      setError('Please enter your email address')
+      return
+    }
+
+    if (!isValidEmail(formData.email)) {
+      setError('Please enter a valid email address')
+      return
+    }
+
+    if (!formData.password) {
+      setError('Please enter your password')
+      return
+    }
+
     setLoading(true)
 
     try {
@@ -26,13 +45,14 @@ export default function LoginPage() {
         return
       }
 
+      // Sign in with password (Supabase handles session persistence automatically)
       const { data, error: signInError } = await supabase.auth.signInWithPassword({
-        email: formData.email,
+        email: sanitizeEmail(formData.email),
         password: formData.password,
       })
 
       if (signInError) {
-        setError(signInError.message)
+        setError(getAuthErrorMessage(signInError))
         setLoading(false)
         return
       }
@@ -42,7 +62,7 @@ export default function LoginPage() {
         router.push('/dashboard')
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unexpected error occurred')
+      setError(getAuthErrorMessage(err))
       setLoading(false)
     }
   }
@@ -81,14 +101,23 @@ export default function LoginPage() {
                 placeholder="your.email@example.com"
                 required
                 disabled={loading}
+                autoComplete="email"
               />
             </div>
 
             {/* Password Input */}
             <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-gray-900 mb-2">
-                Password <span className="text-red-500">*</span>
-              </label>
+              <div className="flex items-center justify-between mb-2">
+                <label htmlFor="password" className="block text-sm font-semibold text-gray-900">
+                  Password <span className="text-red-500">*</span>
+                </label>
+                <Link
+                  href="/forgot-password"
+                  className="text-sm text-primary-600 hover:text-primary-700 font-medium hover:underline"
+                >
+                  Forgot password?
+                </Link>
+              </div>
               <input
                 type="password"
                 id="password"
@@ -98,7 +127,23 @@ export default function LoginPage() {
                 placeholder="Enter your password"
                 required
                 disabled={loading}
+                autoComplete="current-password"
               />
+            </div>
+
+            {/* Remember Me */}
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="rememberMe"
+                checked={formData.rememberMe}
+                onChange={(e) => setFormData({ ...formData, rememberMe: e.target.checked })}
+                className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+                disabled={loading}
+              />
+              <label htmlFor="rememberMe" className="ml-2 text-sm text-gray-700 cursor-pointer">
+                Remember me for 30 days
+              </label>
             </div>
 
             {/* Error Message */}

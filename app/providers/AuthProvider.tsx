@@ -31,7 +31,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       return
     }
 
-    // Get initial session
+    // Get initial session (Supabase automatically persists sessions)
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
       setUser(session?.user ?? null)
