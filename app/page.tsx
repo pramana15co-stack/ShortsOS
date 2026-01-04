@@ -352,13 +352,14 @@ export default function Home() {
             delay="0.7s"
           />
         </div>
+        </div>
       </section>
 
       {/* Social Proof / CTA Section */}
       <section className="relative container mx-auto px-4 py-32">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="glass-effect rounded-3xl p-12 premium-shadow">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-900">
+          <div className="bg-white border border-gray-200 rounded-lg p-12 shadow-sm">
+            <h2 className="text-3xl md:text-4xl font-semibold mb-6 text-gray-900">
               Start Planning Better Content
             </h2>
             <p className="text-lg text-gray-600 mb-8">
@@ -393,14 +394,17 @@ function FeatureCard({ title, description, icon, href, delay }: { title: string;
   return (
     <Link
       href={href}
-      className="group glass-effect rounded-2xl p-6 hover-lift premium-shadow block"
+      className="group bg-white border border-gray-200 rounded-lg p-6 hover:border-gray-300 hover:shadow-md transition-all block"
       style={{ animationDelay: delay }}
     >
-      <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform duration-300">{icon}</div>
-      <h3 className="text-xl font-bold mb-2 text-gray-900 group-hover:text-primary-600 transition-colors">{title}</h3>
-      <p className="text-gray-600 leading-relaxed">{description}</p>
-      <div className="mt-4 text-primary-600 font-semibold text-sm group-hover:translate-x-2 transition-transform duration-300">
-        Try it now →
+      <div className="text-4xl mb-4">{icon}</div>
+      <h3 className="text-lg font-semibold mb-2 text-gray-900 group-hover:text-gray-700 transition-colors">{title}</h3>
+      <p className="text-gray-600 leading-relaxed text-sm">{description}</p>
+      <div className="mt-4 text-gray-900 font-medium text-sm group-hover:translate-x-1 transition-transform duration-300 flex items-center gap-1">
+        <span>View tool</span>
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
       </div>
     </Link>
   )
