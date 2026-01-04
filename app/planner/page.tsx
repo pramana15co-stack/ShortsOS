@@ -177,7 +177,7 @@ export default function PlannerPage() {
 
             <button
               type="submit"
-              className="w-full bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition text-lg"
+              className="w-full bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition text-lg"
             >
               Get My Plan
             </button>
