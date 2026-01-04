@@ -421,6 +421,24 @@ export default function PricingPage() {
           </div>
         </div>
 
+        {/* Products Section */}
+        <div className="max-w-6xl mx-auto mb-16">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-semibold text-gray-900 mb-4">Ready-to-Use Packages & Bundles</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Get complete packages with proven formats, execution paths, and strategies. Based on what's worked for thousands of creators.
+            </p>
+          </div>
+          <div className="text-center">
+            <Link
+              href="/products"
+              className="inline-block px-8 py-3 bg-gray-900 text-white rounded-lg font-semibold hover:bg-gray-800 transition-colors"
+            >
+              View All Packages →
+            </Link>
+          </div>
+        </div>
+
         {/* CTA Section */}
         <div className="max-w-3xl mx-auto text-center">
           <div className="bg-gray-50 rounded-lg border border-gray-200 p-8">

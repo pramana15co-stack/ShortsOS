@@ -37,6 +37,7 @@ export default function Navbar() {
   const allTools = user ? [...publicTools, ...authTools] : publicTools
 
   const resources = [
+    { href: '/products', label: 'Packages' },
     { href: '/tools', label: 'Creator Tools' },
     { href: '/pricing', label: 'Pricing' },
     { href: '/about', label: 'About' },

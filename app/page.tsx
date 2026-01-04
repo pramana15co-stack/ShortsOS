@@ -270,13 +270,21 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="text-center mt-8">
-            <Link
-              href="/execution-paths"
-              className="inline-block px-6 py-3 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors"
-            >
-              Explore Execution Paths
-            </Link>
+          <div className="text-center mt-8 space-y-4">
+            <div>
+              <Link
+                href="/execution-paths"
+                className="inline-block px-6 py-3 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors mr-4"
+              >
+                Explore Execution Paths
+              </Link>
+              <Link
+                href="/products"
+                className="inline-block px-6 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors"
+              >
+                View Packages
+              </Link>
+            </div>
           </div>
         </div>
       </section>
