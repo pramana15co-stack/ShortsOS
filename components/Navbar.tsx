@@ -17,281 +17,234 @@ export default function Navbar() {
     router.push('/')
   }
 
-  const toolsMenu = [
-    { href: '/planner', label: 'Planner', desc: 'Get personalized recommendations' },
-    { href: '/formats', label: 'Formats Library', desc: '6 proven formats' },
-    { href: '/hooks', label: 'Hook Generator', desc: 'Create compelling openings' },
-    { href: '/scripts', label: 'Script Generator', desc: 'Complete 30-45s scripts' },
+  // Consolidated menu items
+  const allTools = [
+    { href: '/planner', label: 'Planner' },
+    { href: '/formats', label: 'Formats' },
+    { href: '/hooks', label: 'Hooks' },
+    { href: '/scripts', label: 'Scripts' },
+    { href: '/seo-optimizer', label: 'SEO Optimizer' },
+    { href: '/content-ideas', label: 'Content Ideas' },
+    { href: '/calendar', label: 'Calendar' },
+    { href: '/checklist', label: 'Checklist' },
+    { href: '/analytics', label: 'Analytics' },
+    { href: '/feedback', label: 'Feedback' },
   ]
 
-  const optimizeMenu = [
-    { href: '/seo-optimizer', label: 'SEO Optimizer', desc: 'Titles, descriptions, tags' },
-    { href: '/content-ideas', label: 'Content Ideas', desc: 'Never run out of topics' },
-    { href: '/feedback', label: 'Performance Feedback', desc: 'Analyze your results' },
-  ]
-
-  const manageMenu = [
-    { href: '/calendar', label: 'Content Calendar', desc: 'Plan your uploads' },
-    { href: '/checklist', label: 'Pre-Publish Checklist', desc: 'Quality assurance' },
-    { href: '/analytics', label: 'Analytics Insights', desc: 'Data-driven decisions' },
-  ]
-
-  const resourcesMenu = [
-    { href: '/tools', label: 'Creator Tools', desc: 'Video & script tools' },
-    { href: '/feedback-form', label: 'Feedback', desc: 'Share your thoughts' },
-    { href: '/contact', label: 'Contact', desc: 'Get support' },
-    { href: '/about', label: 'About', desc: 'Learn about us' },
+  const resources = [
+    { href: '/tools', label: 'Creator Tools' },
+    { href: '/pricing', label: 'Pricing' },
+    { href: '/about', label: 'About' },
+    { href: '/contact', label: 'Contact' },
   ]
 
   const toggleDropdown = (menu: string) => {
     setOpenDropdown(openDropdown === menu ? null : menu)
   }
 
+  const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/')
+
   return (
-    <nav className="sticky top-0 z-50 glass-effect border-b border-gray-200/50">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-20">
+    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/60 shadow-sm">
+      <div className="container mx-auto px-4 lg:px-6">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link 
             href="/" 
             className="flex items-center space-x-2 group"
           >
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-accent-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition-opacity"></div>
-              <div className="relative bg-gradient-to-r from-primary-600 to-accent-600 text-white px-4 py-2 rounded-lg font-bold text-xl">
+              <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-accent-600 rounded-lg blur-sm opacity-60 group-hover:opacity-100 transition-opacity"></div>
+              <div className="relative bg-gradient-to-r from-primary-600 to-accent-600 text-white px-3 py-1.5 rounded-lg font-bold text-lg tracking-tight">
                 ShortsOS
               </div>
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-1">
+          <div className="hidden lg:flex items-center gap-6">
             {user ? (
               <>
-                {/* Highlighted navigation for logged-in users */}
+                {/* Primary navigation for logged-in users */}
                 <Link
                   href="/dashboard"
-                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
-                    pathname === '/dashboard'
-                      ? 'bg-primary-600 text-white shadow-lg'
-                      : 'text-primary-600 hover:bg-primary-50 font-semibold'
+                  className={`px-3 py-1.5 text-sm font-medium transition-colors ${
+                    isActive('/dashboard')
+                      ? 'text-primary-600'
+                      : 'text-gray-700 hover:text-primary-600'
                   }`}
                 >
                   Dashboard
                 </Link>
                 <Link
                   href="/planner"
-                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
-                    pathname === '/planner'
-                      ? 'bg-primary-600 text-white shadow-lg'
-                      : 'text-primary-600 hover:bg-primary-50 font-semibold'
+                  className={`px-3 py-1.5 text-sm font-medium transition-colors ${
+                    isActive('/planner')
+                      ? 'text-primary-600'
+                      : 'text-gray-700 hover:text-primary-600'
                   }`}
                 >
                   Planner
                 </Link>
                 <Link
                   href="/formats"
-                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
-                    pathname === '/formats'
-                      ? 'bg-primary-600 text-white shadow-lg'
-                      : 'text-primary-600 hover:bg-primary-50 font-semibold'
+                  className={`px-3 py-1.5 text-sm font-medium transition-colors ${
+                    isActive('/formats')
+                      ? 'text-primary-600'
+                      : 'text-gray-700 hover:text-primary-600'
                   }`}
                 >
                   Formats
                 </Link>
+
+                {/* Tools Dropdown */}
+                <div className="relative">
+                  <button
+                    onClick={() => toggleDropdown('tools')}
+                    className={`px-3 py-1.5 text-sm font-medium transition-colors flex items-center gap-1 ${
+                      allTools.some(item => isActive(item.href))
+                        ? 'text-primary-600'
+                        : 'text-gray-700 hover:text-primary-600'
+                    }`}
+                  >
+                    Tools
+                    <svg 
+                      className={`w-4 h-4 transition-transform ${openDropdown === 'tools' ? 'rotate-180' : ''}`} 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  {openDropdown === 'tools' && (
+                    <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden py-1">
+                      {allTools.map((item) => (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => setOpenDropdown(null)}
+                          className={`block px-4 py-2 text-sm transition-colors ${
+                            isActive(item.href)
+                              ? 'bg-primary-50 text-primary-600 font-medium'
+                              : 'text-gray-700 hover:bg-gray-50'
+                          }`}
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </>
             ) : (
-              <Link
-                href="/dashboard"
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                  pathname === '/dashboard'
-                    ? 'bg-primary-600 text-white shadow-lg'
-                    : 'text-gray-700 hover:bg-primary-50 hover:text-primary-600'
-                }`}
-              >
-                Dashboard
-              </Link>
+              <>
+                <Link
+                  href="/formats"
+                  className={`px-3 py-1.5 text-sm font-medium transition-colors ${
+                    isActive('/formats')
+                      ? 'text-primary-600'
+                      : 'text-gray-700 hover:text-primary-600'
+                  }`}
+                >
+                  Formats
+                </Link>
+                <Link
+                  href="/pricing"
+                  className={`px-3 py-1.5 text-sm font-medium transition-colors ${
+                    isActive('/pricing')
+                      ? 'text-primary-600'
+                      : 'text-gray-700 hover:text-primary-600'
+                  }`}
+                >
+                  Pricing
+                </Link>
+              </>
             )}
 
-            {/* Tools Dropdown */}
-            <div className="relative group">
-              <button
-                onClick={() => toggleDropdown('tools')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-1 ${
-                  pathname.startsWith('/planner') || pathname.startsWith('/formats') || 
-                  pathname.startsWith('/hooks') || pathname.startsWith('/scripts')
-                    ? 'bg-primary-600 text-white shadow-lg'
-                    : 'text-gray-700 hover:bg-primary-50 hover:text-primary-600'
-                }`}
-              >
-                Tools
-                <svg className="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              {openDropdown === 'tools' && (
-                <div className="absolute top-full left-0 mt-2 w-72 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden animate-slide-down">
-                  <div className="p-2">
-                    {toolsMenu.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        onClick={() => setOpenDropdown(null)}
-                        className="block px-4 py-3 rounded-lg hover:bg-primary-50 transition-all duration-200 group"
-                      >
-                        <div className="font-semibold text-gray-900 group-hover:text-primary-600">{item.label}</div>
-                        <div className="text-xs text-gray-500 mt-0.5">{item.desc}</div>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Optimize Dropdown */}
-            <div className="relative group">
-              <button
-                onClick={() => toggleDropdown('optimize')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-1 ${
-                  pathname.startsWith('/seo-optimizer') || pathname.startsWith('/content-ideas') || 
-                  pathname.startsWith('/feedback')
-                    ? 'bg-primary-600 text-white shadow-lg'
-                    : 'text-gray-700 hover:bg-primary-50 hover:text-primary-600'
-                }`}
-              >
-                Optimize
-                <svg className="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              {openDropdown === 'optimize' && (
-                <div className="absolute top-full left-0 mt-2 w-72 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden animate-slide-down">
-                  <div className="p-2">
-                    {optimizeMenu.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        onClick={() => setOpenDropdown(null)}
-                        className="block px-4 py-3 rounded-lg hover:bg-primary-50 transition-all duration-200 group"
-                      >
-                        <div className="font-semibold text-gray-900 group-hover:text-primary-600">{item.label}</div>
-                        <div className="text-xs text-gray-500 mt-0.5">{item.desc}</div>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Manage Dropdown */}
-            <div className="relative group">
-              <button
-                onClick={() => toggleDropdown('manage')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-1 ${
-                  pathname.startsWith('/calendar') || pathname.startsWith('/checklist') || 
-                  pathname.startsWith('/analytics')
-                    ? 'bg-primary-600 text-white shadow-lg'
-                    : 'text-gray-700 hover:bg-primary-50 hover:text-primary-600'
-                }`}
-              >
-                Manage
-                <svg className="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              {openDropdown === 'manage' && (
-                <div className="absolute top-full left-0 mt-2 w-72 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden animate-slide-down">
-                  <div className="p-2">
-                    {manageMenu.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        onClick={() => setOpenDropdown(null)}
-                        className="block px-4 py-3 rounded-lg hover:bg-primary-50 transition-all duration-200 group"
-                      >
-                        <div className="font-semibold text-gray-900 group-hover:text-primary-600">{item.label}</div>
-                        <div className="text-xs text-gray-500 mt-0.5">{item.desc}</div>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
             {/* Resources Dropdown */}
-            <div className="relative group">
+            <div className="relative">
               <button
                 onClick={() => toggleDropdown('resources')}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-1 ${
-                  pathname.startsWith('/tools') || pathname.startsWith('/feedback-form')
-                    ? 'bg-primary-600 text-white shadow-lg'
-                    : 'text-gray-700 hover:bg-primary-50 hover:text-primary-600'
+                className={`px-3 py-1.5 text-sm font-medium transition-colors flex items-center gap-1 ${
+                  resources.some(item => isActive(item.href))
+                    ? 'text-primary-600'
+                    : 'text-gray-700 hover:text-primary-600'
                 }`}
               >
-                Resources
-                <svg className="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                More
+                <svg 
+                  className={`w-4 h-4 transition-transform ${openDropdown === 'resources' ? 'rotate-180' : ''}`} 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
               {openDropdown === 'resources' && (
-                <div className="absolute top-full left-0 mt-2 w-72 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden animate-slide-down">
-                  <div className="p-2">
-                    {resourcesMenu.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        onClick={() => setOpenDropdown(null)}
-                        className="block px-4 py-3 rounded-lg hover:bg-primary-50 transition-all duration-200 group"
-                      >
-                        <div className="font-semibold text-gray-900 group-hover:text-primary-600">{item.label}</div>
-                        <div className="text-xs text-gray-500 mt-0.5">{item.desc}</div>
-                      </Link>
-                    ))}
-                  </div>
+                <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden py-1">
+                  {resources.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setOpenDropdown(null)}
+                      className={`block px-4 py-2 text-sm transition-colors ${
+                        isActive(item.href)
+                          ? 'bg-primary-50 text-primary-600 font-medium'
+                          : 'text-gray-700 hover:bg-gray-50'
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
                 </div>
               )}
             </div>
 
-            <Link
-              href="/pricing"
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                pathname === '/pricing'
-                  ? 'bg-accent-600 text-white shadow-lg'
-                  : 'text-gray-700 hover:bg-accent-50 hover:text-accent-600'
-              }`}
-            >
-              Pricing
-            </Link>
-
-            {user ? (
-              <button
-                onClick={handleLogout}
-                className="ml-2 px-4 py-2 text-sm font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200"
-              >
-                Logout
-              </button>
-            ) : (
-              <>
-                <Link
-                  href="/login"
-                  className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all duration-200"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href="/signup"
-                  className="ml-2 px-6 py-2.5 bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200"
-                >
-                  Get Started
-                </Link>
-              </>
-            )}
+            {/* Auth Buttons */}
+            <div className="flex items-center gap-3 ml-4 pl-4 border-l border-gray-200">
+              {user ? (
+                <>
+                  <div className="flex items-center gap-2 px-3 py-1.5">
+                    <div className="w-6 h-6 rounded-full bg-gradient-to-r from-primary-600 to-accent-600 flex items-center justify-center text-white text-xs font-semibold">
+                      {user.email?.[0]?.toUpperCase() || 'U'}
+                    </div>
+                    <span className="text-xs text-gray-600 hidden xl:block max-w-[120px] truncate">
+                      {user.email}
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="px-4 py-1.5 text-sm font-medium text-gray-700 hover:text-red-600 transition-colors"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    className="px-4 py-1.5 text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/signup"
+                    className="px-4 py-2 text-sm font-semibold bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-lg hover:shadow-md transition-all"
+                  >
+                    Get Started
+                  </Link>
+                </>
+              )}
+            </div>
           </div>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100"
+            className="lg:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+            aria-label="Toggle menu"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {isMobileMenuOpen ? (
@@ -305,85 +258,132 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden py-4 space-y-2 animate-slide-down">
+          <div className="lg:hidden py-4 border-t border-gray-200 animate-slide-down">
             {user ? (
               <>
+                <div className="px-4 py-3 border-b border-gray-100 mb-2">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-primary-600 to-accent-600 flex items-center justify-center text-white font-semibold">
+                      {user.email?.[0]?.toUpperCase() || 'U'}
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">Signed in</p>
+                      <p className="text-xs text-gray-500 truncate max-w-[200px]">{user.email}</p>
+                    </div>
+                  </div>
+                </div>
                 <Link 
                   href="/dashboard" 
-                  className={`block px-4 py-3 rounded-lg font-semibold ${
-                    pathname === '/dashboard' 
-                      ? 'bg-primary-600 text-white' 
-                      : 'hover:bg-primary-50 text-primary-600'
+                  className={`block px-4 py-2.5 text-sm font-medium ${
+                    isActive('/dashboard')
+                      ? 'bg-primary-50 text-primary-600 border-l-2 border-primary-600'
+                      : 'text-gray-700 hover:bg-gray-50'
                   }`}
                 >
                   Dashboard
                 </Link>
                 <Link 
                   href="/planner" 
-                  className={`block px-4 py-3 rounded-lg font-semibold ${
-                    pathname === '/planner' 
-                      ? 'bg-primary-600 text-white' 
-                      : 'hover:bg-primary-50 text-primary-600'
+                  className={`block px-4 py-2.5 text-sm font-medium ${
+                    isActive('/planner')
+                      ? 'bg-primary-50 text-primary-600 border-l-2 border-primary-600'
+                      : 'text-gray-700 hover:bg-gray-50'
                   }`}
                 >
                   Planner
                 </Link>
                 <Link 
                   href="/formats" 
-                  className={`block px-4 py-3 rounded-lg font-semibold ${
-                    pathname === '/formats' 
-                      ? 'bg-primary-600 text-white' 
-                      : 'hover:bg-primary-50 text-primary-600'
+                  className={`block px-4 py-2.5 text-sm font-medium ${
+                    isActive('/formats')
+                      ? 'bg-primary-50 text-primary-600 border-l-2 border-primary-600'
+                      : 'text-gray-700 hover:bg-gray-50'
                   }`}
                 >
                   Formats
                 </Link>
+                <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-2">
+                  Tools
+                </div>
+                {allTools.map((item) => (
+                  <Link 
+                    key={item.href} 
+                    href={item.href} 
+                    className={`block px-6 py-2 text-sm ${
+                      isActive(item.href)
+                        ? 'bg-primary-50 text-primary-600 border-l-2 border-primary-600 font-medium'
+                        : 'text-gray-600 hover:bg-gray-50'
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
               </>
-            ) : (
-              <Link href="/dashboard" className="block px-4 py-3 rounded-lg hover:bg-primary-50">Dashboard</Link>
-            )}
-            <div className="px-4 py-2 font-semibold text-gray-500 text-sm">Tools</div>
-            {toolsMenu.map((item) => (
-              <Link key={item.href} href={item.href} className="block px-8 py-2 rounded-lg hover:bg-primary-50 text-sm">
-                {item.label}
-              </Link>
-            ))}
-            <div className="px-4 py-2 font-semibold text-gray-500 text-sm">Optimize</div>
-            {optimizeMenu.map((item) => (
-              <Link key={item.href} href={item.href} className="block px-8 py-2 rounded-lg hover:bg-primary-50 text-sm">
-                {item.label}
-              </Link>
-            ))}
-            <div className="px-4 py-2 font-semibold text-gray-500 text-sm">Manage</div>
-            {manageMenu.map((item) => (
-              <Link key={item.href} href={item.href} className="block px-8 py-2 rounded-lg hover:bg-primary-50 text-sm">
-                {item.label}
-              </Link>
-            ))}
-            <div className="px-4 py-2 font-semibold text-gray-500 text-sm">Resources</div>
-            {resourcesMenu.map((item) => (
-              <Link key={item.href} href={item.href} className="block px-8 py-2 rounded-lg hover:bg-primary-50 text-sm">
-                {item.label}
-              </Link>
-            ))}
-            <Link href="/pricing" className="block px-4 py-3 rounded-lg hover:bg-accent-50 font-semibold">Pricing</Link>
-            {user ? (
-              <button
-                onClick={handleLogout}
-                className="block w-full px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-lg font-semibold text-center transition-all duration-200"
-              >
-                Logout
-              </button>
             ) : (
               <>
-                <Link href="/login" className="block px-4 py-3 rounded-lg hover:bg-primary-50 font-semibold text-primary-600 text-center">
-                  Sign In
+                <Link 
+                  href="/formats" 
+                  className={`block px-4 py-2.5 text-sm font-medium ${
+                    isActive('/formats')
+                      ? 'bg-primary-50 text-primary-600 border-l-2 border-primary-600'
+                      : 'text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  Formats
                 </Link>
-                <Link href="/signup" className="block px-4 py-3 bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-lg font-semibold text-center">
-                  Get Started
+                <Link 
+                  href="/pricing" 
+                  className={`block px-4 py-2.5 text-sm font-medium ${
+                    isActive('/pricing')
+                      ? 'bg-primary-50 text-primary-600 border-l-2 border-primary-600'
+                      : 'text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  Pricing
                 </Link>
               </>
             )}
+            <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-2">
+              More
+            </div>
+            {resources.map((item) => (
+              <Link 
+                key={item.href} 
+                href={item.href} 
+                className={`block px-4 py-2.5 text-sm ${
+                  isActive(item.href)
+                    ? 'bg-primary-50 text-primary-600 border-l-2 border-primary-600 font-medium'
+                    : 'text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
+            <div className="px-4 pt-4 mt-4 border-t border-gray-200 space-y-2">
+              {user ? (
+                <button
+                  onClick={handleLogout}
+                  className="block w-full px-4 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors text-left"
+                >
+                  Logout
+                </button>
+              ) : (
+                <>
+                  <Link 
+                    href="/login" 
+                    className="block px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors text-center"
+                  >
+                    Sign In
+                  </Link>
+                  <Link 
+                    href="/signup" 
+                    className="block px-4 py-2.5 text-sm font-semibold bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-lg text-center"
+                  >
+                    Get Started
+                  </Link>
+                </>
+              )}
+            </div>
           </div>
         )}
       </div>
@@ -393,7 +393,6 @@ export default function Navbar() {
         <div
           className="fixed inset-0 z-40"
           onClick={() => setOpenDropdown(null)}
-          onMouseDown={(e) => e.preventDefault()}
         />
       )}
     </nav>
