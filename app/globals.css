@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 text-gray-900 antialiased;
+    @apply bg-white text-gray-900 antialiased;
   }
 }
 

@@ -22,12 +22,15 @@ export default function FormatDetailPage({ params }: PageProps) {
   }
 
   return (
-    <main className="container mx-auto px-4 py-8 max-w-4xl">
+    <main className="min-h-screen bg-white container mx-auto px-4 py-8 max-w-4xl">
       <Link
         href="/formats"
-        className="inline-flex items-center text-primary-600 hover:text-primary-700 mb-6"
+        className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6 text-sm"
       >
-        ← Back to Formats Library
+        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+        </svg>
+        Back to Formats Library
       </Link>
 
       <div className="mb-8">
@@ -41,7 +44,7 @@ export default function FormatDetailPage({ params }: PageProps) {
           {format.bestNiches.map((niche, idx) => (
             <span
               key={idx}
-              className="px-3 py-1 bg-primary-100 text-primary-700 text-sm rounded-full font-medium"
+              className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full font-medium"
             >
               {niche}
             </span>
@@ -115,7 +118,7 @@ export default function FormatDetailPage({ params }: PageProps) {
             </h2>
             <Link
               href="/hooks"
-              className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+              className="text-sm text-gray-600 hover:text-gray-900 font-medium"
             >
               Generate Hooks →
             </Link>
@@ -144,7 +147,7 @@ export default function FormatDetailPage({ params }: PageProps) {
             </h2>
             <Link
               href="/scripts"
-              className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+              className="text-sm text-gray-600 hover:text-gray-900 font-medium"
             >
               Generate Script →
             </Link>
@@ -207,19 +210,19 @@ export default function FormatDetailPage({ params }: PageProps) {
             <div className="bg-white rounded-lg p-4">
               <h3 className="font-semibold text-gray-900 mb-2">1. Hook Optimization</h3>
               <p className="text-sm text-gray-700">
-                Your first 3 seconds determine if viewers stay. Use our <Link href="/hooks" className="text-primary-600 hover:underline font-medium">Hook Generator</Link> to create multiple variations and test which performs best.
+                Your first 3 seconds determine if viewers stay. Use our <Link href="/hooks" className="text-gray-900 hover:underline font-medium">Hook Generator</Link> to create multiple variations and test which performs best.
               </p>
             </div>
             <div className="bg-white rounded-lg p-4">
               <h3 className="font-semibold text-gray-900 mb-2">2. Consistency is Key</h3>
               <p className="text-sm text-gray-700">
-                Post regularly using this format. Use our <Link href="/planner" className="text-primary-600 hover:underline font-medium">Planner</Link> to schedule your content and maintain consistency.
+                Post regularly using this format. Use our <Link href="/planner" className="text-gray-900 hover:underline font-medium">Planner</Link> to schedule your content and maintain consistency.
               </p>
             </div>
             <div className="bg-white rounded-lg p-4">
               <h3 className="font-semibold text-gray-900 mb-2">3. Track Performance</h3>
               <p className="text-sm text-gray-700">
-                Monitor which variations of this format perform best. Use our <Link href="/feedback" className="text-primary-600 hover:underline font-medium">Performance Feedback</Link> tool to analyze what works.
+                Monitor which variations of this format perform best. Use our <Link href="/feedback" className="text-gray-900 hover:underline font-medium">Performance Feedback</Link> tool to analyze what works.
               </p>
             </div>
             <div className="bg-white rounded-lg p-4">
@@ -263,13 +266,13 @@ export default function FormatDetailPage({ params }: PageProps) {
         <div className="flex flex-col sm:flex-row gap-4 justify-between">
           <Link
             href="/formats"
-            className="px-6 py-3 border-2 border-primary-600 text-primary-600 rounded-lg font-semibold hover:bg-primary-50 transition text-center"
+            className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition text-center"
           >
             ← All Formats
           </Link>
           <Link
             href="/content-ideas"
-            className="px-6 py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition text-center"
+            className="px-6 py-3 bg-gray-900 text-white rounded-lg font-semibold hover:bg-gray-800 transition text-center"
           >
             Generate Ideas →
           </Link>
@@ -279,21 +282,21 @@ export default function FormatDetailPage({ params }: PageProps) {
           <div className="flex flex-wrap gap-3">
             <Link
               href="/planner"
-              className="text-sm text-primary-600 hover:text-primary-700 hover:underline"
+              className="text-sm text-gray-600 hover:text-gray-900 hover:underline"
             >
               Get personalized format recommendations
             </Link>
             <span className="text-gray-400">•</span>
             <Link
               href="/hooks"
-              className="text-sm text-primary-600 hover:text-primary-700 hover:underline"
+              className="text-sm text-gray-600 hover:text-gray-900 hover:underline"
             >
               Generate hooks for this format
             </Link>
             <span className="text-gray-400">•</span>
             <Link
               href="/scripts"
-              className="text-sm text-primary-600 hover:text-primary-700 hover:underline"
+              className="text-sm text-gray-600 hover:text-gray-900 hover:underline"
             >
               Create full script with this format
             </Link>
