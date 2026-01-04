@@ -57,7 +57,7 @@ export default function PlannerPage() {
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center">
-            <svg className="animate-spin h-12 w-12 text-primary-600 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <svg className="animate-spin h-12 w-12 text-gray-600 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
               <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
@@ -92,7 +92,7 @@ export default function PlannerPage() {
                 id="niche"
                 value={formData.niche}
                 onChange={(e) => setFormData({ ...formData, niche: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900"
                 placeholder="e.g., fitness, tech tips, cooking, productivity..."
                 required
               />
@@ -112,7 +112,7 @@ export default function PlannerPage() {
                     key={goal}
                     className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition ${
                       formData.goal === goal
-                        ? 'border-primary-500 bg-primary-50'
+                        ? 'border-gray-900 bg-gray-50'
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
@@ -122,7 +122,7 @@ export default function PlannerPage() {
                       value={goal}
                       checked={formData.goal === goal}
                       onChange={(e) => setFormData({ ...formData, goal: e.target.value as Goal })}
-                      className="mr-3 text-primary-600 focus:ring-primary-500"
+                      className="mr-3 text-gray-900 focus:ring-gray-900"
                     />
                     <div>
                       <div className="font-semibold text-gray-900 capitalize">{goal}</div>
@@ -148,7 +148,7 @@ export default function PlannerPage() {
                     key={level}
                     className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition ${
                       formData.experienceLevel === level
-                        ? 'border-primary-500 bg-primary-50'
+                        ? 'border-gray-900 bg-gray-50'
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
@@ -160,7 +160,7 @@ export default function PlannerPage() {
                       onChange={(e) =>
                         setFormData({ ...formData, experienceLevel: e.target.value as ExperienceLevel })
                       }
-                      className="mr-3 text-primary-600 focus:ring-primary-500"
+                      className="mr-3 text-gray-900 focus:ring-gray-900"
                     />
                     <div>
                       <div className="font-semibold text-gray-900 capitalize">{level}</div>
@@ -325,7 +325,9 @@ export default function PlannerPage() {
             >
               Go to Dashboard
             </Link>
-              className="flex-1 px-6 py-3 border-2 border-primary-600 text-primary-600 rounded-lg font-semibold hover:bg-primary-50 transition text-center"
+            <Link
+              href="/calendar"
+              className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
             >
               Plan in Calendar
             </Link>
