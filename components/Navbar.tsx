@@ -51,17 +51,17 @@ export default function Navbar() {
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/')
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/60 shadow-sm">
-      <div className="container mx-auto px-4 lg:px-6">
-        <div className="flex items-center justify-between h-16">
+    <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 md:h-18">
           {/* Logo */}
           <Link 
             href="/" 
             className="flex items-center space-x-2 group"
           >
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-accent-600 rounded-lg blur-sm opacity-60 group-hover:opacity-100 transition-opacity"></div>
-              <div className="relative bg-gradient-to-r from-primary-600 to-accent-600 text-white px-3 py-1.5 rounded-lg font-bold text-lg tracking-tight">
+              <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-accent-600 rounded-lg blur-sm opacity-60 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative bg-gradient-to-r from-primary-600 to-accent-600 text-white px-4 py-2 rounded-lg font-bold text-lg md:text-xl tracking-tight shadow-sm group-hover:shadow-md transition-shadow">
                 ShortsOS
               </div>
             </div>
@@ -74,30 +74,30 @@ export default function Navbar() {
               <>
                 <Link
                   href="/dashboard"
-                  className={`px-3 py-1.5 text-sm font-medium transition-colors ${
+                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
                     isActive('/dashboard')
-                      ? 'text-primary-600'
-                      : 'text-gray-700 hover:text-primary-600'
+                      ? 'text-primary-600 bg-primary-50'
+                      : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
                   }`}
                 >
                   Dashboard
                 </Link>
                 <Link
                   href="/planner"
-                  className={`px-3 py-1.5 text-sm font-medium transition-colors ${
+                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
                     isActive('/planner')
-                      ? 'text-primary-600'
-                      : 'text-gray-700 hover:text-primary-600'
+                      ? 'text-primary-600 bg-primary-50'
+                      : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
                   }`}
                 >
                   Planner
                 </Link>
                 <Link
                   href="/formats"
-                  className={`px-3 py-1.5 text-sm font-medium transition-colors ${
+                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
                     isActive('/formats')
-                      ? 'text-primary-600'
-                      : 'text-gray-700 hover:text-primary-600'
+                      ? 'text-primary-600 bg-primary-50'
+                      : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
                   }`}
                 >
                   Formats
@@ -120,15 +120,15 @@ export default function Navbar() {
             <div className="relative">
                   <button
                     onClick={() => toggleDropdown('tools')}
-                    className={`px-3 py-1.5 text-sm font-medium transition-colors flex items-center gap-1 ${
+                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-1 ${
                       allTools.some(item => isActive(item.href))
-                        ? 'text-primary-600'
-                        : 'text-gray-700 hover:text-primary-600'
+                        ? 'text-primary-600 bg-primary-50'
+                        : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
                     }`}
                   >
                     Tools
                     <svg 
-                      className={`w-4 h-4 transition-transform ${openDropdown === 'tools' ? 'rotate-180' : ''}`} 
+                      className={`w-4 h-4 transition-transform duration-200 ${openDropdown === 'tools' ? 'rotate-180' : ''}`} 
                       fill="none" 
                       stroke="currentColor" 
                       viewBox="0 0 24 24"
@@ -137,13 +137,13 @@ export default function Navbar() {
                     </svg>
                   </button>
                   {openDropdown === 'tools' && (
-                    <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden py-1">
+                    <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden py-2 z-50">
                       {allTools.map((item) => (
                         <Link
                           key={item.href}
                           href={item.href}
                           onClick={() => setOpenDropdown(null)}
-                          className={`block px-4 py-2 text-sm transition-colors ${
+                          className={`block px-4 py-2.5 text-sm transition-colors ${
                             isActive(item.href)
                               ? 'bg-primary-50 text-primary-600 font-medium'
                               : 'text-gray-700 hover:bg-gray-50'
@@ -160,15 +160,15 @@ export default function Navbar() {
             <div className="relative">
               <button
                 onClick={() => toggleDropdown('resources')}
-                className={`px-3 py-1.5 text-sm font-medium transition-colors flex items-center gap-1 ${
+                className={`px-4 py-2 text-sm font-medium rounded-lg transition-all flex items-center gap-1 ${
                   resources.some(item => isActive(item.href))
-                    ? 'text-primary-600'
-                    : 'text-gray-700 hover:text-primary-600'
+                    ? 'text-primary-600 bg-primary-50'
+                    : 'text-gray-700 hover:text-primary-600 hover:bg-gray-50'
                 }`}
               >
                 More
                 <svg 
-                  className={`w-4 h-4 transition-transform ${openDropdown === 'resources' ? 'rotate-180' : ''}`} 
+                  className={`w-4 h-4 transition-transform duration-200 ${openDropdown === 'resources' ? 'rotate-180' : ''}`} 
                   fill="none" 
                   stroke="currentColor" 
                   viewBox="0 0 24 24"
@@ -177,7 +177,7 @@ export default function Navbar() {
                 </svg>
               </button>
               {openDropdown === 'resources' && (
-                <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-100 overflow-hidden py-1">
+                <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden py-2 z-50">
                   {resources.map((item) => (
                     <Link
                       key={item.href}
@@ -225,7 +225,7 @@ export default function Navbar() {
                   </Link>
                   <Link
                     href="/signup"
-                    className="px-4 py-2 text-sm font-semibold bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-lg hover:shadow-md transition-all"
+                    className="px-4 py-2 text-sm font-semibold bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-lg hover:shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all"
                   >
                     Get Started
                   </Link>

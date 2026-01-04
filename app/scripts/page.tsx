@@ -330,9 +330,12 @@ export default function ScriptsPage() {
                     </Link>
                     {formData.formatSlug && formats.find(f => f.slug === formData.formatSlug) ? (
                       <>
-                        <span className="text-blue-400">•</span>
-                        <Link href={`/formats/${formData.formatSlug}`} className="text-blue-700 hover:text-blue-900 hover:underline">
-                          Learn more about this format →
+                        <span className="text-gray-400">•</span>
+                        <Link 
+                          href={`/formats/${formData.formatSlug}`}
+                          className="text-gray-700 hover:text-gray-900 hover:underline font-medium"
+                        >
+                          View format guide →
                         </Link>
                       </>
                     ) : null}

@@ -22,39 +22,40 @@ export default function FormatDetailPage({ params }: PageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-white container mx-auto px-4 py-8 max-w-4xl">
-      <Link
-        href="/formats"
-        className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6 text-sm"
-      >
-        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-        </svg>
-        Back to Formats Library
-      </Link>
+    <main className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 max-w-5xl">
+        <Link
+          href="/formats"
+          className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-8 text-sm font-medium transition-colors"
+        >
+          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Back to Formats Library
+        </Link>
 
-      <div className="mb-8">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
-          {format.name}
-        </h1>
-        <p className="text-xl text-gray-600 mb-4">
-          {format.description}
-        </p>
-        <div className="flex flex-wrap gap-2">
-          {format.bestNiches.map((niche, idx) => (
-            <span
-              key={idx}
-              className="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full font-medium"
-            >
-              {niche}
-            </span>
-          ))}
+        <div className="mb-12">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-gray-900">
+            {format.name}
+          </h1>
+          <p className="text-xl md:text-2xl text-gray-600 mb-6 leading-relaxed">
+            {format.description}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {format.bestNiches.map((niche, idx) => (
+              <span
+                key={idx}
+                className="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm rounded-lg font-medium shadow-sm"
+              >
+                {niche}
+              </span>
+            ))}
+          </div>
         </div>
-      </div>
 
       <div className="space-y-8">
         {/* Why It Works */}
-        <section className="bg-white rounded-xl shadow-md p-6">
+        <section className="card">
           <h2 className="text-2xl font-semibold mb-4 text-gray-900 flex items-center">
             <span className="text-3xl mr-3">💡</span>
             Why This Format Works
@@ -110,7 +111,7 @@ export default function FormatDetailPage({ params }: PageProps) {
         </section>
 
         {/* Hook Structure */}
-        <section className="bg-white rounded-xl shadow-md p-6">
+        <section className="card">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-semibold text-gray-900 flex items-center">
               <span className="text-3xl mr-3">🎣</span>
@@ -139,7 +140,7 @@ export default function FormatDetailPage({ params }: PageProps) {
         </section>
 
         {/* Script Template */}
-        <section className="bg-white rounded-xl shadow-md p-6">
+        <section className="card">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-semibold text-gray-900 flex items-center">
               <span className="text-3xl mr-3">📝</span>
@@ -163,7 +164,7 @@ export default function FormatDetailPage({ params }: PageProps) {
         </section>
 
         {/* Pacing Guidelines */}
-        <section className="bg-white rounded-xl shadow-md p-6">
+        <section className="card">
           <h2 className="text-2xl font-semibold mb-4 text-gray-900 flex items-center">
             <span className="text-3xl mr-3">⏱️</span>
             Pacing Guidelines
@@ -182,7 +183,7 @@ export default function FormatDetailPage({ params }: PageProps) {
         </section>
 
         {/* Common Mistakes */}
-        <section className="bg-white rounded-xl shadow-md p-6">
+        <section className="card">
           <h2 className="text-2xl font-semibold mb-4 text-gray-900 flex items-center">
             <span className="text-3xl mr-3">⚠️</span>
             Common Beginner Mistakes
@@ -201,7 +202,7 @@ export default function FormatDetailPage({ params }: PageProps) {
         </section>
 
         {/* Success Tips */}
-        <section className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl shadow-md p-6 border-l-4 border-green-500">
+        <section className="bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl shadow-sm p-6 md:p-8 border-l-4 border-emerald-500">
           <h2 className="text-2xl font-semibold mb-4 text-gray-900 flex items-center">
             <span className="text-3xl mr-3">✅</span>
             Pro Tips for Success
@@ -235,7 +236,7 @@ export default function FormatDetailPage({ params }: PageProps) {
         </section>
 
         {/* Related Resources */}
-        <section className="bg-white rounded-xl shadow-md p-6">
+        <section className="card">
           <h2 className="text-2xl font-semibold mb-4 text-gray-900 flex items-center">
             <span className="text-3xl mr-3">📚</span>
             Additional Resources
@@ -302,6 +303,7 @@ export default function FormatDetailPage({ params }: PageProps) {
             </Link>
           </div>
         </div>
+      </div>
       </div>
     </main>
   )
