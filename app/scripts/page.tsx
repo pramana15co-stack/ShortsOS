@@ -328,7 +328,7 @@ export default function ScriptsPage() {
                     <Link href="/hooks" className="text-blue-700 hover:text-blue-900 hover:underline">
                       Generate more hooks →
                     </Link>
-                    {formData.formatSlug ? (
+                    {formData.formatSlug && formats.find(f => f.slug === formData.formatSlug) ? (
                       <>
                         <span className="text-blue-400">•</span>
                         <Link href={`/formats/${formData.formatSlug}`} className="text-blue-700 hover:text-blue-900 hover:underline">

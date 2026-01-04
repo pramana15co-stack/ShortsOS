@@ -191,9 +191,95 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Execution Paths Section */}
+      <section className="relative container mx-auto px-4 py-20">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
+              Execution Paths
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Step-by-step, stage-aware playbooks that guide you toward specific goals
+            </p>
+          </div>
+
+          <div className="bg-white rounded-lg border border-gray-200 p-8 mb-8">
+            <h3 className="text-xl font-semibold text-gray-900 mb-4">What is an Execution Path?</h3>
+            <p className="text-gray-700 mb-6 leading-relaxed">
+              An Execution Path is a structured playbook that maps out every step from where you are now to where you want to be. Unlike generic advice or scattered tips, each path is tailored to your creator stage and provides a clear sequence of actions, format recommendations, and constraints specific to your situation.
+            </p>
+            <p className="text-gray-700 leading-relaxed">
+              Think of it as a roadmap that adapts to your experience level, niche, and goals—telling you not just what to do, but when to do it, why it works at your stage, and what to avoid.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6 mb-8">
+            <div className="bg-gray-50 rounded-lg border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">Who it's for</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Execution Paths are designed for creators who know their goal but feel uncertain about the sequence of steps to get there. Whether you're trying to grow from 0 to 1,000 subscribers, establish a consistent posting rhythm, or transition to a new content format, Execution Paths provide the structured guidance you need.
+              </p>
+            </div>
+            <div className="bg-gray-50 rounded-lg border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">Why it saves time</h3>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                Instead of piecing together advice from multiple sources or guessing what to do next, Execution Paths give you a complete, ordered sequence. This eliminates decision fatigue, reduces trial and error, and ensures you're focusing on the right actions at the right time for your stage.
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-gray-900 rounded-lg p-8 text-white">
+            <h3 className="text-lg font-semibold mb-4">How Execution Paths reduce confusion</h3>
+            <div className="space-y-4 text-sm">
+              <div className="flex items-start gap-3">
+                <svg className="w-5 h-5 flex-shrink-0 mt-0.5 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <div>
+                  <div className="font-medium mb-1">Clear sequence</div>
+                  <div className="text-gray-300">Every step is ordered and connected, so you always know what comes next</div>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <svg className="w-5 h-5 flex-shrink-0 mt-0.5 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <div>
+                  <div className="font-medium mb-1">Stage-aware guidance</div>
+                  <div className="text-gray-300">Recommendations adapt to your experience level, avoiding strategies that don't work at your stage</div>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <svg className="w-5 h-5 flex-shrink-0 mt-0.5 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <div>
+                  <div className="font-medium mb-1">Explicit constraints</div>
+                  <div className="text-gray-300">We tell you what to avoid, not just what to do, preventing common mistakes</div>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <svg className="w-5 h-5 flex-shrink-0 mt-0.5 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <div>
+                  <div className="font-medium mb-1">Goal-focused structure</div>
+                  <div className="text-gray-300">Each path is designed for a specific outcome, so every action moves you closer to your goal</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="text-center mt-8">
+            <Link
+              href="/execution-paths"
+              className="inline-block px-6 py-3 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors"
+            >
+              Explore Execution Paths
+            </Link>
+          </div>
         </div>
       </section>
-
 
       {/* Features Grid */}
       <section className="relative container mx-auto px-4 py-20 bg-gray-50">

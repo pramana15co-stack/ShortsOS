@@ -9,15 +9,15 @@ export default function PricingPage() {
   const { user } = useAuth()
   const [waitlistData, setWaitlistData] = useState({
     email: '',
-    tier: 'pro' as 'pro' | 'agency',
+    tier: 'paths' as 'paths' | 'agency',
   })
   const [isSubmitted, setIsSubmitted] = useState(false)
-  const [submittedTier, setSubmittedTier] = useState<'pro' | 'agency' | null>(null)
+  const [submittedTier, setSubmittedTier] = useState<'paths' | 'agency' | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submittingTier, setSubmittingTier] = useState<'pro' | 'agency' | null>(null)
+  const [submittingTier, setSubmittingTier] = useState<'paths' | 'agency' | null>(null)
   const [error, setError] = useState<string | null>(null)
 
-  const handleWaitlistSubmit = async (e: React.FormEvent, tier: 'pro' | 'agency') => {
+  const handleWaitlistSubmit = async (e: React.FormEvent, tier: 'paths' | 'agency') => {
     e.preventDefault()
     setError(null)
     setSubmittingTier(tier)
@@ -32,7 +32,7 @@ export default function PricingPage() {
     try {
       const result = await saveWaitlistEntry({
         email: waitlistData.email.trim(),
-        tier,
+        tier: tier === 'paths' ? 'pro' : 'agency', // Map to existing tier names in database
         user_id: user?.id,
       })
 
@@ -57,166 +57,283 @@ export default function PricingPage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 py-20">
-      <div className="container mx-auto px-4">
+    <main className="min-h-screen bg-white py-12">
+      <div className="container mx-auto px-4 max-w-6xl">
         {/* Header */}
-        <div className="text-center mb-16 animate-fade-in">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-primary-200 rounded-full mb-6">
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-            <span className="text-sm font-medium text-gray-700">Start Free, Scale When Ready</span>
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 border border-gray-200 rounded mb-6">
+            <span className="text-xs font-medium text-gray-700">Built by Pramana</span>
           </div>
-          <h1 className="text-5xl md:text-6xl font-extrabold mb-6 text-gray-900">
-            Simple, <span className="gradient-text">Transparent</span> Pricing
+          <h1 className="text-4xl md:text-5xl font-semibold mb-4 text-gray-900">
+            Choose Your Path
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Everything you need to plan and learn. Upgrade when you&apos;re ready to scale.
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Each plan is designed for a different stage of your creator journey. Start with what you need now.
           </p>
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid md:grid-cols-3 gap-8 mb-20 max-w-6xl mx-auto">
-          {/* Free Tier - Highlighted */}
-          <div className="relative glass-effect rounded-3xl p-8 premium-shadow hover-lift animate-fade-in border-2 border-primary-300 transform scale-105" style={{ animationDelay: '0.1s' }}>
-            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-primary-600 to-accent-600 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
-              RECOMMENDED
-            </div>
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-3">Free</h2>
+        <div className="grid md:grid-cols-3 gap-6 mb-16">
+          {/* Free Plan */}
+          <div className="bg-white border-2 border-gray-200 rounded-lg p-8">
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold text-gray-900 mb-2">Free</h2>
               <div className="mb-4">
-                <span className="text-6xl font-extrabold gradient-text">₹0</span>
-                <span className="text-gray-600 text-lg">/forever</span>
+                <span className="text-4xl font-semibold text-gray-900">Free</span>
               </div>
-              <p className="text-gray-600 font-medium">Planning + Learning</p>
+              <p className="text-sm text-gray-600">Core planning & basic guidance</p>
             </div>
-            <ul className="space-y-4 mb-8">
-              {[
-                'Content planning tools',
-                'Format library & guides',
-                'Hook & script generators',
-                'SEO optimizer',
-                'Performance feedback',
-                'Content ideas generator',
-                'Pre-publish checklist',
-                'Learning resources',
-              ].map((feature, idx) => (
-                <li key={idx} className="flex items-start">
-                  <svg className="w-6 h-6 text-green-500 mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+
+            <div className="mb-6">
+              <h3 className="text-sm font-medium text-gray-500 mb-3 uppercase tracking-wide">Who this is for</h3>
+              <p className="text-sm text-gray-700 leading-relaxed mb-4">
+                Creators who want to plan their content, learn proven formats, and get structured guidance without committing to a paid plan.
+              </p>
+            </div>
+
+            <div className="mb-6">
+              <h3 className="text-sm font-medium text-gray-500 mb-3 uppercase tracking-wide">What you get</h3>
+              <ul className="space-y-3 text-sm text-gray-700">
+                <li className="flex items-start">
+                  <svg className="w-5 h-5 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-gray-700">{feature}</span>
+                  <span>Content planning tools and format recommendations</span>
                 </li>
-              ))}
-            </ul>
+                <li className="flex items-start">
+                  <svg className="w-5 h-5 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span>Format library with execution guides</span>
+                </li>
+                <li className="flex items-start">
+                  <svg className="w-5 h-5 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span>Hook and script templates</span>
+                </li>
+                <li className="flex items-start">
+                  <svg className="w-5 h-5 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span>Basic guidance and learning resources</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="mb-6">
+              <h3 className="text-sm font-medium text-gray-500 mb-2 uppercase tracking-wide">Outcome</h3>
+              <p className="text-sm text-gray-700">
+                Make better content decisions, understand which formats work for your stage, and establish a planning foundation.
+              </p>
+            </div>
+
             <Link
               href="/dashboard"
-              className="block w-full text-center px-6 py-4 bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-xl font-bold hover:shadow-2xl hover:scale-105 transition-all duration-300"
+              className="block w-full text-center px-6 py-3 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors"
             >
-              Get Started Free →
+              Get Started
             </Link>
           </div>
 
-          {/* Pro Tier */}
-          <div className="relative glass-effect rounded-3xl p-8 premium-shadow hover-lift animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gray-500 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
-              COMING SOON
+          {/* Paths Access Plan */}
+          <div className="bg-white border-2 border-gray-900 rounded-lg p-8 relative">
+            <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+              <span className="bg-gray-900 text-white px-4 py-1 rounded-full text-xs font-medium">
+                Available Soon
+              </span>
             </div>
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-3">Pro</h2>
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold text-gray-900 mb-2">Paths Access</h2>
               <div className="mb-4">
-                <span className="text-6xl font-extrabold gradient-text">₹2,499</span>
-                <span className="text-gray-600 text-lg">/month</span>
+                <span className="text-4xl font-semibold text-gray-900">Pricing TBD</span>
               </div>
-              <p className="text-gray-600 font-medium">Advanced Formats + Unlimited Saves</p>
+              <p className="text-sm text-gray-600">Access to all Execution Paths</p>
             </div>
-            <ul className="space-y-4 mb-8">
-              {[
-                'Everything in Free',
-                'Advanced format templates',
-                'Unlimited plan saves',
-                'Unlimited script saves',
-                'Bulk script generation',
-                'Advanced analytics',
-                'Export to Google Calendar',
-                'Priority support',
-              ].map((feature, idx) => (
-                <li key={idx} className="flex items-start">
-                  <svg className="w-6 h-6 text-primary-500 mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+
+            <div className="mb-6">
+              <h3 className="text-sm font-medium text-gray-500 mb-3 uppercase tracking-wide">Who this is for</h3>
+              <p className="text-sm text-gray-700 leading-relaxed mb-4">
+                Creators who know their goal but need a clear, step-by-step sequence to get there. You want structured guidance that eliminates decision fatigue and saves time.
+              </p>
+            </div>
+
+            <div className="mb-6">
+              <h3 className="text-sm font-medium text-gray-500 mb-3 uppercase tracking-wide">What you get</h3>
+              <ul className="space-y-3 text-sm text-gray-700">
+                <li className="flex items-start">
+                  <svg className="w-5 h-5 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-gray-700">{feature}</span>
+                  <span>Everything in Free</span>
                 </li>
-              ))}
-            </ul>
-            {isSubmitted && submittedTier === 'pro' ? (
-              <div className="bg-green-50 border-2 border-green-200 rounded-xl p-4 text-center">
-                <div className="text-2xl mb-2">✓</div>
-                <p className="text-green-800 font-semibold">You&apos;re on the waitlist!</p>
-                <p className="text-green-700 text-sm mt-1">We&apos;ll notify you when Pro launches.</p>
+                <li className="flex items-start">
+                  <svg className="w-5 h-5 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span>Complete Execution Paths with weekly breakdowns</span>
+                </li>
+                <li className="flex items-start">
+                  <svg className="w-5 h-5 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span>Stage-aware format recommendations and constraints</span>
+                </li>
+                <li className="flex items-start">
+                  <svg className="w-5 h-5 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span>Progress checkpoints and evaluation criteria</span>
+                </li>
+                <li className="flex items-start">
+                  <svg className="w-5 h-5 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span>Clear guidance on when to move to the next stage</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="mb-6">
+              <h3 className="text-sm font-medium text-gray-500 mb-2 uppercase tracking-wide">Outcome</h3>
+              <p className="text-sm text-gray-700">
+                Follow a structured sequence that eliminates guesswork, reduces trial and error, and moves you toward your specific goal with clarity.
+              </p>
+            </div>
+
+            {isSubmitted && submittedTier === 'paths' ? (
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
+                <p className="text-sm font-medium text-gray-900 mb-1">Added to waitlist</p>
+                <p className="text-xs text-gray-600">Pramana will notify you when Paths Access is available.</p>
               </div>
             ) : (
-              <form onSubmit={(e) => handleWaitlistSubmit(e, 'pro')} className="space-y-3">
+              <form onSubmit={(e) => handleWaitlistSubmit(e, 'paths')} className="space-y-3">
                 <input
                   type="email"
                   value={waitlistData.email}
                   onChange={handleEmailChange}
                   placeholder="Enter your email"
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 text-gray-900 placeholder-gray-400"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-gray-900 focus:ring-2 focus:ring-gray-200 text-gray-900 placeholder-gray-400 text-sm"
                   required
-                  disabled={isSubmitting && submittingTier === 'pro'}
+                  disabled={isSubmitting && submittingTier === 'paths'}
                 />
-                {error && submittingTier === 'pro' && (
-                  <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg text-sm">
+                {error && submittingTier === 'paths' && (
+                  <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg text-xs">
                     {error}
                   </div>
                 )}
                 <button
                   type="submit"
-                  disabled={isSubmitting && submittingTier === 'pro'}
-                  className="w-full bg-gradient-to-r from-primary-600 to-accent-600 text-white px-6 py-4 rounded-xl font-bold hover:shadow-2xl hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={isSubmitting && submittingTier === 'paths'}
+                  className="w-full bg-gray-900 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                 >
-                  {isSubmitting && submittingTier === 'pro' ? 'Joining...' : 'Join Waitlist'}
+                  {isSubmitting && submittingTier === 'paths' ? 'Adding...' : 'Add to Waitlist'}
                 </button>
               </form>
             )}
           </div>
 
-          {/* Agency Tier */}
-          <div className="relative glass-effect rounded-3xl p-8 premium-shadow hover-lift animate-fade-in" style={{ animationDelay: '0.3s' }}>
-            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gray-500 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
-              COMING LATER
+          {/* Agency Mode Plan */}
+          <div className="bg-white border-2 border-gray-200 rounded-lg p-8 relative">
+            <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+              <span className="bg-gray-200 text-gray-700 px-4 py-1 rounded-full text-xs font-medium">
+                Coming Soon
+              </span>
             </div>
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-gray-900 mb-3">Agency</h2>
-              <div className="mb-4">
-                <span className="text-6xl font-extrabold gradient-text">₹8,499</span>
-                <span className="text-gray-600 text-lg">/month</span>
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold text-gray-900 mb-2">Agency Mode</h2>
+              <p className="text-sm text-gray-600">For scaling content operations</p>
+            </div>
+
+            <div className="mb-6">
+              <h3 className="text-sm font-medium text-gray-500 mb-3 uppercase tracking-wide">Who this is for</h3>
+              <p className="text-sm text-gray-700 leading-relaxed mb-3">
+                Agency Mode is designed for professionals who manage content at scale:
+              </p>
+              <ul className="space-y-2 text-sm text-gray-700">
+                <li className="flex items-start">
+                  <span className="text-gray-400 mr-2">•</span>
+                  <span><strong>Freelancers</strong> managing multiple client channels</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-gray-400 mr-2">•</span>
+                  <span><strong>Agencies</strong> handling content planning for multiple creators</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="text-gray-400 mr-2">•</span>
+                  <span><strong>Operators</strong> running multiple channels or brand accounts</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="mb-6">
+              <h3 className="text-sm font-medium text-gray-500 mb-3 uppercase tracking-wide">What problem it solves</h3>
+              <div className="space-y-3 text-sm text-gray-700">
+                <div>
+                  <p className="font-medium text-gray-900 mb-1">Scale</p>
+                  <p className="leading-relaxed">
+                    Plan content for multiple channels without duplicating work. Apply proven formats and Execution Paths across different accounts efficiently.
+                  </p>
+                </div>
+                <div>
+                  <p className="font-medium text-gray-900 mb-1">Reuse</p>
+                  <p className="leading-relaxed">
+                    Save and reuse planning templates, format structures, and successful strategies across channels. Build a library of what works.
+                  </p>
+                </div>
+                <div>
+                  <p className="font-medium text-gray-900 mb-1">Consistency</p>
+                  <p className="leading-relaxed">
+                    Maintain consistent planning quality and execution standards across all channels, even when working with different team members.
+                  </p>
+                </div>
               </div>
-              <p className="text-gray-600 font-medium">Teams + Batch Planning</p>
             </div>
-            <ul className="space-y-4 mb-8">
-              {[
-                'Everything in Pro',
-                'Team collaboration',
-                'Batch planning tools',
-                'Multiple channel management',
-                'Client reporting dashboard',
-                'White-label options',
-                'API access',
-                'Dedicated support',
-              ].map((feature, idx) => (
-                <li key={idx} className="flex items-start">
-                  <svg className="w-6 h-6 text-primary-500 mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+
+            <div className="mb-6">
+              <h3 className="text-sm font-medium text-gray-500 mb-3 uppercase tracking-wide">Why it's different from individual use</h3>
+              <p className="text-sm text-gray-700 leading-relaxed mb-3">
+                Individual plans focus on your personal creator journey. Agency Mode addresses the unique challenges of managing multiple channels:
+              </p>
+              <ul className="space-y-2 text-sm text-gray-700">
+                <li className="flex items-start">
+                  <svg className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-gray-700">{feature}</span>
+                  <span>Team collaboration instead of solo planning</span>
                 </li>
-              ))}
-            </ul>
+                <li className="flex items-start">
+                  <svg className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span>Batch operations for multiple channels at once</span>
+                </li>
+                <li className="flex items-start">
+                  <svg className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span>Shared templates and workflows across accounts</span>
+                </li>
+                <li className="flex items-start">
+                  <svg className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span>Centralized planning and reporting for all channels</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="mb-6">
+              <h3 className="text-sm font-medium text-gray-500 mb-2 uppercase tracking-wide">Outcome</h3>
+              <p className="text-sm text-gray-700">
+                Scale your content operations efficiently while maintaining quality and consistency across all channels. Reduce planning time per channel by reusing proven structures and workflows.
+              </p>
+            </div>
+
             {isSubmitted && submittedTier === 'agency' ? (
-              <div className="bg-green-50 border-2 border-green-200 rounded-xl p-4 text-center">
-                <div className="text-2xl mb-2">✓</div>
-                <p className="text-green-800 font-semibold">You&apos;re on the waitlist!</p>
-                <p className="text-green-700 text-sm mt-1">We&apos;ll notify you when Agency launches.</p>
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
+                <p className="text-sm font-medium text-gray-900 mb-1">Added to waitlist</p>
+                <p className="text-xs text-gray-600">Pramana will notify you when Agency Mode is available.</p>
               </div>
             ) : (
               <form onSubmit={(e) => handleWaitlistSubmit(e, 'agency')} className="space-y-3">
@@ -225,108 +342,97 @@ export default function PricingPage() {
                   value={waitlistData.email}
                   onChange={handleEmailChange}
                   placeholder="Enter your email"
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200 text-gray-900 placeholder-gray-400"
+                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-gray-900 focus:ring-2 focus:ring-gray-200 text-gray-900 placeholder-gray-400 text-sm"
                   required
                   disabled={isSubmitting && submittingTier === 'agency'}
                 />
                 {error && submittingTier === 'agency' && (
-                  <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg text-sm">
+                  <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg text-xs">
                     {error}
                   </div>
                 )}
                 <button
                   type="submit"
                   disabled={isSubmitting && submittingTier === 'agency'}
-                  className="w-full bg-gradient-to-r from-primary-600 to-accent-600 text-white px-6 py-4 rounded-xl font-bold hover:shadow-2xl hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-gray-900 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                 >
-                  {isSubmitting && submittingTier === 'agency' ? 'Joining...' : 'Join Waitlist'}
+                  {isSubmitting && submittingTier === 'agency' ? 'Adding...' : 'Add to Waitlist'}
                 </button>
               </form>
             )}
           </div>
         </div>
 
-        {/* Feature Comparison */}
-        <div className="max-w-5xl mx-auto mb-20">
-          <h2 className="text-4xl font-bold text-center mb-12 text-gray-900">Compare Plans</h2>
-          <div className="glass-effect rounded-2xl p-8 premium-shadow overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b-2 border-gray-200">
-                  <th className="text-left py-4 px-4 font-bold text-gray-900">Feature</th>
-                  <th className="text-center py-4 px-4 font-bold text-gray-900">Free</th>
-                  <th className="text-center py-4 px-4 font-bold text-gray-900">Pro</th>
-                  <th className="text-center py-4 px-4 font-bold text-gray-900">Agency</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {[
-                  { feature: 'Content Planning', free: '✓', pro: '✓', agency: '✓' },
-                  { feature: 'Format Library', free: '✓', pro: '✓', agency: '✓' },
-                  { feature: 'Hook & Script Generators', free: '✓', pro: '✓', agency: '✓' },
-                  { feature: 'Advanced Format Templates', free: '—', pro: '✓', agency: '✓' },
-                  { feature: 'Unlimited Saves', free: 'Limited', pro: '✓', agency: '✓' },
-                  { feature: 'Batch Planning', free: '—', pro: '—', agency: '✓' },
-                  { feature: 'Team Collaboration', free: '—', pro: '—', agency: '✓' },
-                  { feature: 'Multiple Channels', free: '—', pro: '—', agency: '✓' },
-                  { feature: 'Priority Support', free: '—', pro: '✓', agency: '✓' },
-                  { feature: 'API Access', free: '—', pro: '—', agency: '✓' },
-                ].map((row, idx) => (
-                  <tr key={idx} className="hover:bg-gray-50 transition">
-                    <td className="py-4 px-4 font-medium text-gray-900">{row.feature}</td>
-                    <td className="py-4 px-4 text-center text-gray-600">{row.free}</td>
-                    <td className="py-4 px-4 text-center text-primary-600 font-semibold">{row.pro}</td>
-                    <td className="py-4 px-4 text-center text-primary-600 font-semibold">{row.agency}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        {/* How to Choose Section */}
+        <div className="max-w-4xl mx-auto mb-16">
+          <div className="bg-gray-50 rounded-lg border border-gray-200 p-8">
+            <h2 className="text-2xl font-semibold text-gray-900 mb-6">How to Choose</h2>
+            <div className="space-y-6">
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-2">Start with Free</h3>
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  If you're new to Shorts or want to establish a planning foundation, the Free plan gives you everything you need to make better content decisions. Many creators succeed using only the free tools.
+                </p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-2">Consider Paths Access when</h3>
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  You know your goal but feel uncertain about the sequence of steps to get there. Execution Paths provide the structured guidance that eliminates decision fatigue and saves time by giving you a clear, ordered sequence.
+                </p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-2">Agency Mode is for</h3>
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  Freelancers, agencies, and operators managing multiple channels who need to scale efficiently, reuse proven structures, and maintain consistency across accounts. This solves the problem of duplicating planning work across channels.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* FAQ Section */}
-        <div className="max-w-4xl mx-auto mb-20">
-          <h2 className="text-4xl font-bold text-center mb-12 text-gray-900">Frequently Asked Questions</h2>
+        <div className="max-w-4xl mx-auto mb-16">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-8 text-center">Common Questions</h2>
           <div className="space-y-6">
-            {[
-              {
-                q: 'What&apos;s included in the Free plan?',
-                a: 'The Free plan includes all planning and learning tools: content planning, format library, hook & script generators, SEO optimizer, performance feedback, and learning resources. Perfect for creators who want to learn and plan their Shorts content.',
-              },
-              {
-                q: 'What makes Pro different?',
-                a: 'Pro adds advanced format templates, unlimited saves for plans and scripts, bulk script generation, advanced analytics, calendar exports, and priority support. Ideal for creators ready to scale their content production.',
-              },
-              {
-                q: 'When will Pro and Agency launch?',
-                a: 'Pramana15 is building Pro features now and plans to launch soon. Agency tier will come later as we add team collaboration and batch planning features. Join the waitlist to be notified when each tier launches.',
-              },
-              {
-                q: 'Do I need to pay to succeed?',
-                a: 'Absolutely not! The Free plan has everything you need to plan, create, and optimize your Shorts. Many successful creators use only the free features. Paid plans are optional upgrades for scaling and advanced features.',
-              },
-            ].map((faq, idx) => (
-              <div key={idx} className="glass-effect rounded-2xl p-6 premium-shadow hover-lift animate-fade-in" style={{ animationDelay: `${0.1 * idx}s` }}>
-                <h3 className="text-xl font-bold mb-3 text-gray-900">{faq.q}</h3>
-                <p className="text-gray-600 leading-relaxed">{faq.a}</p>
-              </div>
-            ))}
+            <div className="border-b border-gray-200 pb-6">
+              <h3 className="font-semibold text-gray-900 mb-2">Do I need to pay to succeed?</h3>
+              <p className="text-sm text-gray-700 leading-relaxed">
+                No. The Free plan includes all core planning tools and format guidance. Many successful creators use only the free features. Paid plans are for creators who want structured Execution Paths or team collaboration tools.
+              </p>
+            </div>
+            <div className="border-b border-gray-200 pb-6">
+              <h3 className="font-semibold text-gray-900 mb-2">What's the difference between Free and Paths Access?</h3>
+              <p className="text-sm text-gray-700 leading-relaxed">
+                Free gives you planning tools and format recommendations. Paths Access adds complete Execution Paths—step-by-step, stage-aware playbooks with weekly breakdowns, progress checkpoints, and clear guidance on when to move to the next stage.
+              </p>
+            </div>
+            <div className="border-b border-gray-200 pb-6">
+              <h3 className="font-semibold text-gray-900 mb-2">When will Paths Access and Agency Mode be available?</h3>
+              <p className="text-sm text-gray-700 leading-relaxed">
+                Pramana is building these features now. Add your email to the waitlist to be notified when each plan becomes available. Pricing will be announced closer to launch.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-900 mb-2">Can I change plans later?</h3>
+              <p className="text-sm text-gray-700 leading-relaxed">
+                Yes. Start with Free and move to Paths Access or Agency Mode when you need structured Execution Paths or team collaboration features. You can change your plan based on your needs.
+              </p>
+            </div>
           </div>
         </div>
 
         {/* CTA Section */}
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="glass-effect rounded-3xl p-12 premium-shadow animate-fade-in">
-            <h2 className="text-4xl font-bold mb-4 text-gray-900">Ready to Start Creating?</h2>
-            <p className="text-xl mb-8 text-gray-600 max-w-2xl mx-auto">
-              Start with our free plan. No credit card required. No time limits. 
-              Build your channel, grow your audience, then upgrade when you&apos;re ready to scale.
+        <div className="max-w-3xl mx-auto text-center">
+          <div className="bg-gray-50 rounded-lg border border-gray-200 p-8">
+            <h2 className="text-2xl font-semibold mb-4 text-gray-900">Start Planning Better Content</h2>
+            <p className="text-gray-700 mb-6 max-w-xl mx-auto">
+              Begin with the Free plan. No credit card required. Use Pramana's planning tools and format guidance to make better content decisions.
             </p>
             <Link
               href="/dashboard"
-              className="inline-block bg-gradient-to-r from-primary-600 to-accent-600 text-white px-10 py-5 rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300"
+              className="inline-block px-8 py-3 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors"
             >
-              Get Started Free Forever →
+              Go to Dashboard
             </Link>
           </div>
         </div>

@@ -101,6 +101,27 @@ export default function Dashboard() {
           </div>
         )}
 
+        {/* Execution Paths Introduction */}
+        <div className="bg-gray-50 rounded-lg border border-gray-200 p-6 mb-8">
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+              <h2 className="text-lg font-semibold text-gray-900 mb-2">Execution Paths</h2>
+              <p className="text-sm text-gray-600 mb-4">
+                Step-by-step, stage-aware playbooks that guide you toward specific goals. Each path provides a clear sequence of actions, format recommendations, and constraints tailored to your creator stage.
+              </p>
+              <p className="text-xs text-gray-500">
+                Execution Paths eliminate decision fatigue by giving you an ordered sequence of actions, reducing trial and error, and ensuring you focus on the right steps at the right time.
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/execution-paths"
+            className="inline-block text-sm font-medium text-gray-900 hover:text-gray-700"
+          >
+            Explore Execution Paths →
+          </Link>
+        </div>
+
         {/* What to Do Next */}
         <div className="mb-8">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">What to do next</h2>

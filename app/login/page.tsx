@@ -81,7 +81,7 @@ export default function LoginPage() {
         </div>
 
         {/* Sign In Form */}
-        <form onSubmit={handleSubmit} className="bg-white border border-gray-200 rounded-lg p-6">
+        <form onSubmit={handleSubmit} className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
           <div className="space-y-5">
             {/* Email Input */}
             <div>
@@ -111,7 +111,7 @@ export default function LoginPage() {
                 id="password"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 placeholder-gray-400"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 text-gray-900 placeholder-gray-400"
                 placeholder="Enter your password"
                 required
                 disabled={loading}
@@ -119,24 +119,24 @@ export default function LoginPage() {
               />
             </div>
 
-            {/* Remember Me */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
+            {/* Remember Me and Forgot Password */}
+            <div className="flex items-center justify-between pt-1 pb-2">
+              <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
                   id="rememberMe"
                   checked={formData.rememberMe}
                   onChange={(e) => setFormData({ ...formData, rememberMe: e.target.checked })}
-                  className="w-4 h-4 text-gray-900 border-gray-300 rounded focus:ring-gray-900"
+                  className="w-4 h-4 text-gray-900 border-gray-300 rounded focus:ring-2 focus:ring-gray-900 cursor-pointer"
                   disabled={loading}
                 />
-                <label htmlFor="rememberMe" className="ml-2 text-sm text-gray-700 cursor-pointer">
+                <label htmlFor="rememberMe" className="text-sm text-gray-700 cursor-pointer select-none">
                   Remember me
                 </label>
               </div>
               <Link
                 href="/forgot-password"
-                className="text-sm text-gray-600 hover:text-gray-900 font-medium"
+                className="text-sm text-gray-600 hover:text-gray-900 font-medium underline"
               >
                 Forgot password?
               </Link>

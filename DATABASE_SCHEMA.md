@@ -229,3 +229,4 @@ CREATE POLICY "Users can view own waitlist entries"
 - RLS policies ensure users can only access their own data
 - Support/chat messages allow anonymous submissions (user_id can be NULL)
 
+
