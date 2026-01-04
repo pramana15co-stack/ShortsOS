@@ -319,20 +319,50 @@ export default function Navbar() {
                     ))}
                   </>
                 )}
+              </>
+            ) : (
+              <>
+                <Link 
+                  href="/formats" 
+                  className={`block px-4 py-2.5 text-sm font-medium ${
+                    isActive('/formats')
+                      ? 'bg-primary-50 text-primary-600 border-l-2 border-primary-600'
+                      : 'text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  Formats
+                </Link>
+                <Link 
+                  href="/pricing" 
+                  className={`block px-4 py-2.5 text-sm font-medium ${
+                    isActive('/pricing')
+                      ? 'bg-primary-50 text-primary-600 border-l-2 border-primary-600'
+                      : 'text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  Pricing
+                </Link>
+                {publicTools.length > 0 && (
+                  <>
+                    <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-2">
+                      Tools
+                    </div>
+                    {publicTools.map((item) => (
+                      <Link 
+                        key={item.href} 
+                        href={item.href} 
+                        className={`block px-6 py-2 text-sm ${
+                          isActive(item.href)
+                            ? 'bg-primary-50 text-primary-600 border-l-2 border-primary-600 font-medium'
+                            : 'text-gray-600 hover:bg-gray-50'
+                        }`}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
                   </>
                 )}
               </>
-            ) : (
-              <Link 
-                href="/formats" 
-                className={`block px-4 py-2.5 text-sm font-medium ${
-                  isActive('/formats')
-                    ? 'bg-primary-50 text-primary-600 border-l-2 border-primary-600'
-                    : 'text-gray-700 hover:bg-gray-50'
-                }`}
-              >
-                Formats
-              </Link>
             )}
             <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-2">
               More
