@@ -107,13 +107,23 @@ export default function Dashboard() {
           <div className="grid md:grid-cols-2 gap-4">
             {lastPlan ? (
               <>
-                <Link
-                  href={`/formats/${lastPlan.recommended_formats?.[0]?.format_slug || ''}`}
-                  className="block p-4 border border-gray-200 rounded-lg hover:border-gray-300 hover:bg-gray-50 transition-colors"
-                >
-                  <div className="text-sm font-medium text-gray-900 mb-1">Learn your recommended format</div>
-                  <div className="text-xs text-gray-600">Study the format structure and execution guide</div>
-                </Link>
+                {lastPlan.recommended_formats?.[0]?.format_slug ? (
+                  <Link
+                    href={`/formats/${lastPlan.recommended_formats[0].format_slug}`}
+                    className="block p-4 border border-gray-200 rounded-lg hover:border-gray-300 hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="text-sm font-medium text-gray-900 mb-1">Learn your recommended format</div>
+                    <div className="text-xs text-gray-600">Study the format structure and execution guide</div>
+                  </Link>
+                ) : (
+                  <Link
+                    href="/formats"
+                    className="block p-4 border border-gray-200 rounded-lg hover:border-gray-300 hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="text-sm font-medium text-gray-900 mb-1">Browse formats</div>
+                    <div className="text-xs text-gray-600">Explore all available formats</div>
+                  </Link>
+                )}
                 <Link
                   href="/scripts"
                   className="block p-4 border border-gray-200 rounded-lg hover:border-gray-300 hover:bg-gray-50 transition-colors"
