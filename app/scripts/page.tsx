@@ -99,7 +99,7 @@ export default function ScriptsPage() {
     <main className="container mx-auto px-4 py-8 max-w-4xl">
       <div className="mb-8">
         <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
-          Script Generator
+          Script Templates
         </h1>
         <p className="text-xl text-gray-600">
           Create structured scripts for your YouTube Shorts using proven format templates. Customize templates with your topic and format choice.
