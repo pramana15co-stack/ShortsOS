@@ -194,110 +194,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="relative container mx-auto px-4 py-20">
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          <StatCard
-            number="6"
-            label="Proven Formats"
-            desc="Based on successful Shorts analysis"
-            delay="0.1s"
-          />
-          <StatCard
-            number="100%"
-            label="Free Planning Tools"
-            desc="Core features always free"
-            delay="0.2s"
-          />
-          <StatCard
-            number="100%"
-            label="Free to Start"
-            desc="No credit card required"
-            delay="0.3s"
-          />
-        </div>
-      </section>
-
-      {/* Problem-Solution Section */}
-      <section className="relative container mx-auto px-4 py-20">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
-              Better Decisions, Clearer Execution
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Structured planning and proven formats to help you make informed content decisions
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-2 gap-8 mb-12">
-            <div className="glass-effect rounded-2xl p-8 premium-shadow hover-lift">
-              <div className="text-4xl mb-4">❌</div>
-              <h3 className="text-2xl font-bold mb-3 text-gray-900">The Old Way</h3>
-              <ul className="space-y-3 text-gray-600">
-                <li className="flex items-start">
-                  <span className="mr-2">•</span>
-                  <span>Post randomly without a plan</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2">•</span>
-                  <span>Guess which formats work</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2">•</span>
-                  <span>Spend hours writing scripts</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2">•</span>
-                  <span>No idea why videos fail</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2">•</span>
-                  <span>Weak hooks that lose viewers</span>
-                </li>
-              </ul>
-            </div>
-            
-            <div className="glass-effect rounded-2xl p-8 premium-shadow hover-lift border-2 border-primary-200">
-              <div className="text-4xl mb-4">✅</div>
-              <h3 className="text-2xl font-bold mb-3 text-gray-900">With ShortsOS</h3>
-              <ul className="space-y-3 text-gray-600">
-                <li className="flex items-start">
-                  <span className="mr-2">•</span>
-                  <span>Planner recommends formats based on your goals</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2">•</span>
-                  <span>Proven formats with structured templates</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2">•</span>
-                  <span>Script templates you can customize</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2">•</span>
-                  <span>Performance analysis to understand results</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2">•</span>
-                  <span>Hook templates based on successful patterns</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Features Grid */}
-      <section className="relative container mx-auto px-4 py-20">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
-            Planning and Execution Tools
-          </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Structured formats, templates, and planning tools to help you make better content decisions
-          </p>
-        </div>
+      <section className="relative container mx-auto px-4 py-20 bg-gray-50">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-12">
+            <h2 className="text-2xl font-semibold mb-2 text-gray-900">
+              Tools in the System
+            </h2>
+            <p className="text-sm text-gray-600 max-w-2xl">
+              Each tool serves a specific purpose in the execution framework. Use them in sequence for best results.
+            </p>
+          </div>
         
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           <FeatureCard
@@ -386,18 +294,6 @@ export default function Home() {
   )
 }
 
-function StatCard({ number, label, desc, delay }: { number: string; label: string; desc: string; delay: string }) {
-  return (
-    <div 
-      className="glass-effect rounded-2xl p-8 text-center hover-lift premium-shadow"
-      style={{ animationDelay: delay }}
-    >
-      <div className="text-5xl font-bold gradient-text mb-2">{number}</div>
-      <div className="text-lg font-semibold text-gray-900 mb-1">{label}</div>
-      <div className="text-sm text-gray-500">{desc}</div>
-    </div>
-  )
-}
 
 function FeatureCard({ title, description, icon, href, delay }: { title: string; description: string; icon: string; href: string; delay: string }) {
   return (
