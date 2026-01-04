@@ -57,19 +57,16 @@ export default function AboutPage() {
           <div className="glass-effect rounded-2xl p-8 premium-shadow">
             <h2 className="text-3xl font-bold mb-4 text-gray-900">Why ShortsOS Exists</h2>
             <p className="text-gray-700 leading-relaxed text-lg">
-              ShortsOS was created because Pramana15 identified a fundamental disconnect between what creators need and 
-              what existing tools provide. The platform exists to bridge that gap.
+              ShortsOS was created because Pramana identified a fundamental problem: creators are overwhelmed, confused, 
+              and waste time using the wrong strategies. Existing tools generate outputs but assume users already understand the strategy.
             </p>
             <p className="text-gray-700 leading-relaxed text-lg mt-4">
-              ShortsOS represents Pramana15's commitment to making professional-grade planning and optimization tools 
-              available to all creators, not just those with large budgets or technical expertise. The platform 
-              demonstrates that powerful tools can be both simple and free, challenging the industry standard 
-              of complex, expensive solutions.
+              ShortsOS focuses on clarity, structure, and correct decision-making. The product uses the Creator Execution Framework 
+              to provide stage-aware recommendations that tell creators what to create, why it works, and what to do next.
             </p>
             <p className="text-gray-700 leading-relaxed text-lg mt-4">
-              By focusing exclusively on YouTube Shorts, ShortsOS delivers format-specific insights, templates, 
-              and workflows that generic content tools cannot provide. This specialization enables creators to 
-              make better decisions faster, without the noise of irrelevant features.
+              This is not a video generator. It is a decision and execution intelligence system that reduces uncertainty 
+              and cognitive load, providing a clear execution path instead of random tools.
             </p>
           </div>
 

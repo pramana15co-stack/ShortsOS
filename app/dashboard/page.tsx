@@ -50,157 +50,127 @@ export default function Dashboard() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 py-12">
-      <div className="container mx-auto px-4 max-w-4xl">
-        {/* Welcome Section */}
-        <div className="mb-8 animate-fade-in">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-2 text-gray-900">
-            Welcome back!
+    <main className="min-h-screen bg-white py-8">
+      <div className="container mx-auto px-4 max-w-5xl">
+        {/* Header */}
+        <div className="mb-8 border-b border-gray-200 pb-6">
+          <h1 className="text-2xl font-semibold text-gray-900 mb-1">
+            Dashboard
           </h1>
-          <p className="text-xl text-gray-600">
-            {user?.email ? (
-              <>
-                Signed in as <span className="font-semibold text-primary-600">{user.email}</span>
-              </>
-            ) : (
-              'Ready to plan your next YouTube Shorts?'
+          <p className="text-sm text-gray-600">
+            {user?.email || 'Your content planning control center'}
+          </p>
+        </div>
+
+        {/* Current Status */}
+        {lastPlan ? (
+          <div className="bg-gray-50 rounded-lg border border-gray-200 p-6 mb-6">
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <h2 className="text-sm font-medium text-gray-500 mb-1">Your Current Plan</h2>
+                <p className="text-lg font-semibold text-gray-900">
+                  {lastPlan.niche} • {lastPlan.goal} • {lastPlan.experience_level}
+                </p>
+              </div>
+              <span className="text-xs text-gray-500">
+                {new Date(lastPlan.created_at).toLocaleDateString()}
+              </span>
+            </div>
+            {lastPlan.recommended_formats && lastPlan.recommended_formats.length > 0 && (
+              <div className="mb-4">
+                <p className="text-sm text-gray-600 mb-2">Recommended format:</p>
+                <p className="font-medium text-gray-900">{lastPlan.recommended_formats[0].format_name}</p>
+              </div>
             )}
-          </p>
-          <p className="text-sm text-gray-500 mt-2">
-            Built by <span className="font-semibold">Pramana15</span>
-          </p>
-        </div>
-
-        {/* Quick Links */}
-        <div className="grid md:grid-cols-3 gap-6 mb-8">
-          <Link
-            href="/planner"
-            className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all border-2 border-transparent hover:border-primary-200 group"
-          >
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
-                🎯
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-1">Create New Plan</h3>
-                <p className="text-gray-600 text-sm">Get personalized format recommendations</p>
-              </div>
-            </div>
-          </Link>
-
-          <Link
-            href="/saved-scripts"
-            className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all border-2 border-transparent hover:border-primary-200 group"
-          >
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
-                📝
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-1">Saved Scripts</h3>
-                <p className="text-gray-600 text-sm">View all your generated scripts</p>
-              </div>
-            </div>
-          </Link>
-
-          <Link
-            href="/saved-hooks"
-            className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all border-2 border-transparent hover:border-primary-200 group"
-          >
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-yellow-500 to-orange-600 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
-                🎣
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-1">Saved Hooks</h3>
-                <p className="text-gray-600 text-sm">View all your generated hooks</p>
-              </div>
-            </div>
-          </Link>
-        </div>
-
-        {/* Last Saved Plan */}
-        {loadingPlan ? (
-          <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-            <div className="flex items-center justify-center py-8">
-              <svg className="animate-spin h-6 w-6 text-primary-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              <span className="ml-3 text-gray-600">Loading your plan...</span>
-            </div>
-          </div>
-        ) : lastPlan ? (
-          <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-            <h2 className="text-2xl font-bold mb-4 text-gray-900">Last Saved Plan</h2>
-            <div className="bg-gradient-to-br from-primary-50 to-accent-50 rounded-lg p-5 border border-primary-100">
-              <div className="grid md:grid-cols-3 gap-4 mb-4">
-                <div>
-                  <div className="text-sm text-gray-600 mb-1">Niche</div>
-                  <div className="font-semibold text-gray-900 capitalize">{lastPlan.niche}</div>
-                </div>
-                <div>
-                  <div className="text-sm text-gray-600 mb-1">Goal</div>
-                  <div className="font-semibold text-gray-900 capitalize">{lastPlan.goal}</div>
-                </div>
-                <div>
-                  <div className="text-sm text-gray-600 mb-1">Experience</div>
-                  <div className="font-semibold text-gray-900 capitalize">{lastPlan.experience_level}</div>
-                </div>
-              </div>
-              {lastPlan.recommended_formats && lastPlan.recommended_formats.length > 0 && (
-                <div className="mb-4">
-                  <div className="text-sm text-gray-600 mb-2">Top Recommended Format</div>
-                  <div className="font-semibold text-gray-900">
-                    {lastPlan.recommended_formats[0].format_name}
-                  </div>
-                </div>
-              )}
-              <div className="text-sm text-gray-500 mb-4">
-                Created on {new Date(lastPlan.created_at).toLocaleDateString()}
-              </div>
-              <Link
-                href="/planner"
-                className="inline-block px-6 py-2 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition text-sm"
-              >
-                View Plan →
-              </Link>
-            </div>
+            <Link
+              href="/planner"
+              className="text-sm text-gray-700 hover:text-gray-900 font-medium"
+            >
+              View full plan →
+            </Link>
           </div>
         ) : (
-          <div className="bg-white rounded-xl shadow-md p-8 mb-8">
-            <div className="text-center py-8">
-              <div className="w-20 h-20 bg-gradient-to-br from-primary-100 to-accent-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <svg className="w-10 h-10 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">No saved plans yet</h3>
-              <p className="text-gray-600 mb-6 max-w-md mx-auto">
-                Create your first content plan to get personalized format recommendations based on your niche, goals, and experience level.
-              </p>
-              <Link
-                href="/planner"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-                Create Your First Plan
-              </Link>
-            </div>
+          <div className="bg-gray-50 rounded-lg border border-gray-200 p-6 mb-6">
+            <p className="text-sm text-gray-600 mb-3">No plan yet. Start by identifying your creator stage.</p>
+            <Link
+              href="/planner"
+              className="inline-block px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors"
+            >
+              Create Your First Plan
+            </Link>
           </div>
         )}
 
-        {/* All Tools Link */}
-        <div className="text-center">
-          <Link
-            href="/formats"
-            className="text-primary-600 hover:text-primary-700 font-semibold"
-          >
-            Browse All Tools →
-          </Link>
+        {/* What to Do Next */}
+        <div className="mb-8">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">What to do next</h2>
+          <div className="grid md:grid-cols-2 gap-4">
+            {lastPlan ? (
+              <>
+                <Link
+                  href={`/formats/${lastPlan.recommended_formats?.[0]?.format_slug || ''}`}
+                  className="block p-4 border border-gray-200 rounded-lg hover:border-gray-300 hover:bg-gray-50 transition-colors"
+                >
+                  <div className="text-sm font-medium text-gray-900 mb-1">Learn your recommended format</div>
+                  <div className="text-xs text-gray-600">Study the format structure and execution guide</div>
+                </Link>
+                <Link
+                  href="/scripts"
+                  className="block p-4 border border-gray-200 rounded-lg hover:border-gray-300 hover:bg-gray-50 transition-colors"
+                >
+                  <div className="text-sm font-medium text-gray-900 mb-1">Create a script</div>
+                  <div className="text-xs text-gray-600">Use templates to structure your content</div>
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/planner"
+                  className="block p-4 border border-gray-200 rounded-lg hover:border-gray-300 hover:bg-gray-50 transition-colors"
+                >
+                  <div className="text-sm font-medium text-gray-900 mb-1">Start planning</div>
+                  <div className="text-xs text-gray-600">Identify your stage and get content direction</div>
+                </Link>
+                <Link
+                  href="/formats"
+                  className="block p-4 border border-gray-200 rounded-lg hover:border-gray-300 hover:bg-gray-50 transition-colors"
+                >
+                  <div className="text-sm font-medium text-gray-900 mb-1">Browse formats</div>
+                  <div className="text-xs text-gray-600">Explore proven content structures</div>
+                </Link>
+              </>
+            )}
+          </div>
         </div>
+
+        {/* Tools */}
+        <div>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Tools</h2>
+          <div className="grid md:grid-cols-3 gap-4">
+            <Link
+              href="/saved-scripts"
+              className="block p-4 border border-gray-200 rounded-lg hover:border-gray-300 hover:bg-gray-50 transition-colors"
+            >
+              <div className="text-sm font-medium text-gray-900 mb-1">Saved Scripts</div>
+              <div className="text-xs text-gray-600">View your script templates</div>
+            </Link>
+            <Link
+              href="/saved-hooks"
+              className="block p-4 border border-gray-200 rounded-lg hover:border-gray-300 hover:bg-gray-50 transition-colors"
+            >
+              <div className="text-sm font-medium text-gray-900 mb-1">Saved Hooks</div>
+              <div className="text-xs text-gray-600">View your hook templates</div>
+            </Link>
+            <Link
+              href="/formats"
+              className="block p-4 border border-gray-200 rounded-lg hover:border-gray-300 hover:bg-gray-50 transition-colors"
+            >
+              <div className="text-sm font-medium text-gray-900 mb-1">Format Library</div>
+              <div className="text-xs text-gray-600">Browse all formats</div>
+            </Link>
+          </div>
+        </div>
+
       </div>
     </main>
   )

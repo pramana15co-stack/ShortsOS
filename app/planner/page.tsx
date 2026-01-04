@@ -179,60 +179,76 @@ export default function PlannerPage() {
               type="submit"
               className="w-full bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition text-lg"
             >
-              Generate My Plan
+              Get My Plan
             </button>
           </div>
         </form>
       ) : (
         <div className="space-y-8">
-          {/* Results Header */}
-          <div className="bg-gradient-to-r from-primary-600 to-purple-600 rounded-xl p-8 text-white text-center">
-            <h2 className="text-3xl font-bold mb-2">Your Personalized Plan</h2>
-            <p className="text-lg opacity-90">
-              Based on your {formData.niche} niche, {formData.goal} goal, and {formData.experienceLevel} experience
-            </p>
-            {saving && (
-              <p className="text-sm opacity-75 mt-2">Saving your plan...</p>
-            )}
+          {/* Plan Header */}
+          <div className="border-b border-gray-200 pb-6 mb-8">
+            <div className="flex items-start justify-between">
+              <div>
+                <h2 className="text-2xl font-semibold text-gray-900 mb-2">Your Content Plan</h2>
+                <p className="text-sm text-gray-600">
+                  Based on the Creator Execution Framework • {formData.niche} • {formData.goal} • {formData.experienceLevel}
+                </p>
+              </div>
+              {saving && (
+                <span className="text-xs text-gray-500">Saving...</span>
+              )}
+            </div>
           </div>
 
-          {/* Format Recommendations */}
-          <div>
-            <h3 className="text-2xl font-semibold mb-6 text-gray-900">
-              Top 3 Recommended Formats
-            </h3>
-            <div className="space-y-6">
+          {/* Content Goal */}
+          <div className="bg-gray-50 rounded-lg border border-gray-200 p-6 mb-6">
+            <h3 className="text-sm font-medium text-gray-500 mb-2">Content Goal</h3>
+            <p className="text-lg font-semibold text-gray-900 capitalize">{formData.goal}</p>
+            <p className="text-sm text-gray-600 mt-2">
+              Your plan is optimized for this goal. Formats and posting frequency are aligned accordingly.
+            </p>
+          </div>
+
+          {/* Recommended Formats */}
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">Recommended Formats</h3>
+                <p className="text-sm text-gray-600 mt-1">
+                  These formats are stage-appropriate for your {formData.experienceLevel} level
+                </p>
+              </div>
+            </div>
+            <div className="space-y-4">
               {result?.recommendations.map((rec, idx) => (
                 <div
                   key={rec.format.slug}
-                  className="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary-500"
+                  className="border border-gray-200 rounded-lg p-5 hover:border-gray-300 transition-colors"
                 >
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <span className="flex-shrink-0 w-8 h-8 bg-primary-600 text-white rounded-full flex items-center justify-center font-bold">
+                        <span className="flex-shrink-0 w-6 h-6 rounded bg-gray-900 text-white flex items-center justify-center text-xs font-medium">
                           {idx + 1}
                         </span>
-                        <h4 className="text-2xl font-semibold text-gray-900">
+                        <h4 className="text-lg font-semibold text-gray-900">
                           {rec.format.name}
                         </h4>
                       </div>
-                      <p className="text-gray-600 ml-11">{rec.format.description}</p>
+                      <p className="text-sm text-gray-600 ml-9 mb-3">{rec.format.description}</p>
+                      <div className="ml-9 bg-blue-50 border border-blue-100 rounded p-3">
+                        <div className="text-xs font-medium text-gray-700 mb-1">
+                          Why this format works for you:
+                        </div>
+                        <p className="text-sm text-gray-700">{rec.reason}</p>
+                      </div>
                     </div>
                     <Link
                       href={`/formats/${rec.format.slug}`}
-                      className="text-primary-600 hover:text-primary-700 font-medium text-sm whitespace-nowrap"
+                      className="ml-4 text-sm text-gray-600 hover:text-gray-900 font-medium whitespace-nowrap"
                     >
-                      View Details →
+                      View guide →
                     </Link>
-                  </div>
-                  <div className="ml-11">
-                    <div className="bg-primary-50 rounded-lg p-4">
-                      <div className="text-sm font-semibold text-primary-900 mb-1">
-                        Why this format fits you:
-                      </div>
-                      <p className="text-primary-800">{rec.reason}</p>
-                    </div>
                   </div>
                 </div>
               ))}
@@ -240,73 +256,75 @@ export default function PlannerPage() {
           </div>
 
           {/* Posting Frequency */}
-          <div className="bg-white rounded-xl shadow-md p-6">
-            <h3 className="text-2xl font-semibold mb-4 text-gray-900 flex items-center">
-              <span className="text-3xl mr-3">📅</span>
-              Recommended Posting Frequency
-            </h3>
-            <div className="bg-blue-50 rounded-lg p-6 border-l-4 border-blue-500">
-              <div className="text-2xl font-bold text-blue-900 mb-2">
-                {result?.postingFrequency}
-              </div>
-              <p className="text-blue-800">{result?.frequencyReason}</p>
-            </div>
+          <div className="border border-gray-200 rounded-lg p-5 mb-6">
+            <h3 className="text-sm font-medium text-gray-500 mb-1">Recommended Posting Frequency</h3>
+            <p className="text-lg font-semibold text-gray-900 mb-2">{result?.postingFrequency}</p>
+            <p className="text-sm text-gray-600">{result?.frequencyReason}</p>
           </div>
 
-          {/* Next Steps */}
-          <div className="bg-gray-50 rounded-xl p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Next Steps:</h3>
-            <div className="grid md:grid-cols-3 gap-4">
-              {result?.recommendations?.[0]?.format?.slug ? (
-                <Link
-                  href={`/formats/${result.recommendations[0].format.slug}`}
-                  className="bg-white rounded-lg p-4 border border-gray-200 hover:border-primary-500 hover:shadow-md transition"
-                >
-                  <div className="font-semibold text-gray-900 mb-1">Learn Your Top Format</div>
-                  <div className="text-sm text-gray-600">See detailed guide for {result.recommendations[0].format.name}</div>
-                </Link>
-              ) : (
-                <Link
-                  href="/formats"
-                  className="bg-white rounded-lg p-4 border border-gray-200 hover:border-primary-500 hover:shadow-md transition"
-                >
-                  <div className="font-semibold text-gray-900 mb-1">Browse All Formats</div>
-                  <div className="text-sm text-gray-600">Explore our complete format library</div>
-                </Link>
-              )}
-              <Link
-                href="/hooks"
-                className="bg-white rounded-lg p-4 border border-gray-200 hover:border-primary-500 hover:shadow-md transition"
-              >
-                <div className="font-semibold text-gray-900 mb-1">Generate Hooks</div>
-                <div className="text-sm text-gray-600">Create compelling opening hooks for your videos</div>
-              </Link>
-              <Link
-                href="/scripts"
-                className="bg-white rounded-lg p-4 border border-gray-200 hover:border-primary-500 hover:shadow-md transition"
-              >
-                <div className="font-semibold text-gray-900 mb-1">Generate Scripts</div>
-                <div className="text-sm text-gray-600">Create complete scripts using your recommended format</div>
-              </Link>
-            </div>
+          {/* What to Avoid */}
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-5 mb-6">
+            <h3 className="text-sm font-medium text-amber-900 mb-2">What to avoid at this stage</h3>
+            <p className="text-sm text-amber-800">
+              At the {formData.experienceLevel} level, avoid complex formats that require advanced editing or large audiences. 
+              Focus on mastering the recommended formats first before experimenting with advanced strategies.
+            </p>
           </div>
 
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4">
-            <button
-              onClick={handleReset}
-              className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition"
-            >
-              Plan Another Channel
-            </button>
+          {/* Next Recommended Action */}
+          <div className="border-t border-gray-200 pt-6">
+            <h3 className="text-sm font-medium text-gray-500 mb-4">Next recommended action</h3>
+            {result?.recommendations?.[0]?.format?.slug ? (
+              <Link
+                href={`/formats/${result.recommendations[0].format.slug}`}
+                className="block p-4 border-2 border-gray-900 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <div className="font-semibold text-gray-900 mb-1">Study {result.recommendations[0].format.name}</div>
+                <div className="text-sm text-gray-600">Review the format structure, pacing guidelines, and execution guide</div>
+              </Link>
+            ) : (
+              <Link
+                href="/formats"
+                className="block p-4 border-2 border-gray-900 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <div className="font-semibold text-gray-900 mb-1">Browse Format Library</div>
+                <div className="text-sm text-gray-600">Explore all available formats and their execution guides</div>
+              </Link>
+            )}
+          </div>
+
+          {/* Additional Actions */}
+          <div className="mt-6 grid md:grid-cols-2 gap-4">
             <Link
-              href="/formats"
-              className="flex-1 px-6 py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition text-center"
+              href="/scripts"
+              className="block p-4 border border-gray-200 rounded-lg hover:border-gray-300 hover:bg-gray-50 transition-colors"
             >
-              Browse All Formats
+              <div className="text-sm font-medium text-gray-900 mb-1">Create Script Template</div>
+              <div className="text-xs text-gray-600">Use structured templates for your recommended format</div>
             </Link>
             <Link
-              href="/calendar"
+              href="/hooks"
+              className="block p-4 border border-gray-200 rounded-lg hover:border-gray-300 hover:bg-gray-50 transition-colors"
+            >
+              <div className="text-sm font-medium text-gray-900 mb-1">Get Hook Templates</div>
+              <div className="text-xs text-gray-600">Access hook templates based on successful patterns</div>
+            </Link>
+          </div>
+
+          {/* Actions */}
+          <div className="mt-8 pt-6 border-t border-gray-200 flex gap-3">
+            <button
+              onClick={handleReset}
+              className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
+            >
+              Create New Plan
+            </button>
+            <Link
+              href="/dashboard"
+              className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
+            >
+              Go to Dashboard
+            </Link>
               className="flex-1 px-6 py-3 border-2 border-primary-600 text-primary-600 rounded-lg font-semibold hover:bg-primary-50 transition text-center"
             >
               Plan in Calendar

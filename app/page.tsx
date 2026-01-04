@@ -12,49 +12,43 @@ export default function Home() {
 
   return (
     <main className="min-h-screen overflow-hidden">
-      {/* Animated Background */}
-      <div className="fixed inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-accent-50"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(14,165,233,0.1),transparent_50%)]"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(217,70,239,0.1),transparent_50%)]"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(14,165,233,0.05),transparent_70%)]"></div>
-      </div>
+      {/* Background */}
+      <div className="fixed inset-0 -z-10 bg-white"></div>
 
       {/* Hero Section */}
       <section className="relative container mx-auto px-4 py-32 text-center">
         <div className={`max-w-5xl mx-auto ${isVisible ? 'animate-fade-in' : 'opacity-0'}`}>
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-primary-200 rounded-full mb-8 animate-slide-up">
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-            <span className="text-sm font-medium text-gray-700">Free Planning Tools • No Credit Card Required</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 border border-gray-200 rounded mb-6">
+            <span className="text-xs font-medium text-gray-700">Built by Pramana</span>
           </div>
 
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-            <span className="block text-gray-900">Plan and Execute</span>
-            <span className="block text-primary-600 mt-2">Better Shorts Content</span>
+          <h1 className="text-5xl md:text-6xl font-semibold mb-6 text-gray-900" style={{ animationDelay: '0.1s' }}>
+            Decide what to create.<br />
+            Know when to create it.<br />
+            Execute it correctly.
           </h1>
           
-          <p className="text-xl md:text-2xl text-gray-700 mb-4 max-w-3xl mx-auto animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            Decision and execution intelligence for YouTube Shorts creators. Structure your planning, choose proven formats, and execute with clarity.
+          <p className="text-xl text-gray-700 mb-3 max-w-2xl mx-auto" style={{ animationDelay: '0.2s' }}>
+            Pramana helps short-form creators make better content decisions without wasting time or money.
           </p>
           
-          <p className="text-lg text-gray-600 mb-12 max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: '0.3s' }}>
-            Templates, formats, and planning tools based on analysis of successful Shorts. No video generation. Just better decisions and clearer execution.
+          <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto" style={{ animationDelay: '0.3s' }}>
+            A decision and execution system for YouTube Shorts creators who feel lost, not lazy. Built by Pramana.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up" style={{ animationDelay: '0.4s' }}>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center" style={{ animationDelay: '0.4s' }}>
             <Link 
               href="/dashboard" 
-              className="group relative px-8 py-4 bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 overflow-hidden"
+              className="px-8 py-3 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors"
             >
-              <span className="relative z-10">Get Started Free →</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-accent-600 to-primary-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              Get Started
             </Link>
             <Link 
-              href="/pricing" 
-              className="px-8 py-4 glass-effect border-2 border-primary-200 text-primary-700 rounded-xl font-semibold text-lg hover:border-primary-400 hover:shadow-lg transition-all duration-300"
+              href="/planner" 
+              className="px-8 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors"
             >
-              See Pricing
+              Start Planning
             </Link>
           </div>
 
@@ -94,32 +88,46 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 mb-12">
-            <div className="glass-effect rounded-2xl p-8 premium-shadow text-center">
-              <div className="text-5xl mb-4">📊</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Data-Driven</h3>
-              <p className="text-gray-600">
-                Our formats and strategies are based on analysis of thousands of successful YouTube Shorts
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="bg-white rounded-lg p-6 border border-gray-200">
+              <h3 className="font-semibold text-gray-900 mb-2">Stage-Aware System</h3>
+              <p className="text-sm text-gray-600">
+                Recommendations adapt to your creator stage. What works for beginners differs from what works for established channels.
               </p>
             </div>
-            <div className="glass-effect rounded-2xl p-8 premium-shadow text-center">
-              <div className="text-5xl mb-4">🎯</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Creator-First</h3>
-              <p className="text-gray-600">
-                Built by creators, for creators. Every feature is designed with real creator needs in mind
+            <div className="bg-white rounded-lg p-6 border border-gray-200">
+              <h3 className="font-semibold text-gray-900 mb-2">Clear Constraints</h3>
+              <p className="text-sm text-gray-600">
+                We tell you what to avoid at your stage, not just what to do. This reduces mistakes and wasted effort.
               </p>
             </div>
-            <div className="glass-effect rounded-2xl p-8 premium-shadow text-center">
-              <div className="text-5xl mb-4">🔒</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Privacy-Focused</h3>
-              <p className="text-gray-600">
-                Your data stays yours. We don&apos;t sell or exploit creator information
+            <div className="bg-white rounded-lg p-6 border border-gray-200">
+              <h3 className="font-semibold text-gray-900 mb-2">Execution Framework</h3>
+              <p className="text-sm text-gray-600">
+                Structured templates and guides, not random outputs. Every recommendation includes clear next steps.
               </p>
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-primary-600 to-accent-600 rounded-3xl p-12 text-white text-center">
-            <h3 className="text-2xl font-bold mb-4">What ShortsOS Provides</h3>
+          <div className="bg-gray-900 rounded-lg p-8 text-white">
+            <h3 className="text-lg font-semibold mb-4">The Creator Execution Framework</h3>
+            <p className="text-sm text-gray-300 mb-6 max-w-2xl">
+              Pramana uses a structured framework to provide stage-aware recommendations. Recommendations are intentional and based on your creator stage, not random suggestions.
+            </p>
+            <div className="grid md:grid-cols-3 gap-4 text-sm">
+              <div>
+                <div className="font-medium mb-1">Stage-Aware</div>
+                <div className="text-gray-400">Recommendations adapt to your experience level</div>
+              </div>
+              <div>
+                <div className="font-medium mb-1">Clear Constraints</div>
+                <div className="text-gray-400">We tell you what to avoid at your stage</div>
+              </div>
+              <div>
+                <div className="font-medium mb-1">Execution Path</div>
+                <div className="text-gray-400">Every recommendation includes next steps</div>
+              </div>
+            </div>
             <div className="grid md:grid-cols-2 gap-6 mt-8 max-w-4xl mx-auto">
               <div className="text-left">
                 <div className="flex items-start gap-3 mb-3">
@@ -356,16 +364,16 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                href="/dashboard"
-                className="px-10 py-5 bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-xl font-semibold text-lg hover:shadow-lg transition-all duration-200"
+                href="/planner"
+                className="px-8 py-3 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors"
               >
-                Get Started →
+                Start Planning
               </Link>
               <Link
-                href="/pricing"
-                className="px-10 py-5 glass-effect border-2 border-primary-200 text-primary-700 rounded-xl font-semibold text-lg hover:border-primary-400 transition-all duration-200"
+                href="/dashboard"
+                className="px-8 py-3 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors"
               >
-                See Pricing
+                Go to Dashboard
               </Link>
             </div>
             <p className="mt-6 text-sm text-gray-500">
