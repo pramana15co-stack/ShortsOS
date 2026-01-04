@@ -70,7 +70,7 @@ export default function HooksPage() {
     <main className="container mx-auto px-4 py-8 max-w-4xl">
       <div className="mb-8">
         <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
-          Hook Generator
+          Hook Templates
         </h1>
         <p className="text-xl text-gray-600">
           Access structured hook templates for your YouTube Shorts. Templates are based on successful patterns and optimized for the first 3-8 seconds.
