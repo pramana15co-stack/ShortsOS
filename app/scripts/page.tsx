@@ -5,9 +5,12 @@ import Link from 'next/link'
 import { generateScript, ScriptInput } from '@/lib/scriptTemplates'
 import { formats } from '@/data/formats'
 import { useRequireAuth } from '@/lib/requireAuth'
+import { useAuth } from '@/app/providers/AuthProvider'
+import { saveScript } from '@/lib/saveScript'
 
 export default function ScriptsPage() {
   const { loading } = useRequireAuth()
+  const { user } = useAuth()
   const [formData, setFormData] = useState<ScriptInput>({
     topic: '',
     formatSlug: '',
@@ -15,8 +18,10 @@ export default function ScriptsPage() {
   const [generatedScript, setGeneratedScript] = useState<ReturnType<typeof generateScript> | null>(null)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [copiedSection, setCopiedSection] = useState<string | null>(null)
+  const [saving, setSaving] = useState(false)
+  const [saveSuccess, setSaveSuccess] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!formData.topic.trim()) {
       alert('Please enter a topic')
@@ -30,6 +35,29 @@ export default function ScriptsPage() {
     if (script) {
       setGeneratedScript(script)
       setIsSubmitted(true)
+      setSaveSuccess(false)
+
+      // Save to database if user is logged in
+      if (user) {
+        setSaving(true)
+        const format = formats.find(f => f.slug === formData.formatSlug)
+        const saveResult = await saveScript({
+          topic: formData.topic,
+          format_slug: formData.formatSlug,
+          format_name: format?.name || 'Unknown',
+          hook: script.hook,
+          body: script.body,
+          cta: script.cta,
+          full_script: script.fullScript,
+          estimated_seconds: script.estimatedSeconds,
+          user_id: user.id,
+        })
+        setSaving(false)
+        if (saveResult.success) {
+          setSaveSuccess(true)
+          setTimeout(() => setSaveSuccess(false), 3000)
+        }
+      }
     } else {
       alert('Error generating script. Please try again.')
     }
@@ -150,13 +178,34 @@ export default function ScriptsPage() {
                   {formData.topic} • {formats.find(f => f.slug === formData.formatSlug)?.name}
                   {generatedScript && ` • ~${generatedScript.estimatedSeconds}s`}
                 </p>
+                {saveSuccess && (
+                  <div className="mt-2 flex items-center gap-2 text-sm">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span>Script saved! <Link href="/saved-scripts" className="underline">View saved scripts</Link></span>
+                  </div>
+                )}
+                {saving && (
+                  <div className="mt-2 text-sm opacity-90">Saving script...</div>
+                )}
               </div>
-              <button
-                onClick={handleReset}
-                className="px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition text-sm font-medium"
-              >
-                Generate New
-              </button>
+              <div className="flex items-center gap-2">
+                {user && (
+                  <Link
+                    href="/saved-scripts"
+                    className="px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition text-sm font-medium"
+                  >
+                    View Saved
+                  </Link>
+                )}
+                <button
+                  onClick={handleReset}
+                  className="px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition text-sm font-medium"
+                >
+                  Generate New
+                </button>
+              </div>
             </div>
           </div>
 

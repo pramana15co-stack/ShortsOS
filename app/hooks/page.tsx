@@ -3,8 +3,11 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { generateHooks, HookInput, Emotion, AudienceLevel, GeneratedHook } from '@/lib/hookTemplates'
+import { useAuth } from '@/app/providers/AuthProvider'
+import { saveHook } from '@/lib/saveHook'
 
 export default function HooksPage() {
+  const { user } = useAuth()
   const [formData, setFormData] = useState<HookInput>({
     topic: '',
     emotion: 'curiosity',
@@ -12,8 +15,10 @@ export default function HooksPage() {
   })
   const [generatedHooks, setGeneratedHooks] = useState<GeneratedHook[]>([])
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [saveSuccess, setSaveSuccess] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!formData.topic.trim()) {
       alert('Please enter a topic')
@@ -22,6 +27,28 @@ export default function HooksPage() {
     const hooks = generateHooks(formData)
     setGeneratedHooks(hooks)
     setIsSubmitted(true)
+    setSaveSuccess(false)
+
+    // Save all hooks to database if user is logged in
+    if (user && hooks.length > 0) {
+      setSaving(true)
+      const savePromises = hooks.map(hook =>
+        saveHook({
+          topic: formData.topic,
+          emotion: formData.emotion,
+          audience_level: formData.audienceLevel,
+          hook_text: hook.text,
+          estimated_seconds: hook.estimatedSeconds,
+          user_id: user.id,
+        })
+      )
+      const results = await Promise.all(savePromises)
+      setSaving(false)
+      if (results.some(r => r.success)) {
+        setSaveSuccess(true)
+        setTimeout(() => setSaveSuccess(false), 3000)
+      }
+    }
   }
 
   const handleReset = () => {
@@ -165,13 +192,34 @@ export default function HooksPage() {
                 <p className="opacity-90">
                   {formData.topic} • {formData.emotion} • {formData.audienceLevel}
                 </p>
+                {saveSuccess && (
+                  <div className="mt-2 flex items-center gap-2 text-sm">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span>Hooks saved! <Link href="/saved-hooks" className="underline">View saved hooks</Link></span>
+                  </div>
+                )}
+                {saving && (
+                  <div className="mt-2 text-sm opacity-90">Saving hooks...</div>
+                )}
               </div>
-              <button
-                onClick={handleReset}
-                className="px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition text-sm font-medium"
-              >
-                Generate New
-              </button>
+              <div className="flex items-center gap-2">
+                {user && (
+                  <Link
+                    href="/saved-hooks"
+                    className="px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition text-sm font-medium"
+                  >
+                    View Saved
+                  </Link>
+                )}
+                <button
+                  onClick={handleReset}
+                  className="px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition text-sm font-medium"
+                >
+                  Generate New
+                </button>
+              </div>
             </div>
           </div>
 

@@ -72,7 +72,7 @@ export default function Dashboard() {
         </div>
 
         {/* Quick Links */}
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
+        <div className="grid md:grid-cols-3 gap-6 mb-8">
           <Link
             href="/planner"
             className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all border-2 border-transparent hover:border-primary-200 group"
@@ -89,7 +89,7 @@ export default function Dashboard() {
           </Link>
 
           <Link
-            href="/scripts"
+            href="/saved-scripts"
             className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all border-2 border-transparent hover:border-primary-200 group"
           >
             <div className="flex items-center gap-4">
@@ -97,8 +97,23 @@ export default function Dashboard() {
                 📝
               </div>
               <div>
-                <h3 className="text-xl font-bold text-gray-900 mb-1">View Saved Scripts</h3>
-                <p className="text-gray-600 text-sm">Access your generated scripts</p>
+                <h3 className="text-xl font-bold text-gray-900 mb-1">Saved Scripts</h3>
+                <p className="text-gray-600 text-sm">View all your generated scripts</p>
+              </div>
+            </div>
+          </Link>
+
+          <Link
+            href="/saved-hooks"
+            className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-all border-2 border-transparent hover:border-primary-200 group"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-yellow-500 to-orange-600 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
+                🎣
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 mb-1">Saved Hooks</h3>
+                <p className="text-gray-600 text-sm">View all your generated hooks</p>
               </div>
             </div>
           </Link>
