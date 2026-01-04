@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabaseClient'
+import { getAuthErrorMessage, isValidEmail, validatePassword, sanitizeEmail } from '@/lib/authHelpers'
 
 export default function SignUpPage() {
   const router = useRouter()
@@ -17,6 +18,24 @@ export default function SignUpPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError(null)
+
+    // Client-side validation
+    if (!formData.email.trim()) {
+      setError('Please enter your email address')
+      return
+    }
+
+    if (!isValidEmail(formData.email)) {
+      setError('Please enter a valid email address')
+      return
+    }
+
+    const passwordValidation = validatePassword(formData.password)
+    if (!passwordValidation.valid) {
+      setError(passwordValidation.message || 'Invalid password')
+      return
+    }
+
     setLoading(true)
 
     try {
@@ -30,7 +49,7 @@ export default function SignUpPage() {
       const redirectUrl = `${window.location.origin}/auth/callback`
 
       const { data, error: signUpError } = await supabase.auth.signUp({
-        email: formData.email,
+        email: sanitizeEmail(formData.email),
         password: formData.password,
         options: {
           emailRedirectTo: redirectUrl,
@@ -38,7 +57,7 @@ export default function SignUpPage() {
       })
 
       if (signUpError) {
-        setError(signUpError.message)
+        setError(getAuthErrorMessage(signUpError))
         setLoading(false)
         return
       }
@@ -48,7 +67,7 @@ export default function SignUpPage() {
         router.push('/dashboard')
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unexpected error occurred')
+      setError(getAuthErrorMessage(err))
       setLoading(false)
     }
   }
@@ -83,6 +102,7 @@ export default function SignUpPage() {
                 placeholder="your.email@example.com"
                 required
                 disabled={loading}
+                autoComplete="email"
               />
             </div>
 
