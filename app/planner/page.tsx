@@ -257,13 +257,23 @@ export default function PlannerPage() {
           <div className="bg-gray-50 rounded-xl p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Next Steps:</h3>
             <div className="grid md:grid-cols-3 gap-4">
-              <Link
-                href={`/formats/${result?.recommendations[0]?.format.slug || ''}`}
-                className="bg-white rounded-lg p-4 border border-gray-200 hover:border-primary-500 hover:shadow-md transition"
-              >
-                <div className="font-semibold text-gray-900 mb-1">Learn Your Top Format</div>
-                <div className="text-sm text-gray-600">See detailed guide for {result?.recommendations[0]?.format.name}</div>
-              </Link>
+              {result?.recommendations?.[0]?.format?.slug ? (
+                <Link
+                  href={`/formats/${result.recommendations[0].format.slug}`}
+                  className="bg-white rounded-lg p-4 border border-gray-200 hover:border-primary-500 hover:shadow-md transition"
+                >
+                  <div className="font-semibold text-gray-900 mb-1">Learn Your Top Format</div>
+                  <div className="text-sm text-gray-600">See detailed guide for {result.recommendations[0].format.name}</div>
+                </Link>
+              ) : (
+                <Link
+                  href="/formats"
+                  className="bg-white rounded-lg p-4 border border-gray-200 hover:border-primary-500 hover:shadow-md transition"
+                >
+                  <div className="font-semibold text-gray-900 mb-1">Browse All Formats</div>
+                  <div className="text-sm text-gray-600">Explore our complete format library</div>
+                </Link>
+              )}
               <Link
                 href="/hooks"
                 className="bg-white rounded-lg p-4 border border-gray-200 hover:border-primary-500 hover:shadow-md transition"

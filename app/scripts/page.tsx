@@ -328,10 +328,14 @@ export default function ScriptsPage() {
                     <Link href="/hooks" className="text-blue-700 hover:text-blue-900 hover:underline">
                       Generate more hooks →
                     </Link>
-                    <span className="text-blue-400">•</span>
-                    <Link href={`/formats/${formData.formatSlug}`} className="text-blue-700 hover:text-blue-900 hover:underline">
-                      Learn more about this format →
-                    </Link>
+                    {formData.formatSlug && (
+                      <>
+                        <span className="text-blue-400">•</span>
+                        <Link href={`/formats/${formData.formatSlug}`} className="text-blue-700 hover:text-blue-900 hover:underline">
+                          Learn more about this format →
+                        </Link>
+                      </>
+                    )}
                     <span className="text-blue-400">•</span>
                     <Link href="/planner" className="text-blue-700 hover:text-blue-900 hover:underline">
                       Get personalized recommendations →
