@@ -299,8 +299,6 @@ export default function Navbar() {
                 </Link>
                 {allTools.length > 0 && (
                   <>
-                {allTools.length > 0 && (
-                  <>
                     <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mt-2">
                       Tools
                     </div>
