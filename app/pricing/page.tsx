@@ -4,6 +4,8 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/app/providers/AuthProvider'
 import { saveWaitlistEntry } from '@/lib/saveWaitlist'
+import { products } from '@/data/products'
+import { testimonials } from '@/data/testimonials'
 
 export default function PricingPage() {
   const { user } = useAuth()
@@ -16,6 +18,11 @@ export default function PricingPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submittingTier, setSubmittingTier] = useState<'paths' | 'agency' | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState<'plans' | 'bundles' | 'courses'>('plans')
+
+  const bundles = products.filter(p => p.type === 'bundle')
+  const plans = products.filter(p => p.type === 'plan')
+  const courses = products.filter(p => p.type === 'course')
 
   const handleWaitlistSubmit = async (e: React.FormEvent, tier: 'paths' | 'agency') => {
     e.preventDefault()
@@ -61,7 +68,7 @@ export default function PricingPage() {
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-white to-purple-50/30 pointer-events-none"></div>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(99,102,241,0.1),transparent_50%)] pointer-events-none"></div>
       
-      <div className="container mx-auto px-4 max-w-6xl relative z-10">
+      <div className="container mx-auto px-4 max-w-7xl relative z-10">
         {/* Header */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/90 backdrop-blur-md border border-indigo-200/50 rounded-full mb-8 shadow-lg">
@@ -70,14 +77,95 @@ export default function PricingPage() {
           </div>
           <div className="accent-line mx-auto mb-6"></div>
           <h1 className="text-5xl md:text-6xl font-extrabold mb-6 text-gray-900">
-            Simple Pricing
+            Pricing & Packages
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Start free. Upgrade when you're ready for the complete system.
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            Choose the plan that fits your creator journey. Start free, upgrade when ready.
           </p>
+          
+          {/* Success Stats */}
+          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto mt-12">
+            <div className="card p-6 text-center">
+              <div className="text-4xl font-extrabold text-gray-900 mb-2">10,000+</div>
+              <div className="text-sm text-gray-600 font-medium">Active Creators</div>
+            </div>
+            <div className="card p-6 text-center">
+              <div className="text-4xl font-extrabold text-gray-900 mb-2">78%</div>
+              <div className="text-sm text-gray-600 font-medium">Success Rate</div>
+            </div>
+            <div className="card p-6 text-center">
+              <div className="text-4xl font-extrabold text-gray-900 mb-2">$1.2M+</div>
+              <div className="text-sm text-gray-600 font-medium">Creator Earnings</div>
+            </div>
+          </div>
         </div>
 
-        {/* Main Bundle - Featured */}
+        {/* Free Plan */}
+        <div className="mb-20">
+          <div className="card p-10 max-w-4xl mx-auto text-center">
+            <h2 className="text-4xl font-extrabold text-gray-900 mb-4">Free Plan</h2>
+            <p className="text-xl text-gray-600 mb-8">Perfect for getting started with content planning</p>
+            <div className="grid md:grid-cols-3 gap-6 mb-8 text-left">
+              <div>
+                <h3 className="font-bold text-gray-900 mb-3">Core Tools</h3>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-start gap-2">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span>Format library access</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span>Content planner</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span>Hook & script templates</span>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900 mb-3">Learning Resources</h3>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-start gap-2">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span>Format execution guides</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span>SEO guidance</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <svg className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span>Tools directory</span>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900 mb-3">Outcome</h3>
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  Make better content decisions, understand which formats work for your stage, and establish a planning foundation.
+                </p>
+              </div>
+            </div>
+            <Link href="/dashboard" className="btn-primary w-full py-4 text-lg">
+              Get Started Free
+            </Link>
+          </div>
+        </div>
+
+        {/* Featured Bundle */}
         <div className="mb-20">
           <div className="gradient-bg rounded-3xl p-10 md:p-16 text-white shadow-2xl relative overflow-hidden">
             <div className="absolute inset-0 opacity-20" style={{backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`}}></div>
@@ -95,69 +183,6 @@ export default function PricingPage() {
                   <span className="text-2xl text-white/70 line-through">$197</span>
                 </div>
               </div>
-
-              <div className="grid md:grid-cols-2 gap-8 mb-10">
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                  <h3 className="text-xl font-bold mb-4">Complete Path to Success</h3>
-                  <ul className="space-y-3 text-white/90">
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <span>Step-by-step execution paths (0 to 10K+ subscribers)</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <span>All 6 proven format guides with templates</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <span>50+ ready-to-use script templates</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <span>100+ hook variations for every niche</span>
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                  <h3 className="text-xl font-bold mb-4">Monetization & Growth</h3>
-                  <ul className="space-y-3 text-white/90">
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <span>Complete affiliate marketing guide & strategies</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <span>Videos per day strategy (when & how many to post)</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <span>Curated tools directory (free & paid recommendations)</span>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <span>Growth strategy playbook & analytics guide</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
               <div className="text-center">
                 <Link
                   href="/products/complete-shorts-bundle"
@@ -170,75 +195,155 @@ export default function PricingPage() {
           </div>
         </div>
 
-        {/* Free vs Paid Comparison */}
-        <div className="grid md:grid-cols-2 gap-8 mb-16">
-          <div className="card p-8">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Free Plan</h3>
-            <p className="text-gray-600 mb-6">Perfect for getting started</p>
-            <ul className="space-y-3 mb-8">
-              <li className="flex items-start gap-3">
-                <svg className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <span className="text-gray-700">Format library access</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <svg className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <span className="text-gray-700">Basic planning tools</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <svg className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <span className="text-gray-700">Hook & script templates</span>
-              </li>
-            </ul>
-            <Link href="/dashboard" className="btn-secondary w-full text-center py-4">
-              Get Started Free
-            </Link>
+        {/* Tabs for Products */}
+        <div className="mb-12">
+          <div className="flex justify-center gap-4 mb-10 border-b border-gray-200">
+            <button
+              onClick={() => setActiveTab('plans')}
+              className={`px-6 py-3 font-bold text-lg transition-all ${
+                activeTab === 'plans'
+                  ? 'text-indigo-600 border-b-2 border-indigo-600'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Execution Plans
+            </button>
+            <button
+              onClick={() => setActiveTab('bundles')}
+              className={`px-6 py-3 font-bold text-lg transition-all ${
+                activeTab === 'bundles'
+                  ? 'text-indigo-600 border-b-2 border-indigo-600'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Complete Bundles
+            </button>
+            {courses.length > 0 && (
+              <button
+                onClick={() => setActiveTab('courses')}
+                className={`px-6 py-3 font-bold text-lg transition-all ${
+                  activeTab === 'courses'
+                    ? 'text-indigo-600 border-b-2 border-indigo-600'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                Courses
+              </button>
+            )}
           </div>
 
-          <div className="card p-8 border-2 border-indigo-200 bg-gradient-to-br from-indigo-50/30 to-white">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Complete Bundle</h3>
-            <p className="text-gray-600 mb-6">Everything to make your Shorts hit</p>
-            <ul className="space-y-3 mb-8">
-              <li className="flex items-start gap-3">
-                <svg className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <span className="text-gray-700">Everything in Free, plus:</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <svg className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <span className="text-gray-700">Complete execution paths</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <svg className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <span className="text-gray-700">Affiliate marketing guide</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <svg className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <span className="text-gray-700">Videos per day strategy</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <svg className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <span className="text-gray-700">Curated tools directory</span>
-              </li>
-            </ul>
-            <Link href="/products/complete-shorts-bundle" className="btn-primary w-full text-center py-4">
-              Get Complete Bundle - $97
-            </Link>
-          </div>
+          {/* Plans Tab */}
+          {activeTab === 'plans' && (
+            <div className="grid md:grid-cols-2 gap-8">
+              {plans.map((product) => (
+                <Link key={product.id} href={`/products/${product.slug}`}>
+                  <div className="card p-10 hover:scale-[1.02] transition-transform duration-300 h-full">
+                    <h3 className="text-3xl font-extrabold text-gray-900 mb-4">{product.name}</h3>
+                    <p className="text-gray-600 mb-6 text-lg leading-relaxed">{product.description}</p>
+                    <div className="flex items-baseline gap-4 mb-8">
+                      <span className="text-5xl font-extrabold text-gray-900">${product.price}</span>
+                      {product.originalPrice && (
+                        <span className="text-2xl text-gray-400 line-through">${product.originalPrice}</span>
+                      )}
+                    </div>
+                    <div className="space-y-3 mb-8">
+                      {product.features.slice(0, 4).map((feature, idx) => (
+                        <div key={idx} className="flex items-start gap-3 text-gray-700">
+                          <svg className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                          </svg>
+                          <span className="text-sm">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex items-center text-indigo-600 font-bold text-base">
+                      <span>View details</span>
+                      <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+
+          {/* Bundles Tab */}
+          {activeTab === 'bundles' && (
+            <div className="grid md:grid-cols-2 gap-8">
+              {bundles.map((product) => (
+                <Link key={product.id} href={`/products/${product.slug}`}>
+                  <div className={`card p-10 hover:scale-[1.02] transition-transform duration-300 h-full ${product.popular ? 'border-2 border-indigo-200 bg-gradient-to-br from-indigo-50/50 to-white' : ''}`}>
+                    {product.popular && (
+                      <div className="inline-block bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-2 rounded-full text-xs font-bold mb-6 shadow-lg">
+                        {product.badge}
+                      </div>
+                    )}
+                    <h3 className="text-3xl font-extrabold text-gray-900 mb-4">{product.name}</h3>
+                    <p className="text-gray-600 mb-6 text-lg leading-relaxed">{product.description}</p>
+                    <div className="flex items-baseline gap-4 mb-8">
+                      <span className="text-5xl font-extrabold text-gray-900">${product.price}</span>
+                      {product.originalPrice && (
+                        <span className="text-2xl text-gray-400 line-through">${product.originalPrice}</span>
+                      )}
+                    </div>
+                    <div className="space-y-3 mb-8">
+                      {product.features.slice(0, 4).map((feature, idx) => (
+                        <div key={idx} className="flex items-start gap-3 text-gray-700">
+                          <svg className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                          </svg>
+                          <span className="text-sm">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex items-center text-indigo-600 font-bold text-base">
+                      <span>View details</span>
+                      <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
+
+          {/* Courses Tab */}
+          {activeTab === 'courses' && courses.length > 0 && (
+            <div className="grid md:grid-cols-1 gap-8 max-w-2xl mx-auto">
+              {courses.map((product) => (
+                <Link key={product.id} href={`/products/${product.slug}`}>
+                  <div className="card p-10 hover:scale-[1.02] transition-transform duration-300">
+                    <h3 className="text-3xl font-extrabold text-gray-900 mb-4">{product.name}</h3>
+                    <p className="text-gray-600 mb-6 text-lg leading-relaxed">{product.description}</p>
+                    <div className="flex items-baseline gap-4 mb-8">
+                      <span className="text-5xl font-extrabold text-gray-900">${product.price}</span>
+                      {product.originalPrice && (
+                        <span className="text-2xl text-gray-400 line-through">${product.originalPrice}</span>
+                      )}
+                    </div>
+                    <div className="space-y-3 mb-8">
+                      {product.features.slice(0, 4).map((feature, idx) => (
+                        <div key={idx} className="flex items-start gap-3 text-gray-700">
+                          <svg className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                          </svg>
+                          <span className="text-sm">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex items-center text-indigo-600 font-bold text-base">
+                      <span>View details</span>
+                      <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Coming Soon Plans */}
@@ -247,7 +352,7 @@ export default function PricingPage() {
             <h2 className="text-3xl font-extrabold text-gray-900 mb-4">Coming Soon</h2>
             <p className="text-gray-600">Additional plans for advanced creators</p>
           </div>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             <div className="card p-8 opacity-75">
               <div className="inline-block bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-xs font-bold mb-4">
                 Coming Soon
@@ -323,6 +428,43 @@ export default function PricingPage() {
             </div>
           </div>
         </div>
+
+        {/* Testimonials */}
+        <section className="mb-16">
+          <div className="text-center mb-10">
+            <h2 className="text-4xl font-extrabold text-gray-900 mb-4">What Creators Are Saying</h2>
+          </div>
+          <div className="grid md:grid-cols-2 gap-8">
+            {testimonials.slice(0, 4).map((testimonial) => (
+              <div key={testimonial.id} className="card p-8">
+                <div className="flex items-center gap-1 mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <svg key={i} className="w-6 h-6 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-gray-700 mb-6 leading-relaxed text-lg">"{testimonial.text}"</p>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-bold text-gray-900">{testimonial.name}</div>
+                    <div className="text-sm text-gray-600">{testimonial.role}</div>
+                  </div>
+                  {testimonial.verified && (
+                    <span className="px-3 py-1 bg-green-100 text-green-700 text-xs rounded-full font-bold">
+                      Verified
+                    </span>
+                  )}
+                </div>
+                {testimonial.results && (
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <div className="text-sm font-bold text-gray-900">Results: {testimonial.results}</div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
 
         {/* CTA */}
         <div className="text-center">
