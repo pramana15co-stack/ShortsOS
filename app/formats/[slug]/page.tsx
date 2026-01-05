@@ -14,8 +14,11 @@ export async function generateStaticParams() {
   }))
 }
 
-export default function FormatDetailPage({ params }: PageProps) {
-  const format = getFormatBySlug(params.slug)
+export const dynamicParams = false
+
+export default async function FormatDetailPage({ params }: PageProps) {
+  const { slug } = await params
+  const format = getFormatBySlug(slug)
 
   if (!format) {
     notFound()
