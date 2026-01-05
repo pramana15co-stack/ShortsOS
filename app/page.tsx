@@ -2,13 +2,79 @@
 
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { testimonials } from '@/data/testimonials'
 
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false)
+  const [activeTestimonial, setActiveTestimonial] = useState(0)
 
   useEffect(() => {
     setIsVisible(true)
   }, [])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveTestimonial((prev) => (prev + 1) % Math.min(3, testimonials.length))
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [])
+
+  const stats = [
+    { value: '10,000+', label: 'Active Creators', icon: '👥' },
+    { value: '78%', label: 'Success Rate', icon: '📈' },
+    { value: '$1.2M+', label: 'Creator Earnings', icon: '💰' },
+    { value: '50K+', label: 'Videos Planned', icon: '🎬' },
+  ]
+
+  const steps = [
+    {
+      number: '01',
+      title: 'Tell Us Your Stage',
+      description: 'Answer a few questions about your niche, goals, and experience level.',
+      icon: '🎯',
+    },
+    {
+      number: '02',
+      title: 'Get Recommendations',
+      description: 'Receive format recommendations tailored to your specific creator stage.',
+      icon: '📋',
+    },
+    {
+      number: '03',
+      title: 'Use Templates',
+      description: 'Access proven script templates, hook structures, and execution guides.',
+      icon: '📝',
+    },
+    {
+      number: '04',
+      title: 'Create & Optimize',
+      description: 'Generate content, optimize for SEO, and track your performance.',
+      icon: '🚀',
+    },
+  ]
+
+  const faqs = [
+    {
+      question: 'Is Pramana really free to start?',
+      answer: 'Yes! All core planning tools are free forever. You can use the Content Planner, Format Library, Hook Generator, Script Templates, and SEO Optimizer without any payment. Premium features like Execution Paths are optional.',
+    },
+    {
+      question: 'Do I need to create an account?',
+      answer: 'No account is required for most features. You can use planning tools, format guides, and generators without signing up. Creating a free account lets you save your work and access your dashboard.',
+    },
+    {
+      question: 'What makes Pramana different from other tools?',
+      answer: 'Pramana is stage-aware. We provide different recommendations based on whether you\'re a beginner, intermediate, or advanced creator. We also tell you what to avoid at your stage, not just what to do.',
+    },
+    {
+      question: 'Can I use Pramana for platforms other than YouTube Shorts?',
+      answer: 'Pramana is specifically designed for YouTube Shorts (vertical, 60-second videos). While some principles may apply to other platforms, our formats and templates are optimized for YouTube\'s algorithm and audience behavior.',
+    },
+    {
+      question: 'How do I know which format to use?',
+      answer: 'Use our Content Planner! It asks about your niche, goals, and experience level, then recommends the best formats for your situation. You can also browse the Format Library to see all available options.',
+    },
+  ]
 
   return (
     <main className="min-h-screen">
@@ -82,8 +148,23 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Key Features - Simplified */}
+      {/* Stats Section */}
       <section className="section-alt">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+            {stats.map((stat, idx) => (
+              <div key={idx} className="card text-center p-6">
+                <div className="text-4xl mb-3">{stat.icon}</div>
+                <div className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-2">{stat.value}</div>
+                <div className="text-sm text-gray-600 font-medium">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Key Features */}
+      <section className="section">
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="text-center mb-16">
             <div className="accent-line mx-auto mb-6"></div>
@@ -133,7 +214,44 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Tools Grid - Simplified */}
+      {/* Step-by-Step Process */}
+      <section className="section-alt">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="text-center mb-16">
+            <div className="accent-line mx-auto mb-6"></div>
+            <h2 className="text-4xl md:text-5xl font-extrabold mb-6 text-gray-900">
+              Get Started in 4 Simple Steps
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              From planning to publishing, we guide you every step of the way
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            {steps.map((step, idx) => (
+              <div key={idx} className="card p-6 text-center relative">
+                <div className="absolute -top-4 -left-4 w-12 h-12 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white font-extrabold text-lg shadow-lg">
+                  {step.number}
+                </div>
+                <div className="text-5xl mb-4 mt-4">{step.icon}</div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">{step.title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">{step.description}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center">
+            <Link
+              href="/planner"
+              className="btn-primary text-lg px-10 py-5 inline-block"
+            >
+              Start Your First Plan →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Tools Grid */}
       <section className="section">
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="text-center mb-16">
@@ -187,33 +305,130 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* Testimonials Section */}
+      <section className="section-alt">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="text-center mb-16">
+            <div className="accent-line mx-auto mb-6"></div>
+            <h2 className="text-4xl md:text-5xl font-extrabold mb-6 text-gray-900">
+              What Creators Are Saying
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Real results from creators using Pramana to grow their channels
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 mb-8">
+            {testimonials.slice(0, 3).map((testimonial, idx) => (
+              <div
+                key={testimonial.id}
+                className={`card p-8 transition-all duration-500 ${
+                  idx === activeTestimonial ? 'scale-105 shadow-xl border-2 border-indigo-200' : 'opacity-75'
+                }`}
+              >
+                <div className="flex items-center gap-1 mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-gray-700 mb-6 leading-relaxed text-lg">"{testimonial.text}"</p>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="font-bold text-gray-900">{testimonial.name}</div>
+                    <div className="text-sm text-gray-600">{testimonial.role}</div>
+                  </div>
+                  {testimonial.verified && (
+                    <span className="px-3 py-1 bg-green-100 text-green-700 text-xs rounded-full font-bold">
+                      Verified
+                    </span>
+                  )}
+                </div>
+                {testimonial.results && (
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <div className="text-sm font-bold text-gray-900">Results: {testimonial.results}</div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className="flex justify-center gap-2 mb-8">
+            {testimonials.slice(0, 3).map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => setActiveTestimonial(idx)}
+                className={`w-2 h-2 rounded-full transition-all ${
+                  idx === activeTestimonial ? 'bg-indigo-600 w-8' : 'bg-gray-300'
+                }`}
+                aria-label={`View testimonial ${idx + 1}`}
+              />
+            ))}
+          </div>
+
+          <div className="text-center">
+            <Link
+              href="/pricing"
+              className="text-indigo-600 hover:text-indigo-700 font-bold text-lg"
+            >
+              See More Success Stories →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="section">
+        <div className="container mx-auto px-6 max-w-4xl">
+          <div className="text-center mb-16">
+            <div className="accent-line mx-auto mb-6"></div>
+            <h2 className="text-4xl md:text-5xl font-extrabold mb-6 text-gray-900">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Everything you need to know about getting started with Pramana
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            {faqs.map((faq, idx) => (
+              <FAQItem key={idx} question={faq.question} answer={faq.answer} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA Section */}
       <section className="section-alt">
         <div className="container mx-auto px-6 max-w-4xl">
-          <div className="card p-12 md:p-16 text-center">
-            <h2 className="text-4xl md:text-5xl font-extrabold mb-6 text-gray-900">
-              Ready to Start Creating?
-            </h2>
-            <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-              Join thousands of creators using Pramana to make better content decisions. Free to start, no credit card required.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/dashboard"
-                className="btn-primary text-lg px-10 py-5"
-              >
-                Get Started Free
-              </Link>
-              <Link
-                href="/pricing"
-                className="btn-secondary text-lg px-10 py-5"
-              >
-                View Pricing
-              </Link>
+          <div className="gradient-bg rounded-3xl p-12 md:p-16 text-white shadow-2xl relative overflow-hidden">
+            <div className="absolute inset-0 opacity-20" style={{backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`}}></div>
+            <div className="relative z-10 text-center">
+              <h2 className="text-4xl md:text-5xl font-extrabold mb-6">
+                Ready to Start Creating?
+              </h2>
+              <p className="text-xl text-white/90 mb-10 max-w-2xl mx-auto leading-relaxed">
+                Join thousands of creators using Pramana to make better content decisions. Free to start, no credit card required.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  href="/dashboard"
+                  className="bg-white text-indigo-600 px-10 py-5 rounded-xl font-bold text-lg hover:scale-105 transition-transform shadow-xl"
+                >
+                  Get Started Free
+                </Link>
+                <Link
+                  href="/pricing"
+                  className="bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white px-10 py-5 rounded-xl font-bold text-lg hover:bg-white/20 transition-all shadow-xl"
+                >
+                  View Pricing
+                </Link>
+              </div>
+              <p className="mt-8 text-base text-white/80">
+                No credit card • No time limits • Start creating today
+              </p>
             </div>
-            <p className="mt-8 text-base text-gray-500">
-              No credit card • No time limits • Start creating today
-            </p>
           </div>
         </div>
       </section>
@@ -237,5 +452,33 @@ function FeatureCard({ title, description, icon, href }: { title: string; descri
         </svg>
       </div>
     </Link>
+  )
+}
+
+function FAQItem({ question, answer }: { question: string; answer: string }) {
+  const [isOpen, setIsOpen] = useState(false)
+
+  return (
+    <div className="card">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full text-left flex items-center justify-between p-6 focus:outline-none"
+      >
+        <h3 className="text-lg font-bold text-gray-900 pr-8">{question}</h3>
+        <svg
+          className={`w-6 h-6 text-gray-600 flex-shrink-0 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      {isOpen && (
+        <div className="px-6 pb-6">
+          <p className="text-gray-600 leading-relaxed">{answer}</p>
+        </div>
+      )}
+    </div>
   )
 }
