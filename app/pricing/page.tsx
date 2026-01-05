@@ -32,7 +32,7 @@ export default function PricingPage() {
     try {
       const result = await saveWaitlistEntry({
         email: waitlistData.email.trim(),
-        tier: tier === 'paths' ? 'pro' : 'agency', // Map to existing tier names in database
+        tier: tier === 'paths' ? 'pro' : 'agency',
         user_id: user?.id,
       })
 
@@ -58,410 +58,287 @@ export default function PricingPage() {
 
   return (
     <main className="min-h-screen py-16 md:py-24 relative overflow-hidden">
-      {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-white to-purple-50/30 pointer-events-none"></div>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(99,102,241,0.1),transparent_50%)] pointer-events-none"></div>
       
-      <div className="container mx-auto px-4 max-w-7xl relative z-10">
+      <div className="container mx-auto px-4 max-w-6xl relative z-10">
         {/* Header */}
-        <div className="text-center mb-20">
+        <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/90 backdrop-blur-md border border-indigo-200/50 rounded-full mb-8 shadow-lg">
             <span className="w-2.5 h-2.5 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse"></span>
             <span className="text-xs font-bold text-gray-700 uppercase tracking-wider">Built by Pramana</span>
           </div>
-          <div className="accent-line mx-auto mb-8"></div>
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-8 text-gray-900">
-            Choose Your Path
+          <div className="accent-line mx-auto mb-6"></div>
+          <h1 className="text-5xl md:text-6xl font-extrabold mb-6 text-gray-900">
+            Simple Pricing
           </h1>
-          <p className="text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Each plan is designed for a different stage of your creator journey. Start with what you need now.
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Start free. Upgrade when you're ready for the complete system.
           </p>
         </div>
 
-        {/* Pricing Cards */}
-        <div className="grid md:grid-cols-3 gap-8 mb-20">
-          {/* Free Plan */}
-          <div className="card p-10">
-            <div className="mb-6">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-2">Free</h2>
-              <div className="mb-4">
-                <span className="text-4xl font-semibold text-gray-900">Free</span>
+        {/* Main Bundle - Featured */}
+        <div className="mb-20">
+          <div className="gradient-bg rounded-3xl p-10 md:p-16 text-white shadow-2xl relative overflow-hidden">
+            <div className="absolute inset-0 opacity-20" style={{backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`}}></div>
+            <div className="relative z-10">
+              <div className="text-center mb-10">
+                <div className="inline-block bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-bold mb-6">
+                  Complete Creator Bundle
+                </div>
+                <h2 className="text-4xl md:text-5xl font-extrabold mb-4">Everything You Need to Make Shorts Hit</h2>
+                <p className="text-xl text-white/90 max-w-2xl mx-auto mb-8">
+                  The complete system: proven formats, execution paths, monetization strategies, tools, and daily posting guidance.
+                </p>
+                <div className="flex items-center justify-center gap-4 mb-8">
+                  <span className="text-6xl font-extrabold">$97</span>
+                  <span className="text-2xl text-white/70 line-through">$197</span>
+                </div>
               </div>
-              <p className="text-sm text-gray-600">Core planning & basic guidance</p>
-            </div>
 
-            <div className="mb-6">
-              <h3 className="text-sm font-medium text-gray-500 mb-3 uppercase tracking-wide">Who this is for</h3>
-              <p className="text-sm text-gray-700 leading-relaxed mb-4">
-                Creators who want to plan their content, learn proven formats, and get structured guidance without committing to a paid plan.
-              </p>
-            </div>
+              <div className="grid md:grid-cols-2 gap-8 mb-10">
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                  <h3 className="text-xl font-bold mb-4">Complete Path to Success</h3>
+                  <ul className="space-y-3 text-white/90">
+                    <li className="flex items-start gap-3">
+                      <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      <span>Step-by-step execution paths (0 to 10K+ subscribers)</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      <span>All 6 proven format guides with templates</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      <span>50+ ready-to-use script templates</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      <span>100+ hook variations for every niche</span>
+                    </li>
+                  </ul>
+                </div>
 
-            <div className="mb-6">
-              <h3 className="text-sm font-medium text-gray-500 mb-3 uppercase tracking-wide">What you get</h3>
-              <ul className="space-y-3 text-sm text-gray-700">
-                <li className="flex items-start">
-                  <svg className="w-5 h-5 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span>Content planning tools and format recommendations</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="w-5 h-5 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span>Format library with execution guides</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="w-5 h-5 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span>Hook and script templates</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="w-5 h-5 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span>Basic guidance and learning resources</span>
-                </li>
-              </ul>
-            </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                  <h3 className="text-xl font-bold mb-4">Monetization & Growth</h3>
+                  <ul className="space-y-3 text-white/90">
+                    <li className="flex items-start gap-3">
+                      <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      <span>Complete affiliate marketing guide & strategies</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      <span>Videos per day strategy (when & how many to post)</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      <span>Curated tools directory (free & paid recommendations)</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      <span>Growth strategy playbook & analytics guide</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
 
-            <div className="mb-6">
-              <h3 className="text-sm font-medium text-gray-500 mb-2 uppercase tracking-wide">Outcome</h3>
-              <p className="text-sm text-gray-700">
-                Make better content decisions, understand which formats work for your stage, and establish a planning foundation.
-              </p>
+              <div className="text-center">
+                <Link
+                  href="/products/complete-shorts-bundle"
+                  className="inline-block bg-white text-indigo-600 px-10 py-5 rounded-xl font-bold text-lg hover:scale-105 transition-transform shadow-xl"
+                >
+                  View Complete Bundle →
+                </Link>
+              </div>
             </div>
+          </div>
+        </div>
 
-            <Link
-              href="/dashboard"
-              className="block w-full text-center btn-primary py-4"
-            >
-              Get Started
+        {/* Free vs Paid Comparison */}
+        <div className="grid md:grid-cols-2 gap-8 mb-16">
+          <div className="card p-8">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">Free Plan</h3>
+            <p className="text-gray-600 mb-6">Perfect for getting started</p>
+            <ul className="space-y-3 mb-8">
+              <li className="flex items-start gap-3">
+                <svg className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span className="text-gray-700">Format library access</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <svg className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span className="text-gray-700">Basic planning tools</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <svg className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span className="text-gray-700">Hook & script templates</span>
+              </li>
+            </ul>
+            <Link href="/dashboard" className="btn-secondary w-full text-center py-4">
+              Get Started Free
             </Link>
           </div>
 
-          {/* Paths Access Plan */}
-          <div className="card p-10 relative border-2 border-indigo-200 bg-gradient-to-br from-indigo-50/50 to-white">
-            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-              <span className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-5 py-2 rounded-full text-xs font-bold shadow-lg">
-                Available Soon
-              </span>
-            </div>
-            <div className="mb-6">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-2">Paths Access</h2>
-              <div className="mb-4">
-                <span className="text-4xl font-semibold text-gray-900">Pricing TBD</span>
-              </div>
-              <p className="text-sm text-gray-600">Access to all Execution Paths</p>
-            </div>
-
-            <div className="mb-6">
-              <h3 className="text-sm font-medium text-gray-500 mb-3 uppercase tracking-wide">Who this is for</h3>
-              <p className="text-sm text-gray-700 leading-relaxed mb-4">
-                Creators who know their goal but need a clear, step-by-step sequence to get there. You want structured guidance that eliminates decision fatigue and saves time.
-              </p>
-            </div>
-
-            <div className="mb-6">
-              <h3 className="text-sm font-medium text-gray-500 mb-3 uppercase tracking-wide">What you get</h3>
-              <ul className="space-y-3 text-sm text-gray-700">
-                <li className="flex items-start">
-                  <svg className="w-5 h-5 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span>Everything in Free</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="w-5 h-5 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span>Complete Execution Paths with weekly breakdowns</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="w-5 h-5 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span>Stage-aware format recommendations and constraints</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="w-5 h-5 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span>Progress checkpoints and evaluation criteria</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="w-5 h-5 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span>Clear guidance on when to move to the next stage</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="mb-6">
-              <h3 className="text-sm font-medium text-gray-500 mb-2 uppercase tracking-wide">Outcome</h3>
-              <p className="text-sm text-gray-700">
-                Follow a structured sequence that eliminates guesswork, reduces trial and error, and moves you toward your specific goal with clarity.
-              </p>
-            </div>
-
-            {isSubmitted && submittedTier === 'paths' ? (
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
-                <p className="text-sm font-medium text-gray-900 mb-1">Added to waitlist</p>
-                <p className="text-xs text-gray-600">Pramana will notify you when Paths Access is available.</p>
-              </div>
-            ) : (
-              <form onSubmit={(e) => handleWaitlistSubmit(e, 'paths')} className="space-y-3">
-                <input
-                  type="email"
-                  value={waitlistData.email}
-                  onChange={handleEmailChange}
-                  placeholder="Enter your email"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-gray-900 focus:ring-2 focus:ring-gray-200 text-gray-900 placeholder-gray-400 text-sm"
-                  required
-                  disabled={isSubmitting && submittingTier === 'paths'}
-                />
-                {error && submittingTier === 'paths' && (
-                  <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg text-xs">
-                    {error}
-                  </div>
-                )}
-                <button
-                  type="submit"
-                  disabled={isSubmitting && submittingTier === 'paths'}
-                  className="w-full btn-primary py-4 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting && submittingTier === 'paths' ? 'Adding...' : 'Add to Waitlist'}
-                </button>
-              </form>
-            )}
-          </div>
-
-          {/* Agency Mode Plan */}
-          <div className="card p-10 relative">
-            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-              <span className="bg-gradient-to-r from-gray-400 to-gray-500 text-white px-5 py-2 rounded-full text-xs font-bold shadow-lg">
-                Coming Soon
-              </span>
-            </div>
-            <div className="mb-6">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-2">Agency Mode</h2>
-              <p className="text-sm text-gray-600">For scaling content operations</p>
-            </div>
-
-            <div className="mb-6">
-              <h3 className="text-sm font-medium text-gray-500 mb-3 uppercase tracking-wide">Who this is for</h3>
-              <p className="text-sm text-gray-700 leading-relaxed mb-3">
-                Agency Mode is designed for professionals who manage content at scale:
-              </p>
-              <ul className="space-y-2 text-sm text-gray-700">
-                <li className="flex items-start">
-                  <span className="text-gray-400 mr-2">•</span>
-                  <span><strong>Freelancers</strong> managing multiple client channels</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-gray-400 mr-2">•</span>
-                  <span><strong>Agencies</strong> handling content planning for multiple creators</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-gray-400 mr-2">•</span>
-                  <span><strong>Operators</strong> running multiple channels or brand accounts</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="mb-6">
-              <h3 className="text-sm font-medium text-gray-500 mb-3 uppercase tracking-wide">What problem it solves</h3>
-              <div className="space-y-3 text-sm text-gray-700">
-                <div>
-                  <p className="font-medium text-gray-900 mb-1">Scale</p>
-                  <p className="leading-relaxed">
-                    Plan content for multiple channels without duplicating work. Apply proven formats and Execution Paths across different accounts efficiently.
-                  </p>
-                </div>
-                <div>
-                  <p className="font-medium text-gray-900 mb-1">Reuse</p>
-                  <p className="leading-relaxed">
-                    Save and reuse planning templates, format structures, and successful strategies across channels. Build a library of what works.
-                  </p>
-                </div>
-                <div>
-                  <p className="font-medium text-gray-900 mb-1">Consistency</p>
-                  <p className="leading-relaxed">
-                    Maintain consistent planning quality and execution standards across all channels, even when working with different team members.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="mb-6">
-              <h3 className="text-sm font-medium text-gray-500 mb-3 uppercase tracking-wide">Why it's different from individual use</h3>
-              <p className="text-sm text-gray-700 leading-relaxed mb-3">
-                Individual plans focus on your personal creator journey. Agency Mode addresses the unique challenges of managing multiple channels:
-              </p>
-              <ul className="space-y-2 text-sm text-gray-700">
-                <li className="flex items-start">
-                  <svg className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span>Team collaboration instead of solo planning</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span>Batch operations for multiple channels at once</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span>Shared templates and workflows across accounts</span>
-                </li>
-                <li className="flex items-start">
-                  <svg className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span>Centralized planning and reporting for all channels</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="mb-6">
-              <h3 className="text-sm font-medium text-gray-500 mb-2 uppercase tracking-wide">Outcome</h3>
-              <p className="text-sm text-gray-700">
-                Scale your content operations efficiently while maintaining quality and consistency across all channels. Reduce planning time per channel by reusing proven structures and workflows.
-              </p>
-            </div>
-
-            {isSubmitted && submittedTier === 'agency' ? (
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
-                <p className="text-sm font-medium text-gray-900 mb-1">Added to waitlist</p>
-                <p className="text-xs text-gray-600">Pramana will notify you when Agency Mode is available.</p>
-              </div>
-            ) : (
-              <form onSubmit={(e) => handleWaitlistSubmit(e, 'agency')} className="space-y-3">
-                <input
-                  type="email"
-                  value={waitlistData.email}
-                  onChange={handleEmailChange}
-                  placeholder="Enter your email"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-gray-900 focus:ring-2 focus:ring-gray-200 text-gray-900 placeholder-gray-400 text-sm"
-                  required
-                  disabled={isSubmitting && submittingTier === 'agency'}
-                />
-                {error && submittingTier === 'agency' && (
-                  <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg text-xs">
-                    {error}
-                  </div>
-                )}
-                <button
-                  type="submit"
-                  disabled={isSubmitting && submittingTier === 'agency'}
-                  className="w-full btn-primary py-4 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting && submittingTier === 'agency' ? 'Adding...' : 'Add to Waitlist'}
-                </button>
-              </form>
-            )}
+          <div className="card p-8 border-2 border-indigo-200 bg-gradient-to-br from-indigo-50/30 to-white">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">Complete Bundle</h3>
+            <p className="text-gray-600 mb-6">Everything to make your Shorts hit</p>
+            <ul className="space-y-3 mb-8">
+              <li className="flex items-start gap-3">
+                <svg className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span className="text-gray-700">Everything in Free, plus:</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <svg className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span className="text-gray-700">Complete execution paths</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <svg className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span className="text-gray-700">Affiliate marketing guide</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <svg className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span className="text-gray-700">Videos per day strategy</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <svg className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+                <span className="text-gray-700">Curated tools directory</span>
+              </li>
+            </ul>
+            <Link href="/products/complete-shorts-bundle" className="btn-primary w-full text-center py-4">
+              Get Complete Bundle - $97
+            </Link>
           </div>
         </div>
 
-        {/* How to Choose Section */}
-        <div className="max-w-5xl mx-auto mb-20">
-          <div className="card p-10">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-6">How to Choose</h2>
-            <div className="space-y-6">
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2">Start with Free</h3>
-                <p className="text-sm text-gray-700 leading-relaxed">
-                  If you're new to Shorts or want to establish a planning foundation, the Free plan gives you everything you need to make better content decisions. Many creators succeed using only the free tools.
-                </p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2">Consider Paths Access when</h3>
-                <p className="text-sm text-gray-700 leading-relaxed">
-                  You know your goal but feel uncertain about the sequence of steps to get there. Execution Paths provide the structured guidance that eliminates decision fatigue and saves time by giving you a clear, ordered sequence.
-                </p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2">Agency Mode is for</h3>
-                <p className="text-sm text-gray-700 leading-relaxed">
-                  Freelancers, agencies, and operators managing multiple channels who need to scale efficiently, reuse proven structures, and maintain consistency across accounts. This solves the problem of duplicating planning work across channels.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* FAQ Section */}
-        <div className="max-w-5xl mx-auto mb-20">
-          <div className="text-center mb-12">
-            <div className="accent-line mx-auto mb-6"></div>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">Common Questions</h2>
-          </div>
-          <div className="space-y-6">
-            <div className="border-b border-gray-200 pb-6">
-              <h3 className="font-semibold text-gray-900 mb-2">Do I need to pay to succeed?</h3>
-              <p className="text-sm text-gray-700 leading-relaxed">
-                No. The Free plan includes all core planning tools and format guidance. Many successful creators use only the free features. Paid plans are for creators who want structured Execution Paths or team collaboration tools.
-              </p>
-            </div>
-            <div className="border-b border-gray-200 pb-6">
-              <h3 className="font-semibold text-gray-900 mb-2">What's the difference between Free and Paths Access?</h3>
-              <p className="text-sm text-gray-700 leading-relaxed">
-                Free gives you planning tools and format recommendations. Paths Access adds complete Execution Paths—step-by-step, stage-aware playbooks with weekly breakdowns, progress checkpoints, and clear guidance on when to move to the next stage.
-              </p>
-            </div>
-            <div className="border-b border-gray-200 pb-6">
-              <h3 className="font-semibold text-gray-900 mb-2">When will Paths Access and Agency Mode be available?</h3>
-              <p className="text-sm text-gray-700 leading-relaxed">
-                Pramana is building these features now. Add your email to the waitlist to be notified when each plan becomes available. Pricing will be announced closer to launch.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold text-gray-900 mb-2">Can I change plans later?</h3>
-              <p className="text-sm text-gray-700 leading-relaxed">
-                Yes. Start with Free and move to Paths Access or Agency Mode when you need structured Execution Paths or team collaboration features. You can change your plan based on your needs.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Products Section */}
-        <div className="max-w-6xl mx-auto mb-20">
+        {/* Coming Soon Plans */}
+        <div className="mb-16">
           <div className="text-center mb-10">
-            <div className="accent-line mx-auto mb-6"></div>
-            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6">Ready-to-Use Packages & Bundles</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Get complete packages with proven formats, execution paths, and strategies. Based on what's worked for thousands of creators.
-            </p>
+            <h2 className="text-3xl font-extrabold text-gray-900 mb-4">Coming Soon</h2>
+            <p className="text-gray-600">Additional plans for advanced creators</p>
           </div>
-          <div className="text-center">
-            <Link
-              href="/products"
-              className="btn-primary text-lg px-10 py-5"
-            >
-              View All Packages →
-            </Link>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="card p-8 opacity-75">
+              <div className="inline-block bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-xs font-bold mb-4">
+                Coming Soon
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Paths Access</h3>
+              <p className="text-gray-600 mb-4">Access to all Execution Paths with weekly breakdowns and progress checkpoints.</p>
+              {isSubmitted && submittedTier === 'paths' ? (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+                  <p className="text-sm font-medium text-green-900">Added to waitlist!</p>
+                </div>
+              ) : (
+                <form onSubmit={(e) => handleWaitlistSubmit(e, 'paths')} className="space-y-3">
+                  <input
+                    type="email"
+                    value={waitlistData.email}
+                    onChange={handleEmailChange}
+                    placeholder="Enter your email"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-gray-900 placeholder-gray-400 text-sm"
+                    required
+                    disabled={isSubmitting && submittingTier === 'paths'}
+                  />
+                  {error && submittingTier === 'paths' && (
+                    <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg text-xs">
+                      {error}
+                    </div>
+                  )}
+                  <button
+                    type="submit"
+                    disabled={isSubmitting && submittingTier === 'paths'}
+                    className="w-full btn-secondary py-3 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                  >
+                    {isSubmitting && submittingTier === 'paths' ? 'Adding...' : 'Join Waitlist'}
+                  </button>
+                </form>
+              )}
+            </div>
+
+            <div className="card p-8 opacity-75">
+              <div className="inline-block bg-gray-200 text-gray-700 px-3 py-1 rounded-full text-xs font-bold mb-4">
+                Coming Soon
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Agency Mode</h3>
+              <p className="text-gray-600 mb-4">For freelancers and agencies managing multiple channels. Scale efficiently with team collaboration.</p>
+              {isSubmitted && submittedTier === 'agency' ? (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+                  <p className="text-sm font-medium text-green-900">Added to waitlist!</p>
+                </div>
+              ) : (
+                <form onSubmit={(e) => handleWaitlistSubmit(e, 'agency')} className="space-y-3">
+                  <input
+                    type="email"
+                    value={waitlistData.email}
+                    onChange={handleEmailChange}
+                    placeholder="Enter your email"
+                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-gray-900 placeholder-gray-400 text-sm"
+                    required
+                    disabled={isSubmitting && submittingTier === 'agency'}
+                  />
+                  {error && submittingTier === 'agency' && (
+                    <div className="bg-red-50 border border-red-200 text-red-700 px-3 py-2 rounded-lg text-xs">
+                      {error}
+                    </div>
+                  )}
+                  <button
+                    type="submit"
+                    disabled={isSubmitting && submittingTier === 'agency'}
+                    className="w-full btn-secondary py-3 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                  >
+                    {isSubmitting && submittingTier === 'agency' ? 'Adding...' : 'Join Waitlist'}
+                  </button>
+                </form>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* CTA Section */}
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="card p-12 md:p-16">
-            <h2 className="text-4xl md:text-5xl font-extrabold mb-6 text-gray-900">Start Planning Better Content</h2>
-            <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-              Begin with the Free plan. No credit card required. Use Pramana's planning tools and format guidance to make better content decisions.
+        {/* CTA */}
+        <div className="text-center">
+          <div className="card p-12 max-w-3xl mx-auto">
+            <h2 className="text-3xl font-extrabold mb-4 text-gray-900">Ready to Make Your Shorts Hit?</h2>
+            <p className="text-lg text-gray-600 mb-8">
+              Start with the free plan, or get the complete bundle with everything you need to succeed.
             </p>
-            <Link
-              href="/dashboard"
-              className="btn-primary text-lg px-10 py-5"
-            >
-              Go to Dashboard
-            </Link>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/dashboard" className="btn-secondary px-8 py-4">
+                Start Free
+              </Link>
+              <Link href="/products/complete-shorts-bundle" className="btn-primary px-8 py-4">
+                Get Complete Bundle
+              </Link>
+            </div>
           </div>
         </div>
       </div>
