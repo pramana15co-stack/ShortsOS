@@ -51,15 +51,18 @@ export default function Navbar() {
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/')
 
   return (
-    <nav className="sticky top-0 z-50 bg-white border-b border-gray-200">
+    <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
       <div className="container mx-auto px-6">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-18">
           {/* Logo */}
           <Link 
             href="/" 
-            className="text-lg font-medium text-gray-900 hover:text-gray-600 transition-colors"
+            className="text-xl font-bold text-gray-900 hover:text-gray-700 transition-colors flex items-center gap-2"
           >
-            ShortsOS
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+              <span className="text-white text-sm font-bold">S</span>
+            </div>
+            <span>ShortsOS</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -69,30 +72,30 @@ export default function Navbar() {
               <>
                 <Link
                   href="/dashboard"
-                  className={`px-4 py-2 text-sm font-medium transition-colors ${
+                  className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
                     isActive('/dashboard')
-                      ? 'text-gray-900'
-                      : 'text-gray-600 hover:text-gray-900'
+                      ? 'text-gray-900 bg-gray-100'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                   }`}
                 >
                   Dashboard
                 </Link>
                 <Link
                   href="/planner"
-                  className={`px-4 py-2 text-sm font-medium transition-colors ${
+                  className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
                     isActive('/planner')
-                      ? 'text-gray-900'
-                      : 'text-gray-600 hover:text-gray-900'
+                      ? 'text-gray-900 bg-gray-100'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                   }`}
                 >
                   Planner
                 </Link>
                 <Link
                   href="/formats"
-                  className={`px-4 py-2 text-sm font-medium transition-colors ${
+                  className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
                     isActive('/formats')
-                      ? 'text-gray-900'
-                      : 'text-gray-600 hover:text-gray-900'
+                      ? 'text-gray-900 bg-gray-100'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                   }`}
                 >
                   Formats
@@ -220,7 +223,7 @@ export default function Navbar() {
                   </Link>
                   <Link
                     href="/signup"
-                    className="px-6 py-2 text-sm font-medium bg-black text-white hover:bg-gray-800 transition-colors"
+                    className="px-6 py-2.5 text-sm font-semibold bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-all shadow-md hover:shadow-lg"
                   >
                     Get Started
                   </Link>

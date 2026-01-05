@@ -22,11 +22,11 @@ export default function FormatDetailPage({ params }: PageProps) {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 max-w-5xl">
+    <main className="min-h-screen bg-white">
+      <div className="container mx-auto px-6 py-12 md:py-16 max-w-5xl">
         <Link
           href="/formats"
-          className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-8 text-sm font-medium transition-colors"
+          className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-10 text-sm font-semibold transition-colors"
         >
           <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -34,18 +34,18 @@ export default function FormatDetailPage({ params }: PageProps) {
           Back to Formats Library
         </Link>
 
-        <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-gray-900">
+        <div className="mb-16">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-gray-900 leading-tight">
             {format.name}
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 mb-6 leading-relaxed">
+          <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed">
             {format.description}
           </p>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-3">
             {format.bestNiches.map((niche, idx) => (
               <span
                 key={idx}
-                className="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-sm rounded-lg font-medium shadow-sm"
+                className="px-4 py-2 bg-gray-100 text-gray-700 text-sm rounded-lg font-semibold"
               >
                 {niche}
               </span>
@@ -53,7 +53,7 @@ export default function FormatDetailPage({ params }: PageProps) {
           </div>
         </div>
 
-      <div className="space-y-8">
+      <div className="space-y-10">
         {/* Why It Works */}
         <section className="card">
           <h2 className="text-2xl font-semibold mb-4 text-gray-900 flex items-center">

@@ -13,29 +13,46 @@
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply font-medium tracking-tight;
-    letter-spacing: -0.02em;
+    @apply font-semibold tracking-tight;
+    letter-spacing: -0.025em;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply px-8 py-3 bg-black text-white rounded-none font-medium 
-           hover:bg-gray-800 transition-colors duration-200
-           border border-black;
+    @apply px-8 py-4 bg-gray-900 text-white rounded-lg font-semibold 
+           hover:bg-gray-800 active:scale-[0.98] transition-all duration-200
+           shadow-lg hover:shadow-xl;
   }
   
   .btn-secondary {
-    @apply px-8 py-3 bg-white text-gray-900 rounded-none font-medium 
-           border border-gray-900 hover:bg-gray-50 
-           transition-colors duration-200;
+    @apply px-8 py-4 bg-white text-gray-900 rounded-lg font-semibold 
+           border-2 border-gray-900 hover:bg-gray-50 active:scale-[0.98]
+           transition-all duration-200 shadow-sm hover:shadow-md;
   }
   
   .card {
-    @apply bg-white border border-gray-200 p-8;
+    @apply bg-white rounded-2xl p-8 border border-gray-200 
+           shadow-sm hover:shadow-lg transition-all duration-300;
+  }
+  
+  .card-feature {
+    @apply card hover:-translate-y-2;
   }
   
   .section {
-    @apply py-24 md:py-32;
+    @apply py-20 md:py-28 lg:py-32;
+  }
+  
+  .section-alt {
+    @apply section bg-gray-50;
+  }
+  
+  .gradient-bg {
+    @apply bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900;
+  }
+  
+  .accent-line {
+    @apply w-12 h-1 bg-gray-900 rounded-full;
   }
 }

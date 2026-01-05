@@ -4,13 +4,16 @@ export default function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="border-t border-gray-200 mt-24">
-      <div className="container mx-auto px-6 py-12">
+    <footer className="bg-gray-50 border-t border-gray-200 mt-24">
+      <div className="container mx-auto px-6 py-16">
         <div className="grid md:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
           <div className="md:col-span-1">
-            <Link href="/" className="text-lg font-medium text-gray-900 mb-4 block">
-              ShortsOS
+            <Link href="/" className="text-xl font-bold text-gray-900 mb-4 block flex items-center gap-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                <span className="text-white text-sm font-bold">S</span>
+              </div>
+              <span>ShortsOS</span>
             </Link>
             <p className="text-sm text-gray-600 leading-relaxed">
               The all-in-one platform for YouTube Shorts creators. Plan smarter, optimize better, grow faster.
