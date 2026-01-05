@@ -68,24 +68,29 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white py-12">
-      <div className="container mx-auto px-4 max-w-md">
+    <main className="min-h-screen py-16 md:py-24 relative overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-white to-purple-50/30 pointer-events-none"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(99,102,241,0.1),transparent_50%)] pointer-events-none"></div>
+      
+      <div className="container mx-auto px-4 max-w-md relative z-10">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-semibold mb-2 text-gray-900">
+        <div className="text-center mb-10">
+          <div className="w-16 h-2 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-full mx-auto mb-6"></div>
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900">
             Sign In
           </h1>
-          <p className="text-sm text-gray-600">
+          <p className="text-lg text-gray-600">
             Sign in to access your content planning tools
           </p>
         </div>
 
         {/* Sign In Form */}
-        <form onSubmit={handleSubmit} className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-          <div className="space-y-5">
+        <form onSubmit={handleSubmit} className="card p-8 md:p-10">
+          <div className="space-y-6">
             {/* Email Input */}
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-gray-900 mb-2">
+              <label htmlFor="email" className="block text-sm font-bold text-gray-900 mb-3">
                 Email Address <span className="text-red-500">*</span>
               </label>
               <input
@@ -93,7 +98,7 @@ export default function LoginPage() {
                 id="email"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 placeholder-gray-400"
+                className="w-full px-5 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 placeholder-gray-400 transition-all duration-300"
                 placeholder="your.email@example.com"
                 required
                 disabled={loading}
@@ -103,7 +108,7 @@ export default function LoginPage() {
 
             {/* Password Input */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="password" className="block text-sm font-bold text-gray-900 mb-3">
                 Password <span className="text-red-500">*</span>
               </label>
               <input
@@ -111,7 +116,7 @@ export default function LoginPage() {
                 id="password"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-gray-900 text-gray-900 placeholder-gray-400"
+                className="w-full px-5 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-900 placeholder-gray-400 transition-all duration-300"
                 placeholder="Enter your password"
                 required
                 disabled={loading}
@@ -120,23 +125,23 @@ export default function LoginPage() {
             </div>
 
             {/* Remember Me and Forgot Password */}
-            <div className="flex items-center justify-between pt-1 pb-2">
-              <div className="flex items-center gap-2">
+            <div className="flex items-center justify-between pt-2 pb-2">
+              <div className="flex items-center gap-3">
                 <input
                   type="checkbox"
                   id="rememberMe"
                   checked={formData.rememberMe}
                   onChange={(e) => setFormData({ ...formData, rememberMe: e.target.checked })}
-                  className="w-4 h-4 text-gray-900 border-gray-300 rounded focus:ring-2 focus:ring-gray-900 cursor-pointer"
+                  className="w-5 h-5 text-indigo-600 border-2 border-gray-300 rounded focus:ring-2 focus:ring-indigo-500 cursor-pointer transition-all"
                   disabled={loading}
                 />
-                <label htmlFor="rememberMe" className="text-sm text-gray-700 cursor-pointer select-none">
+                <label htmlFor="rememberMe" className="text-sm text-gray-700 cursor-pointer select-none font-medium">
                   Remember me
                 </label>
               </div>
               <Link
                 href="/forgot-password"
-                className="text-sm text-gray-600 hover:text-gray-900 font-medium underline"
+                className="text-sm text-indigo-600 hover:text-indigo-700 font-bold underline transition-colors"
               >
                 Forgot password?
               </Link>
@@ -144,7 +149,7 @@ export default function LoginPage() {
 
             {/* Error Message */}
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+              <div className="bg-red-50 border-2 border-red-200 text-red-700 px-5 py-4 rounded-xl text-sm font-medium">
                 {error}
               </div>
             )}
@@ -153,11 +158,11 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gray-900 text-white px-4 py-2.5 rounded-lg font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full btn-primary py-4 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <span className="flex items-center justify-center gap-3">
+                  <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
@@ -171,10 +176,10 @@ export default function LoginPage() {
         </form>
 
         {/* Sign Up Link */}
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600">
+        <div className="mt-8 text-center">
+          <p className="text-base text-gray-600">
             Don&apos;t have an account?{' '}
-            <Link href="/signup" className="text-gray-900 hover:underline font-medium">
+            <Link href="/signup" className="text-indigo-600 hover:text-indigo-700 font-bold underline transition-colors">
               Sign up
             </Link>
           </p>
@@ -183,6 +188,3 @@ export default function LoginPage() {
     </main>
   )
 }
-
-
-

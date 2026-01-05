@@ -174,3 +174,4 @@ export function getProductsByType(type: 'bundle' | 'plan' | 'course'): Product[]
   return products.filter(p => p.type === type)
 }
 
+

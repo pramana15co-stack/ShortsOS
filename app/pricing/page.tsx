@@ -57,25 +57,31 @@ export default function PricingPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white py-12">
-      <div className="container mx-auto px-4 max-w-6xl">
+    <main className="min-h-screen py-16 md:py-24 relative overflow-hidden">
+      {/* Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-white to-purple-50/30 pointer-events-none"></div>
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(99,102,241,0.1),transparent_50%)] pointer-events-none"></div>
+      
+      <div className="container mx-auto px-4 max-w-7xl relative z-10">
         {/* Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 border border-gray-200 rounded mb-6">
-            <span className="text-xs font-medium text-gray-700">Built by Pramana</span>
+        <div className="text-center mb-20">
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/90 backdrop-blur-md border border-indigo-200/50 rounded-full mb-8 shadow-lg">
+            <span className="w-2.5 h-2.5 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse"></span>
+            <span className="text-xs font-bold text-gray-700 uppercase tracking-wider">Built by Pramana</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-semibold mb-4 text-gray-900">
+          <div className="accent-line mx-auto mb-8"></div>
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-8 text-gray-900">
             Choose Your Path
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             Each plan is designed for a different stage of your creator journey. Start with what you need now.
           </p>
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid md:grid-cols-3 gap-6 mb-16">
+        <div className="grid md:grid-cols-3 gap-8 mb-20">
           {/* Free Plan */}
-          <div className="bg-white border-2 border-gray-200 rounded-lg p-8">
+          <div className="card p-10">
             <div className="mb-6">
               <h2 className="text-2xl font-semibold text-gray-900 mb-2">Free</h2>
               <div className="mb-4">
@@ -130,16 +136,16 @@ export default function PricingPage() {
 
             <Link
               href="/dashboard"
-              className="block w-full text-center px-6 py-3 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors"
+              className="block w-full text-center btn-primary py-4"
             >
               Get Started
             </Link>
           </div>
 
           {/* Paths Access Plan */}
-          <div className="bg-white border-2 border-gray-900 rounded-lg p-8 relative">
-            <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-              <span className="bg-gray-900 text-white px-4 py-1 rounded-full text-xs font-medium">
+          <div className="card p-10 relative border-2 border-indigo-200 bg-gradient-to-br from-indigo-50/50 to-white">
+            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+              <span className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-5 py-2 rounded-full text-xs font-bold shadow-lg">
                 Available Soon
               </span>
             </div>
@@ -225,7 +231,7 @@ export default function PricingPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting && submittingTier === 'paths'}
-                  className="w-full bg-gray-900 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                  className="w-full btn-primary py-4 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting && submittingTier === 'paths' ? 'Adding...' : 'Add to Waitlist'}
                 </button>
@@ -234,9 +240,9 @@ export default function PricingPage() {
           </div>
 
           {/* Agency Mode Plan */}
-          <div className="bg-white border-2 border-gray-200 rounded-lg p-8 relative">
-            <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-              <span className="bg-gray-200 text-gray-700 px-4 py-1 rounded-full text-xs font-medium">
+          <div className="card p-10 relative">
+            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+              <span className="bg-gradient-to-r from-gray-400 to-gray-500 text-white px-5 py-2 rounded-full text-xs font-bold shadow-lg">
                 Coming Soon
               </span>
             </div>
@@ -354,7 +360,7 @@ export default function PricingPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting && submittingTier === 'agency'}
-                  className="w-full bg-gray-900 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+                  className="w-full btn-primary py-4 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isSubmitting && submittingTier === 'agency' ? 'Adding...' : 'Add to Waitlist'}
                 </button>
@@ -364,8 +370,8 @@ export default function PricingPage() {
         </div>
 
         {/* How to Choose Section */}
-        <div className="max-w-4xl mx-auto mb-16">
-          <div className="bg-gray-50 rounded-lg border border-gray-200 p-8">
+        <div className="max-w-5xl mx-auto mb-20">
+          <div className="card p-10">
             <h2 className="text-2xl font-semibold text-gray-900 mb-6">How to Choose</h2>
             <div className="space-y-6">
               <div>
@@ -391,8 +397,11 @@ export default function PricingPage() {
         </div>
 
         {/* FAQ Section */}
-        <div className="max-w-4xl mx-auto mb-16">
-          <h2 className="text-2xl font-semibold text-gray-900 mb-8 text-center">Common Questions</h2>
+        <div className="max-w-5xl mx-auto mb-20">
+          <div className="text-center mb-12">
+            <div className="accent-line mx-auto mb-6"></div>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">Common Questions</h2>
+          </div>
           <div className="space-y-6">
             <div className="border-b border-gray-200 pb-6">
               <h3 className="font-semibold text-gray-900 mb-2">Do I need to pay to succeed?</h3>
@@ -422,17 +431,18 @@ export default function PricingPage() {
         </div>
 
         {/* Products Section */}
-        <div className="max-w-6xl mx-auto mb-16">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-semibold text-gray-900 mb-4">Ready-to-Use Packages & Bundles</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <div className="max-w-6xl mx-auto mb-20">
+          <div className="text-center mb-10">
+            <div className="accent-line mx-auto mb-6"></div>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6">Ready-to-Use Packages & Bundles</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
               Get complete packages with proven formats, execution paths, and strategies. Based on what's worked for thousands of creators.
             </p>
           </div>
           <div className="text-center">
             <Link
               href="/products"
-              className="inline-block px-8 py-3 bg-gray-900 text-white rounded-lg font-semibold hover:bg-gray-800 transition-colors"
+              className="btn-primary text-lg px-10 py-5"
             >
               View All Packages →
             </Link>
@@ -440,15 +450,15 @@ export default function PricingPage() {
         </div>
 
         {/* CTA Section */}
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="bg-gray-50 rounded-lg border border-gray-200 p-8">
-            <h2 className="text-2xl font-semibold mb-4 text-gray-900">Start Planning Better Content</h2>
-            <p className="text-gray-700 mb-6 max-w-xl mx-auto">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="card p-12 md:p-16">
+            <h2 className="text-4xl md:text-5xl font-extrabold mb-6 text-gray-900">Start Planning Better Content</h2>
+            <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
               Begin with the Free plan. No credit card required. Use Pramana's planning tools and format guidance to make better content decisions.
             </p>
             <Link
               href="/dashboard"
-              className="inline-block px-8 py-3 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors"
+              className="btn-primary text-lg px-10 py-5"
             >
               Go to Dashboard
             </Link>

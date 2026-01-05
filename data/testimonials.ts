@@ -77,3 +77,4 @@ export function getTestimonialsByProduct(productSlug: string): Testimonial[] {
   return testimonials.filter(t => t.product.toLowerCase().includes(productSlug.toLowerCase()) || productSlug === 'all')
 }
 
+
