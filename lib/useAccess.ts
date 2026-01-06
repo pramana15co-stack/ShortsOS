@@ -13,6 +13,13 @@ interface AccessState {
   isPro: boolean
   isAgency: boolean
   loading: boolean
+  // Legacy properties for backward compatibility
+  isPaid: boolean
+  canAccessPromptStudio: boolean
+  canAccessHookCaption: boolean
+  canAccessPostProcessing: boolean
+  canAccessExportInstructions: boolean
+  promptStudioRemaining: number | 'unlimited'
 }
 
 // Helper to determine tier from user object
@@ -61,6 +68,16 @@ export function useAccess(): AccessState {
   const isStarter = tier === 'starter' || tier === 'pro' || tier === 'agency'
   const isPro = tier === 'pro' || tier === 'agency'
   const isAgency = tier === 'agency'
+  const isPaid = isStarter // Legacy alias
+
+  // Feature access flags
+  const canAccessPromptStudio = true // Both tiers can access
+  const canAccessHookCaption = true // Both tiers can access
+  const canAccessPostProcessing = true // Both tiers can access (with limits)
+  const canAccessExportInstructions = isStarter // Paid only
+
+  // Prompt Studio limits (TODO: Track daily usage in database)
+  const promptStudioRemaining: number | 'unlimited' = isStarter ? 'unlimited' : 5
 
   return {
     tier,
@@ -70,5 +87,12 @@ export function useAccess(): AccessState {
     isPro,
     isAgency,
     loading: loading || authLoading,
+    // Legacy properties
+    isPaid,
+    canAccessPromptStudio,
+    canAccessHookCaption,
+    canAccessPostProcessing,
+    canAccessExportInstructions,
+    promptStudioRemaining,
   }
 }

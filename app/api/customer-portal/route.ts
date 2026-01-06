@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { stripe } from '@/lib/stripe'
+import { getStripe } from '@/lib/stripe'
 import { createClient } from '@supabase/supabase-js'
 
 // Initialize Supabase client (optional - only if configured)
@@ -53,6 +53,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create customer portal session
+    const stripe = getStripe()
     const session = await stripe.billingPortal.sessions.create({
       customer: customerId,
       return_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/dashboard`,

@@ -7,7 +7,8 @@ import Link from 'next/link'
 type Editor = 'capcut' | 'premiere-pro' | 'vn-editor'
 
 export default function ExportInstructionsPage() {
-  const { canAccessExportInstructions } = useAccess()
+  const { canAccess } = useAccess()
+  const canAccessExportInstructions = canAccess('starter')
   const [activeEditor, setActiveEditor] = useState<Editor>('capcut')
   const [formData, setFormData] = useState({
     hook: '',

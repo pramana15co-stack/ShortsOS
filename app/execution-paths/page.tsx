@@ -147,7 +147,7 @@ export default function ExecutionPathsPage() {
         <div className="mb-16">
           <h2 className="text-3xl font-extrabold mb-8 text-gray-900 text-center">Available Paths</h2>
           <div className="space-y-6">
-            {executionPaths.map((path) => (
+            {executionPaths.filter(path => path.status === 'available').map((path) => (
               <div
                 key={path.slug}
                 className={`card p-8 ${path.status === 'coming-soon' ? 'opacity-75' : 'hover:scale-[1.01] transition-transform'} ${path.status === 'available' ? 'border-2 border-indigo-200' : ''}`}
