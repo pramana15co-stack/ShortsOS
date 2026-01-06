@@ -3,9 +3,9 @@
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { getProductBySlug } from '@/data/products'
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const searchParams = useSearchParams()
   const productSlug = searchParams.get('product')
   const product = productSlug ? getProductBySlug(productSlug) : null
@@ -155,3 +155,16 @@ export default function CheckoutPage() {
   )
 }
 
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen py-16 md:py-24">
+        <div className="container mx-auto px-4 max-w-2xl text-center">
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </main>
+    }>
+      <CheckoutContent />
+    </Suspense>
+  )
+}

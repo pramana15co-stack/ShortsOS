@@ -25,6 +25,13 @@ export default function Navbar() {
     { href: '/content-ideas', label: 'Content Ideas' },
   ]
 
+  const aiTools = [
+    { href: '/prompt-studio', label: 'Prompt Studio' },
+    { href: '/hook-caption-engine', label: 'Hook & Caption' },
+    { href: '/post-processing', label: 'Post-Processing' },
+    { href: '/export-instructions', label: 'Export Instructions' },
+  ]
+
   const authTools = [
     { href: '/planner', label: 'Planner' },
     { href: '/scripts', label: 'Scripts' },
@@ -34,7 +41,7 @@ export default function Navbar() {
     { href: '/feedback', label: 'Feedback' },
   ]
 
-  const allTools = user ? [...publicTools, ...authTools] : publicTools
+  const allTools = user ? [...publicTools, ...aiTools, ...authTools] : [...publicTools, ...aiTools]
 
   const resources = [
     { href: '/pricing', label: 'Pricing & Packages' },

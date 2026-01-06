@@ -51,10 +51,10 @@ export default function Dashboard() {
   const quickActions = [
     { title: 'Content Planner', description: 'Get format recommendations', icon: '🎯', href: '/planner', color: 'from-blue-500 to-indigo-600' },
     { title: 'Format Library', description: 'Browse proven formats', icon: '📚', href: '/formats', color: 'from-purple-500 to-pink-600' },
-    { title: 'Generate Scripts', description: 'Create structured scripts', icon: '📝', href: '/scripts', color: 'from-emerald-500 to-teal-600' },
-    { title: 'Generate Hooks', description: 'Create compelling hooks', icon: '🎣', href: '/hooks', color: 'from-orange-500 to-amber-600' },
-    { title: 'SEO Optimizer', description: 'Optimize titles & descriptions', icon: '🔍', href: '/seo-optimizer', color: 'from-indigo-500 to-purple-600' },
-    { title: 'Performance Analysis', description: 'Analyze video performance', icon: '📊', href: '/feedback', color: 'from-pink-500 to-rose-600' },
+    { title: 'Prompt Studio', description: 'Generate AI video prompts', icon: '🎬', href: '/prompt-studio', color: 'from-violet-500 to-purple-600' },
+    { title: 'Hook & Caption Engine', description: 'Create hooks and captions', icon: '🎣', href: '/hook-caption-engine', color: 'from-orange-500 to-amber-600' },
+    { title: 'Post-Processing', description: 'Get optimization feedback', icon: '⚡', href: '/post-processing', color: 'from-emerald-500 to-teal-600' },
+    { title: 'Generate Scripts', description: 'Create structured scripts', icon: '📝', href: '/scripts', color: 'from-indigo-500 to-blue-600' },
   ]
 
   const tools = [
