@@ -17,37 +17,56 @@ export default function Navbar() {
     router.push('/')
   }
 
-  // Consolidated menu items - separate by auth requirement
-  const publicTools = [
-    { href: '/formats', label: 'Formats' },
-    { href: '/hooks', label: 'Hooks' },
-    { href: '/seo-optimizer', label: 'SEO Optimizer' },
-    { href: '/content-ideas', label: 'Content Ideas' },
+  // Organized tool categories for mega menu
+  const toolCategories = [
+    {
+      title: 'Planning & Creation',
+      items: [
+        { href: '/planner', label: 'Content Planner', icon: '🎯', requiresAuth: true },
+        { href: '/formats', label: 'Format Library', icon: '📚', requiresAuth: false },
+        { href: '/hooks', label: 'Hook Templates', icon: '🎣', requiresAuth: false },
+        { href: '/scripts', label: 'Script Templates', icon: '📝', requiresAuth: true },
+        { href: '/content-ideas', label: 'Content Ideas', icon: '💡', requiresAuth: false },
+      ],
+    },
+    {
+      title: 'AI Tools',
+      items: [
+        { href: '/prompt-studio', label: 'Prompt Studio', icon: '✨', requiresAuth: false },
+        { href: '/hook-caption-engine', label: 'Hook & Caption', icon: '💬', requiresAuth: false },
+        { href: '/post-processing', label: 'Post-Processing', icon: '🔧', requiresAuth: false },
+        { href: '/export-instructions', label: 'Export Instructions', icon: '📤', requiresAuth: false },
+      ],
+    },
+    {
+      title: 'Optimization',
+      items: [
+        { href: '/seo-optimizer', label: 'SEO Optimizer', icon: '🔍', requiresAuth: false },
+        { href: '/analytics', label: 'Analytics', icon: '📊', requiresAuth: true },
+        { href: '/feedback', label: 'Feedback', icon: '💬', requiresAuth: true },
+      ],
+    },
+    {
+      title: 'Organization',
+      items: [
+        { href: '/calendar', label: 'Calendar', icon: '📅', requiresAuth: true },
+        { href: '/checklist', label: 'Checklist', icon: '✅', requiresAuth: true },
+      ],
+    },
   ]
 
-  const aiTools = [
-    { href: '/prompt-studio', label: 'Prompt Studio' },
-    { href: '/hook-caption-engine', label: 'Hook & Caption' },
-    { href: '/post-processing', label: 'Post-Processing' },
-    { href: '/export-instructions', label: 'Export Instructions' },
-  ]
-
-  const authTools = [
-    { href: '/planner', label: 'Planner' },
-    { href: '/scripts', label: 'Scripts' },
-    { href: '/calendar', label: 'Calendar' },
-    { href: '/checklist', label: 'Checklist' },
-    { href: '/analytics', label: 'Analytics' },
-    { href: '/feedback', label: 'Feedback' },
-  ]
-
-  const allTools = user ? [...publicTools, ...aiTools, ...authTools] : [...publicTools, ...aiTools]
+  // Get all tools filtered by auth requirement
+  const getAllTools = () => {
+    return toolCategories.flatMap(category => 
+      category.items.filter(item => !item.requiresAuth || user)
+    )
+  }
 
   const resources = [
-    { href: '/pricing', label: 'Pricing & Packages' },
-    { href: '/tools', label: 'Creator Tools' },
-    { href: '/about', label: 'About' },
-    { href: '/contact', label: 'Contact' },
+    { href: '/execution-paths', label: 'Execution Paths', icon: '🗺️' },
+    { href: '/pricing', label: 'Pricing', icon: '💰' },
+    { href: '/about', label: 'About', icon: 'ℹ️' },
+    { href: '/contact', label: 'Contact', icon: '📧' },
   ]
 
   const toggleDropdown = (menu: string) => {
@@ -106,26 +125,48 @@ export default function Navbar() {
                 >
                   Formats
                 </Link>
+                <Link
+                  href="/execution-paths"
+                  className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 ${
+                    isActive('/execution-paths')
+                      ? 'text-white bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg'
+                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  }`}
+                >
+                  Paths
+                </Link>
               </>
             ) : (
-              <Link
-                href="/formats"
-                className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 ${
-                  isActive('/formats')
-                    ? 'text-white bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg'
-                    : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
-                }`}
-              >
-                Formats
-              </Link>
+              <>
+                <Link
+                  href="/formats"
+                  className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 ${
+                    isActive('/formats')
+                      ? 'text-white bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg'
+                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  }`}
+                >
+                  Formats
+                </Link>
+                <Link
+                  href="/execution-paths"
+                  className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 ${
+                    isActive('/execution-paths')
+                      ? 'text-white bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg'
+                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  }`}
+                >
+                  Execution Paths
+                </Link>
+              </>
             )}
 
-            {/* Tools Dropdown */}
+            {/* Tools Mega Menu */}
             <div className="relative">
               <button
                 onClick={() => toggleDropdown('tools')}
                 className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 flex items-center gap-2 ${
-                  allTools.some(item => isActive(item.href))
+                  getAllTools().some(item => isActive(item.href))
                     ? 'text-white bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg'
                     : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
                 }`}
@@ -141,21 +182,35 @@ export default function Navbar() {
                 </svg>
               </button>
               {openDropdown === 'tools' && (
-                <div className="absolute top-full left-0 mt-2 w-64 bg-white/95 backdrop-blur-xl border border-gray-200/50 rounded-2xl overflow-hidden py-2 z-50 shadow-2xl">
-                  {allTools.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={() => setOpenDropdown(null)}
-                      className={`block px-5 py-3 text-sm transition-all duration-300 ${
-                        isActive(item.href)
-                          ? 'text-indigo-600 font-semibold bg-indigo-50'
-                          : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50'
-                      }`}
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
+                <div className="absolute top-full left-0 mt-2 w-[600px] bg-white/95 backdrop-blur-xl border border-gray-200/50 rounded-2xl overflow-hidden py-4 z-50 shadow-2xl">
+                  <div className="grid grid-cols-2 gap-6 px-4">
+                    {toolCategories.map((category, catIdx) => (
+                      <div key={catIdx}>
+                        <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-2">
+                          {category.title}
+                        </h3>
+                        <div className="space-y-1">
+                          {category.items
+                            .filter(item => !item.requiresAuth || user)
+                            .map((item) => (
+                              <Link
+                                key={item.href}
+                                href={item.href}
+                                onClick={() => setOpenDropdown(null)}
+                                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-300 ${
+                                  isActive(item.href)
+                                    ? 'text-indigo-600 font-semibold bg-indigo-50'
+                                    : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50'
+                                }`}
+                              >
+                                <span className="text-lg">{item.icon}</span>
+                                <span>{item.label}</span>
+                              </Link>
+                            ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
@@ -187,13 +242,14 @@ export default function Navbar() {
                       key={item.href}
                       href={item.href}
                       onClick={() => setOpenDropdown(null)}
-                      className={`block px-5 py-3 text-sm transition-all duration-300 ${
+                      className={`flex items-center gap-3 px-5 py-3 text-sm transition-all duration-300 ${
                         isActive(item.href)
                           ? 'text-indigo-600 font-semibold bg-indigo-50'
                           : 'text-gray-700 hover:text-indigo-600 hover:bg-gray-50'
                       }`}
                     >
-                      {item.label}
+                      <span className="text-lg">{item.icon}</span>
+                      <span>{item.label}</span>
                     </Link>
                   ))}
                 </div>
@@ -300,26 +356,39 @@ export default function Navbar() {
                 >
                   Formats
                 </Link>
-                {allTools.length > 0 && (
-                  <>
+                <Link 
+                  href="/execution-paths" 
+                  className={`block px-4 py-3 text-sm font-semibold rounded-xl mx-2 mb-2 transition-all ${
+                    isActive('/execution-paths')
+                      ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  Execution Paths
+                </Link>
+                {toolCategories.map((category, catIdx) => (
+                  <div key={catIdx}>
                     <div className="px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-wider mt-4 mb-2">
-                      Tools
+                      {category.title}
                     </div>
-                    {allTools.map((item) => (
-                      <Link 
-                        key={item.href} 
-                        href={item.href} 
-                        className={`block px-6 py-3 text-sm font-medium rounded-xl mx-2 mb-1 transition-all ${
-                          isActive(item.href)
-                            ? 'bg-indigo-50 text-indigo-600 font-semibold'
-                            : 'text-gray-600 hover:bg-gray-50'
-                        }`}
-                      >
-                        {item.label}
-                      </Link>
-                    ))}
-                  </>
-                )}
+                    {category.items
+                      .filter(item => !item.requiresAuth || user)
+                      .map((item) => (
+                        <Link 
+                          key={item.href} 
+                          href={item.href} 
+                          className={`flex items-center gap-3 px-6 py-3 text-sm font-medium rounded-xl mx-2 mb-1 transition-all ${
+                            isActive(item.href)
+                              ? 'bg-indigo-50 text-indigo-600 font-semibold'
+                              : 'text-gray-600 hover:bg-gray-50'
+                          }`}
+                        >
+                          <span>{item.icon}</span>
+                          <span>{item.label}</span>
+                        </Link>
+                      ))}
+                  </div>
+                ))}
               </>
             ) : (
               <>
@@ -334,6 +403,16 @@ export default function Navbar() {
                   Formats
                 </Link>
                 <Link 
+                  href="/execution-paths" 
+                  className={`block px-4 py-3 text-sm font-semibold rounded-xl mx-2 mb-2 transition-all ${
+                    isActive('/execution-paths')
+                      ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  Execution Paths
+                </Link>
+                <Link 
                   href="/pricing" 
                   className={`block px-4 py-3 text-sm font-semibold rounded-xl mx-2 mb-2 transition-all ${
                     isActive('/pricing')
@@ -343,26 +422,29 @@ export default function Navbar() {
                 >
                   Pricing
                 </Link>
-                {publicTools.length > 0 && (
-                  <>
+                {toolCategories.map((category, catIdx) => (
+                  <div key={catIdx}>
                     <div className="px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-wider mt-4 mb-2">
-                      Tools
+                      {category.title}
                     </div>
-                    {publicTools.map((item) => (
-                      <Link 
-                        key={item.href} 
-                        href={item.href} 
-                        className={`block px-6 py-3 text-sm font-medium rounded-xl mx-2 mb-1 transition-all ${
-                          isActive(item.href)
-                            ? 'bg-indigo-50 text-indigo-600 font-semibold'
-                            : 'text-gray-600 hover:bg-gray-50'
-                        }`}
-                      >
-                        {item.label}
-                      </Link>
-                    ))}
-                  </>
-                )}
+                    {category.items
+                      .filter(item => !item.requiresAuth)
+                      .map((item) => (
+                        <Link 
+                          key={item.href} 
+                          href={item.href} 
+                          className={`flex items-center gap-3 px-6 py-3 text-sm font-medium rounded-xl mx-2 mb-1 transition-all ${
+                            isActive(item.href)
+                              ? 'bg-indigo-50 text-indigo-600 font-semibold'
+                              : 'text-gray-600 hover:bg-gray-50'
+                          }`}
+                        >
+                          <span>{item.icon}</span>
+                          <span>{item.label}</span>
+                        </Link>
+                      ))}
+                  </div>
+                ))}
               </>
             )}
             <div className="px-4 py-2 text-xs font-bold text-gray-500 uppercase tracking-wider mt-4 mb-2">
@@ -372,13 +454,14 @@ export default function Navbar() {
               <Link 
                 key={item.href} 
                 href={item.href} 
-                className={`block px-4 py-3 text-sm font-medium rounded-xl mx-2 mb-1 transition-all ${
+                className={`flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl mx-2 mb-1 transition-all ${
                   isActive(item.href)
                     ? 'bg-indigo-50 text-indigo-600 font-semibold'
                     : 'text-gray-700 hover:bg-gray-50'
                 }`}
               >
-                {item.label}
+                <span>{item.icon}</span>
+                <span>{item.label}</span>
               </Link>
             ))}
             <div className="px-4 pt-4 mt-4 border-t border-gray-200 space-y-2">

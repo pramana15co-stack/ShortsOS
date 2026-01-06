@@ -53,6 +53,53 @@ export default function Home() {
     },
   ]
 
+  const useCases = [
+    {
+      title: 'For Beginners',
+      description: 'Start from zero with clear, step-by-step guidance. No confusion, no overwhelm.',
+      features: ['Execution Paths', 'Format Library', 'Script Templates', 'Basic Tools'],
+      icon: '🌱',
+      color: 'from-green-500 to-emerald-600',
+    },
+    {
+      title: 'For Growing Creators',
+      description: 'Scale your channel with advanced optimization and structured workflows.',
+      features: ['AI Prompt Studio', 'Hook Engine', 'Post-Processing', 'Analytics'],
+      icon: '📈',
+      color: 'from-blue-500 to-indigo-600',
+    },
+    {
+      title: 'For Agencies',
+      description: 'Manage multiple clients with batch workflows and professional exports.',
+      features: ['Batch Processing', 'Client Management', 'Export Instructions', 'Team Features'],
+      icon: '🏢',
+      color: 'from-purple-500 to-pink-600',
+    },
+  ]
+
+  const problems = [
+    {
+      problem: 'Decision Fatigue',
+      solution: 'Get clear, stage-aware recommendations so you know exactly what to create next.',
+      icon: '🤔',
+    },
+    {
+      problem: 'Conflicting Advice',
+      solution: 'We tell you what works at YOUR stage, not generic tips that might not apply.',
+      icon: '⚡',
+    },
+    {
+      problem: 'Time Wasted',
+      solution: 'Structured templates and execution guides save hours every week.',
+      icon: '⏱️',
+    },
+    {
+      problem: 'Inconsistent Results',
+      solution: 'Follow proven formats and paths that lead to predictable growth.',
+      icon: '🎯',
+    },
+  ]
+
   const faqs = [
     {
       question: 'Is Pramana really free to start?',
@@ -163,8 +210,37 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Key Features */}
+      {/* Problem/Solution Section */}
       <section className="section">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="text-center mb-16">
+            <div className="accent-line mx-auto mb-6"></div>
+            <h2 className="text-4xl md:text-5xl font-extrabold mb-6 text-gray-900">
+              We Solve Real Problems
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Every creator faces these challenges. Pramana provides clear solutions.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {problems.map((item, idx) => (
+              <div key={idx} className="card p-8">
+                <div className="flex items-start gap-4">
+                  <div className="text-5xl flex-shrink-0">{item.icon}</div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">{item.problem}</h3>
+                    <p className="text-gray-600 leading-relaxed">{item.solution}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Key Features */}
+      <section className="section-alt">
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="text-center mb-16">
             <div className="accent-line mx-auto mb-6"></div>
@@ -210,6 +286,44 @@ export default function Home() {
                 Structured templates and guides, not random outputs. Every recommendation includes clear next steps.
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Use Cases Section */}
+      <section className="section">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="text-center mb-16">
+            <div className="accent-line mx-auto mb-6"></div>
+            <h2 className="text-4xl md:text-5xl font-extrabold mb-6 text-gray-900">
+              Built for Every Creator Stage
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Whether you're just starting or scaling, Pramana adapts to your needs
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {useCases.map((useCase, idx) => (
+              <div key={idx} className="card p-8 relative overflow-hidden group">
+                <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${useCase.color} opacity-10 rounded-full blur-3xl group-hover:opacity-20 transition-opacity`}></div>
+                <div className="relative z-10">
+                  <div className="text-5xl mb-4">{useCase.icon}</div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">{useCase.title}</h3>
+                  <p className="text-gray-600 mb-6 leading-relaxed">{useCase.description}</p>
+                  <ul className="space-y-2">
+                    {useCase.features.map((feature, fIdx) => (
+                      <li key={fIdx} className="flex items-center gap-2 text-sm text-gray-700">
+                        <svg className="w-4 h-4 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -290,23 +404,73 @@ export default function Home() {
               href="/scripts"
             />
             <FeatureCard
+              title="AI Prompt Studio"
+              description="Generate high-quality prompts for AI video tools like Sora and Veo."
+              icon="✨"
+              href="/prompt-studio"
+            />
+            <FeatureCard
+              title="Hook & Caption Engine"
+              description="Create engaging hooks and captions with timing suggestions."
+              icon="💬"
+              href="/hook-caption-engine"
+            />
+            <FeatureCard
+              title="Post-Processing"
+              description="Get intelligent feedback on pacing, retention, and optimization."
+              icon="🔧"
+              href="/post-processing"
+            />
+            <FeatureCard
+              title="Export Instructions"
+              description="Step-by-step guides for CapCut, Premiere Pro, and VN Editor."
+              icon="📤"
+              href="/export-instructions"
+            />
+            <FeatureCard
               title="SEO Optimizer"
               description="Optimize titles, descriptions, and tags for better discoverability."
               icon="🔍"
               href="/seo-optimizer"
             />
-            <FeatureCard
-              title="Performance Analysis"
-              description="Analyze your video performance and get actionable insights."
-              icon="📊"
-              href="/feedback"
-            />
+          </div>
+        </div>
+      </section>
+
+      {/* Execution Paths CTA */}
+      <section className="section-alt">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <div className="gradient-bg rounded-3xl p-12 md:p-16 text-white shadow-2xl relative overflow-hidden">
+            <div className="absolute inset-0 opacity-20" style={{backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`}}></div>
+            <div className="relative z-10 text-center">
+              <h2 className="text-4xl md:text-5xl font-extrabold mb-6">
+                Ready for Structured Growth?
+              </h2>
+              <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed">
+                Execution Paths are step-by-step playbooks that guide you from where you are to where you want to be. 
+                No guesswork, just clear progress.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  href="/execution-paths"
+                  className="bg-white text-indigo-600 px-10 py-5 rounded-xl font-bold text-lg hover:scale-105 transition-transform shadow-xl"
+                >
+                  Explore Execution Paths
+                </Link>
+                <Link
+                  href="/pricing"
+                  className="bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white px-10 py-5 rounded-xl font-bold text-lg hover:bg-white/20 transition-all shadow-xl"
+                >
+                  View Pricing
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Testimonials Section */}
-      <section className="section-alt">
+      <section className="section">
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="text-center mb-16">
             <div className="accent-line mx-auto mb-6"></div>
@@ -379,7 +543,7 @@ export default function Home() {
       </section>
 
       {/* FAQ Section */}
-      <section className="section">
+      <section className="section-alt">
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="text-center mb-16">
             <div className="accent-line mx-auto mb-6"></div>
@@ -400,7 +564,7 @@ export default function Home() {
       </section>
 
       {/* Final CTA Section */}
-      <section className="section-alt">
+      <section className="section">
         <div className="container mx-auto px-6 max-w-4xl">
           <div className="gradient-bg rounded-3xl p-12 md:p-16 text-white shadow-2xl relative overflow-hidden">
             <div className="absolute inset-0 opacity-20" style={{backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`}}></div>
