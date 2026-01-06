@@ -7,6 +7,7 @@ import { useAuth } from '@/app/providers/AuthProvider'
 export default function PricingPage() {
   const { user } = useAuth()
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
+  const [pricingRegion, setPricingRegion] = useState<'india' | 'global'>('global')
 
   return (
     <main className="min-h-screen py-16 md:py-24 relative overflow-hidden">
@@ -24,9 +25,33 @@ export default function PricingPage() {
           <h1 className="text-5xl md:text-6xl font-extrabold mb-6 text-gray-900">
             Choose Your Path
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-8">
             Pramana grows with you. Start free, upgrade when you're ready for the next step.
           </p>
+
+          {/* Pricing Region Toggle */}
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <button
+              onClick={() => setPricingRegion('india')}
+              className={`px-6 py-3 rounded-xl font-semibold transition-all ${
+                pricingRegion === 'india'
+                  ? 'bg-indigo-600 text-white shadow-lg'
+                  : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-gray-300'
+              }`}
+            >
+              India (₹)
+            </button>
+            <button
+              onClick={() => setPricingRegion('global')}
+              className={`px-6 py-3 rounded-xl font-semibold transition-all ${
+                pricingRegion === 'global'
+                  ? 'bg-indigo-600 text-white shadow-lg'
+                  : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-gray-300'
+              }`}
+            >
+              Global ($)
+            </button>
+          </div>
         </div>
 
         {/* Pricing Ladder - 4 Tiers */}
@@ -44,7 +69,8 @@ export default function PricingPage() {
                 </p>
               </div>
               <div className="text-right">
-                <div className="text-5xl font-extrabold text-gray-900">$0</div>
+                <div className="text-5xl font-extrabold text-gray-900">₹0</div>
+                <div className="text-2xl font-extrabold text-gray-900">$0</div>
                 <div className="text-sm text-gray-500 mt-1">Forever</div>
               </div>
             </div>
@@ -65,8 +91,8 @@ export default function PricingPage() {
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   <div>
-                    <div className="font-semibold text-gray-900">Format Library</div>
-                    <div className="text-sm text-gray-600">Browse proven formats and execution guides</div>
+                    <div className="font-semibold text-gray-900">Limited AI Video Prompt Studio</div>
+                    <div className="text-sm text-gray-600">Daily limit on prompt generations</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -74,8 +100,8 @@ export default function PricingPage() {
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   <div>
-                    <div className="font-semibold text-gray-900">Basic Planning</div>
-                    <div className="text-sm text-gray-600">Get format recommendations for your niche</div>
+                    <div className="font-semibold text-gray-900">Limited Hook & Caption Engine</div>
+                    <div className="text-sm text-gray-600">Basic hooks and captions</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -83,8 +109,8 @@ export default function PricingPage() {
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   <div>
-                    <div className="font-semibold text-gray-900">Hook & Script Templates</div>
-                    <div className="text-sm text-gray-600">Access basic templates and generators</div>
+                    <div className="font-semibold text-gray-900">Preview Execution Path</div>
+                    <div className="text-sm text-gray-600">Outline only - see how paths work</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -92,8 +118,8 @@ export default function PricingPage() {
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   <div>
-                    <div className="font-semibold text-gray-900">Limited AI Tools</div>
-                    <div className="text-sm text-gray-600">5 prompt generations per day</div>
+                    <div className="font-semibold text-gray-900">Basic Post-Processing Preview</div>
+                    <div className="text-sm text-gray-600">Preview of optimization advice</div>
                   </div>
                 </div>
               </div>
@@ -122,8 +148,13 @@ export default function PricingPage() {
                 </p>
               </div>
               <div className="text-right">
-                <div className="text-5xl font-extrabold text-gray-900">Pricing TBD</div>
-                <div className="text-sm text-gray-500 mt-1">Coming Soon</div>
+                <div className="text-5xl font-extrabold text-gray-900">
+                  {pricingRegion === 'india' ? '₹799' : '$9'}
+                </div>
+                <div className="text-sm text-gray-500 mt-1">per month</div>
+                {pricingRegion === 'india' && (
+                  <div className="text-xs text-gray-400 mt-1">≈ $9 USD</div>
+                )}
               </div>
             </div>
 
@@ -136,15 +167,15 @@ export default function PricingPage() {
             </div>
 
             <div className="mb-8">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">What changes</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-4">What you get</h3>
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
                   <svg className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   <div>
-                    <div className="font-semibold text-gray-900">Execution Paths</div>
-                    <div className="text-sm text-gray-600">Step-by-step playbooks that eliminate "what do I do next?" moments</div>
+                    <div className="font-semibold text-gray-900">Unlimited AI Video Prompt Studio</div>
+                    <div className="text-sm text-gray-600">No daily limits on prompt generation</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -152,17 +183,8 @@ export default function PricingPage() {
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   <div>
-                    <div className="font-semibold text-gray-900">Unlimited AI Tools</div>
-                    <div className="text-sm text-gray-600">No daily limits on prompt generation and optimization</div>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <svg className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <div>
-                    <div className="font-semibold text-gray-900">Advanced Caption Timing</div>
-                    <div className="text-sm text-gray-600">Precise timing suggestions for better retention</div>
+                    <div className="font-semibold text-gray-900">Full Hook & Caption Engine</div>
+                    <div className="text-sm text-gray-600">Complete access with caption timing suggestions</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -171,7 +193,16 @@ export default function PricingPage() {
                   </svg>
                   <div>
                     <div className="font-semibold text-gray-900">Export Instructions</div>
-                    <div className="text-sm text-gray-600">Step-by-step guides for CapCut, Premiere Pro, VN Editor</div>
+                    <div className="text-sm text-gray-600">Step-by-step guides for CapCut and VN Editor</div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <svg className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <div>
+                    <div className="font-semibold text-gray-900">Full Beginner Execution Path</div>
+                    <div className="text-sm text-gray-600">Complete step-by-step playbook for your first consistent views</div>
                   </div>
                 </div>
               </div>
@@ -185,7 +216,7 @@ export default function PricingPage() {
                 onClick={() => setSelectedPlan('starter')}
                 className="btn-primary w-full text-center py-4"
               >
-                Join Waitlist
+                Get Started
               </button>
             </div>
           </div>
@@ -203,8 +234,13 @@ export default function PricingPage() {
                 </p>
               </div>
               <div className="text-right">
-                <div className="text-5xl font-extrabold text-gray-900">Pricing TBD</div>
-                <div className="text-sm text-gray-500 mt-1">Coming Soon</div>
+                <div className="text-5xl font-extrabold text-gray-900">
+                  {pricingRegion === 'india' ? '₹2,499' : '$29'}
+                </div>
+                <div className="text-sm text-gray-500 mt-1">per month</div>
+                {pricingRegion === 'india' && (
+                  <div className="text-xs text-gray-400 mt-1">≈ $29 USD</div>
+                )}
               </div>
             </div>
 
@@ -233,8 +269,8 @@ export default function PricingPage() {
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   <div>
-                    <div className="font-semibold text-gray-900">Advanced Analytics</div>
-                    <div className="text-sm text-gray-600">Performance insights and optimization recommendations</div>
+                    <div className="font-semibold text-gray-900">Access to All Execution Paths</div>
+                    <div className="text-sm text-gray-600">Beginner, Intermediate, and Advanced paths</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -242,8 +278,8 @@ export default function PricingPage() {
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   <div>
-                    <div className="font-semibold text-gray-900">Monetization Strategies</div>
-                    <div className="text-sm text-gray-600">Complete guides for affiliate marketing and revenue optimization</div>
+                    <div className="font-semibold text-gray-900">Advanced Post-Processing Intelligence</div>
+                    <div className="text-sm text-gray-600">Full optimization recommendations and feedback</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -251,8 +287,8 @@ export default function PricingPage() {
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   <div>
-                    <div className="font-semibold text-gray-900">Priority Support</div>
-                    <div className="text-sm text-gray-600">Faster response times and direct access to our team</div>
+                    <div className="font-semibold text-gray-900">Platform-Specific Optimization</div>
+                    <div className="text-sm text-gray-600">Guidance tailored for YouTube Shorts and Instagram Reels</div>
                   </div>
                 </div>
               </div>
@@ -264,19 +300,20 @@ export default function PricingPage() {
               </p>
               <button
                 onClick={() => setSelectedPlan('pro')}
-                className="btn-secondary w-full text-center py-4"
+                className="btn-primary w-full text-center py-4"
               >
-                Join Waitlist
+                Get Started
               </button>
             </div>
           </div>
 
           {/* Tier 4: Operator / Agency */}
-          <div className="card p-10 max-w-5xl mx-auto opacity-90">
+          <div className="card p-10 max-w-5xl mx-auto opacity-90 border-2 border-dashed border-gray-300">
             <div className="flex items-start justify-between mb-8">
               <div className="flex-1">
-                <div className="inline-block px-4 py-2 bg-gray-200 text-gray-700 rounded-full text-sm font-bold mb-4">
-                  Advanced
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-full text-sm font-bold mb-4">
+                  <span>Advanced</span>
+                  <span className="px-2 py-0.5 bg-gray-300 rounded text-xs">Coming Soon</span>
                 </div>
                 <h2 className="text-4xl font-extrabold text-gray-900 mb-4">Operator</h2>
                 <p className="text-xl text-gray-600 mb-6 leading-relaxed">
@@ -284,8 +321,13 @@ export default function PricingPage() {
                 </p>
               </div>
               <div className="text-right">
-                <div className="text-5xl font-extrabold text-gray-900">Pricing TBD</div>
-                <div className="text-sm text-gray-500 mt-1">Coming Soon</div>
+                <div className="text-5xl font-extrabold text-gray-900">
+                  {pricingRegion === 'india' ? '₹7,999' : '$79'}
+                </div>
+                <div className="text-sm text-gray-500 mt-1">per month</div>
+                {pricingRegion === 'india' && (
+                  <div className="text-xs text-gray-400 mt-1">≈ $79 USD</div>
+                )}
               </div>
             </div>
 
@@ -314,8 +356,8 @@ export default function PricingPage() {
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   <div>
-                    <div className="font-semibold text-gray-900">Multi-Channel Management</div>
-                    <div className="text-sm text-gray-600">Manage multiple creator accounts and channels from one dashboard</div>
+                    <div className="font-semibold text-gray-900">Batch Workflows</div>
+                    <div className="text-sm text-gray-600">Process multiple videos and channels simultaneously</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -323,8 +365,8 @@ export default function PricingPage() {
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   <div>
-                    <div className="font-semibold text-gray-900">Batch Processing</div>
-                    <div className="text-sm text-gray-600">Generate prompts, hooks, and scripts for multiple videos at once</div>
+                    <div className="font-semibold text-gray-900">Multiple Niches/Projects</div>
+                    <div className="text-sm text-gray-600">Manage different niches and client projects separately</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -332,17 +374,8 @@ export default function PricingPage() {
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   <div>
-                    <div className="font-semibold text-gray-900">Team Collaboration</div>
-                    <div className="text-sm text-gray-600">Share plans, templates, and workflows with team members</div>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <svg className="w-5 h-5 text-gray-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <div>
-                    <div className="font-semibold text-gray-900">API Access</div>
-                    <div className="text-sm text-gray-600">Integrate Pramana into your existing workflows</div>
+                    <div className="font-semibold text-gray-900">Client-Ready Exports</div>
+                    <div className="text-sm text-gray-600">Professional exports and reports for client presentations</div>
                   </div>
                 </div>
               </div>
@@ -354,9 +387,10 @@ export default function PricingPage() {
               </p>
               <button
                 onClick={() => setSelectedPlan('operator')}
-                className="btn-secondary w-full text-center py-4"
+                className="btn-secondary w-full text-center py-4 opacity-75"
+                disabled
               >
-                Join Waitlist
+                Coming Soon
               </button>
             </div>
           </div>
@@ -366,9 +400,13 @@ export default function PricingPage() {
         {selectedPlan && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="card max-w-md w-full">
-              <h3 className="text-2xl font-bold mb-4 text-gray-900">Join Waitlist</h3>
+              <h3 className="text-2xl font-bold mb-4 text-gray-900">Get Started</h3>
               <p className="text-gray-600 mb-6">
-                We'll notify you when {selectedPlan === 'starter' ? 'Starter' : selectedPlan === 'pro' ? 'Creator Pro' : 'Operator'} is available.
+                {selectedPlan === 'starter' 
+                  ? 'Starter plan is coming soon. We\'ll notify you when it\'s available.'
+                  : selectedPlan === 'pro'
+                  ? 'Creator Pro plan is coming soon. We\'ll notify you when it\'s available.'
+                  : 'Operator plan is coming soon. We\'ll notify you when it\'s available.'}
               </p>
               <form className="space-y-4">
                 <input
@@ -390,7 +428,7 @@ export default function PricingPage() {
                     className="btn-primary flex-1 py-3"
                     onClick={(e) => {
                       e.preventDefault()
-                      alert('Waitlist signup would be processed here')
+                      alert('Payment integration will be added here. For now, this is a demo.')
                       setSelectedPlan(null)
                     }}
                   >
