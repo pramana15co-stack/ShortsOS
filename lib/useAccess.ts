@@ -1,70 +1,74 @@
 'use client'
 
 import { useAuth } from '@/app/providers/AuthProvider'
+import { useState, useEffect } from 'react'
 
-export type AccessTier = 'free' | 'paid'
+export type AccessTier = 'free' | 'starter' | 'pro' | 'agency'
 
-interface AccessLimits {
-  promptStudio: {
-    free: number // Max generations per day
-    paid: 'unlimited'
-  }
-  hookCaption: {
-    free: boolean // Basic only
-    paid: boolean // Advanced
-  }
-  postProcessing: {
-    free: boolean // Preview only
-    paid: boolean // Full access
-  }
-  exportInstructions: {
-    free: boolean
-    paid: boolean
-  }
+interface AccessState {
+  tier: AccessTier
+  canAccess: (requiredTier: AccessTier) => boolean
+  isFree: boolean
+  isStarter: boolean
+  isPro: boolean
+  isAgency: boolean
+  loading: boolean
 }
 
-// For now, all users are free tier
-// This can be extended to check subscription status from user object
-export function useAccess() {
-  const { user } = useAuth()
+// Helper to determine tier from user object
+function getUserTier(user: any): AccessTier {
+  if (!user) return 'free'
   
-  // TODO: Check user.subscription_status or user.tier from database
-  // For now, all authenticated users are free tier
-  // In production, this would check: user?.subscription_tier === 'paid'
-  const tier: AccessTier = (user as any)?.subscription_tier === 'paid' ? 'paid' : 'free'
+  // Check subscription_tier from database (set by webhook)
+  const tier = user.subscription_tier || user.tier
+  if (tier === 'starter' || tier === 'paid') return 'starter'
+  if (tier === 'pro') return 'pro'
+  if (tier === 'agency' || tier === 'operator') return 'agency'
   
-  const limits: AccessLimits = {
-    promptStudio: {
-      free: 5, // 5 generations per day for free users
-      paid: 'unlimited',
-    },
-    hookCaption: {
-      free: true, // Basic hooks/captions
-      paid: true, // Advanced timing and variations
-    },
-    postProcessing: {
-      free: true, // Preview mode
-      paid: true, // Full recommendations
-    },
-    exportInstructions: {
-      free: false, // Not available for free
-      paid: true,
-    },
+  return 'free'
+}
+
+export function useAccess(): AccessState {
+  const { user, loading: authLoading } = useAuth()
+  const [tier, setTier] = useState<AccessTier>('free')
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (!authLoading) {
+      const userTier = getUserTier(user)
+      setTier(userTier)
+      setLoading(false)
+    }
+  }, [user, authLoading])
+
+  const canAccess = (requiredTier: AccessTier): boolean => {
+    if (loading) return false
+    
+    if (requiredTier === 'free') return true
+    
+    // Tier hierarchy: free < starter < pro < agency
+    const tierHierarchy: Record<AccessTier, number> = {
+      free: 0,
+      starter: 1,
+      pro: 2,
+      agency: 3,
+    }
+    
+    return tierHierarchy[tier] >= tierHierarchy[requiredTier]
   }
 
-  const isPaid = tier === 'paid'
   const isFree = tier === 'free'
+  const isStarter = tier === 'starter' || tier === 'pro' || tier === 'agency'
+  const isPro = tier === 'pro' || tier === 'agency'
+  const isAgency = tier === 'agency'
 
   return {
     tier,
-    isPaid,
+    canAccess,
     isFree,
-    limits,
-    canAccessPromptStudio: true, // Both tiers can access
-    canAccessHookCaption: true, // Both tiers can access
-    canAccessPostProcessing: true, // Both tiers can access (with limits)
-    canAccessExportInstructions: isPaid,
-    promptStudioRemaining: isPaid ? 'unlimited' : limits.promptStudio.free, // TODO: Track daily usage
+    isStarter,
+    isPro,
+    isAgency,
+    loading: loading || authLoading,
   }
 }
-

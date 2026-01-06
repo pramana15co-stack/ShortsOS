@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/app/providers/AuthProvider'
+import UpgradeButton from '@/components/UpgradeButton'
 
 export default function PricingPage() {
   const { user } = useAuth()
@@ -212,12 +213,9 @@ export default function PricingPage() {
               <p className="text-sm text-gray-600 mb-4">
                 <strong>Outcome:</strong> You'll know exactly what to create, when to create it, and how to execute it correctly.
               </p>
-              <button
-                onClick={() => setSelectedPlan('starter')}
-                className="btn-primary w-full text-center py-4"
-              >
+              <UpgradeButton className="btn-primary w-full text-center py-4">
                 Get Started
-              </button>
+              </UpgradeButton>
             </div>
           </div>
 

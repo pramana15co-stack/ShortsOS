@@ -1,29 +1,22 @@
 'use client'
 
-import { notFound } from 'next/navigation'
+import { notFound, useParams } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/app/providers/AuthProvider'
+import { useAccess } from '@/lib/useAccess'
+import UpgradeButton from '@/components/UpgradeButton'
 
-interface PageProps {
-  params: {
-    slug: string
-  }
-}
+export default function ExecutionPathPage() {
+  const params = useParams()
+  const slug = params?.slug as string
+  const { user, loading: authLoading } = useAuth()
+  const { isStarter, loading: accessLoading } = useAccess()
+  const hasFullAccess = isStarter
 
-// Helper function to check if user has access (for now, all users are free)
-// This can be extended later to check subscription status
-function hasAccess(user: any): boolean {
-  // For now, return false to show paywall to all users
-  // Later: check user.subscription_status or similar
-  return false
-}
-
-export default function ExecutionPathPage({ params }: PageProps) {
-  const { user, loading } = useAuth()
-  const hasFullAccess = user && hasAccess(user)
+  const loading = authLoading || accessLoading
 
   // For now, only support beginner-shorts-path
-  if (params.slug !== 'beginner-shorts-path') {
+  if (slug !== 'beginner-shorts-path') {
     notFound()
   }
 
@@ -140,7 +133,7 @@ export default function ExecutionPathPage({ params }: PageProps) {
             <h2 className="text-2xl font-semibold text-gray-900">Weekly Focus Breakdown</h2>
             {!hasFullAccess && (
               <span className="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full">
-                Full Access Required
+                Starter Required
               </span>
             )}
           </div>
@@ -213,9 +206,12 @@ export default function ExecutionPathPage({ params }: PageProps) {
                   <p className="text-sm text-gray-700 mb-4 leading-relaxed">
                     The full weekly focus breakdown provides a structured sequence that eliminates decision fatigue. Each week includes specific actions, expected outcomes, and clear guidance on what to focus on and when.
                   </p>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-600 mb-4">
                     This detailed roadmap saves time by giving you an ordered sequence instead of piecing together advice from multiple sources. You'll know exactly what to do each week, why it matters at your stage, and what success looks like.
                   </p>
+                  <UpgradeButton className="btn-primary">
+                    Upgrade to Starter to Unlock
+                  </UpgradeButton>
                 </div>
               </div>
             </div>
@@ -256,7 +252,7 @@ export default function ExecutionPathPage({ params }: PageProps) {
                 </>
               ) : (
                 <p className="text-sm text-gray-600">
-                  Simple structure, easy to execute, teaches fundamental Shorts principles. Full format details, structure breakdown, and execution guide available with full access.
+                  Simple structure, easy to execute, teaches fundamental Shorts principles. Full format details, structure breakdown, and execution guide available with Starter plan.
                 </p>
               )}
             </div>
@@ -279,229 +275,6 @@ export default function ExecutionPathPage({ params }: PageProps) {
             )}
           </div>
         </section>
-
-        {/* What NOT to Do - Preview for Free, Full for Paid */}
-        <section className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-semibold text-gray-900">What NOT to Do at This Stage</h2>
-            {!hasFullAccess && (
-              <span className="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full">
-                Preview
-              </span>
-            )}
-          </div>
-          
-          {hasFullAccess ? (
-            <div className="space-y-4">
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2">Content Strategy Mistakes</h3>
-                <ul className="space-y-2 text-sm text-gray-700">
-                  <li className="flex items-start">
-                    <span className="text-red-500 mr-2">✗</span>
-                    <span><strong>Don't:</strong> Try to go viral with trending sounds or topics outside your niche</span>
-                  </li>
-                  <li className="text-xs text-gray-600 ml-6">Why: Inconsistent content confuses the algorithm and prevents audience building</li>
-                  <li className="flex items-start">
-                    <span className="text-red-500 mr-2">✗</span>
-                    <span><strong>Don't:</strong> Post daily if it means sacrificing quality</span>
-                  </li>
-                  <li className="text-xs text-gray-600 ml-6">Why: 2-3 quality videos per week beats 7 rushed videos that hurt your channel</li>
-                  <li className="flex items-start">
-                    <span className="text-red-500 mr-2">✗</span>
-                    <span><strong>Don't:</strong> Switch formats every video</span>
-                  </li>
-                  <li className="text-xs text-gray-600 ml-6">Why: You need data to learn what works; constant switching prevents pattern recognition</li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2">Technical Mistakes</h3>
-                <ul className="space-y-2 text-sm text-gray-700">
-                  <li className="flex items-start">
-                    <span className="text-red-500 mr-2">✗</span>
-                    <span><strong>Don't:</strong> Spend hours on editing when simple cuts work</span>
-                  </li>
-                  <li className="text-xs text-gray-600 ml-6">Why: At this stage, content structure matters more than production value</li>
-                  <li className="flex items-start">
-                    <span className="text-red-500 mr-2">✗</span>
-                    <span><strong>Don't:</strong> Use complex transitions or effects</span>
-                  </li>
-                  <li className="text-xs text-gray-600 ml-6">Why: Focus on hook, pacing, and value delivery first</li>
-                </ul>
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-2">Growth Strategy Mistakes</h3>
-                <ul className="space-y-2 text-sm text-gray-700">
-                  <li className="flex items-start">
-                    <span className="text-red-500 mr-2">✗</span>
-                    <span><strong>Don't:</strong> Focus on subscriber count over views</span>
-                  </li>
-                  <li className="text-xs text-gray-600 ml-6">Why: Views from browse/suggested are more valuable for growth at this stage</li>
-                  <li className="flex items-start">
-                    <span className="text-red-500 mr-2">✗</span>
-                    <span><strong>Don't:</strong> Buy views, subscribers, or engagement</span>
-                  </li>
-                  <li className="text-xs text-gray-600 ml-6">Why: Artificial metrics hurt your channel's long-term performance</li>
-                </ul>
-              </div>
-            </div>
-          ) : (
-            <div className="bg-gray-50 rounded-lg border border-gray-200 p-4">
-              <p className="text-sm text-gray-700 mb-3">
-                This section provides explicit constraints on what to avoid at your stage, preventing common mistakes that waste time and effort.
-              </p>
-              <p className="text-sm text-gray-600">
-                Full access includes detailed explanations of content strategy mistakes, technical pitfalls, and growth strategy errors—each with clear reasoning on why to avoid them.
-              </p>
-            </div>
-          )}
-        </section>
-
-        {/* Evaluation & Next Stage - Locked for Free Users */}
-        {hasFullAccess ? (
-          <>
-            <section className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">How to Evaluate Progress</h2>
-              <div className="space-y-6">
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-3">Week 2 Checkpoint</h3>
-                  <ul className="space-y-2 text-sm text-gray-700 mb-3">
-                    <li className="flex items-start">
-                      <svg className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <span>Posted at least 4 videos in 2 weeks</span>
-                    </li>
-                    <li className="flex items-start">
-                      <svg className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <span>At least 2 videos have 50+ views</span>
-                    </li>
-                    <li className="flex items-start">
-                      <svg className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <span>Average retention above 40%</span>
-                    </li>
-                  </ul>
-                  <p className="text-xs text-gray-600 italic">If not met: Review format structure and hook effectiveness</p>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-3">Week 4 Checkpoint</h3>
-                  <ul className="space-y-2 text-sm text-gray-700 mb-3">
-                    <li className="flex items-start">
-                      <svg className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <span>Posted consistently (2-3x/week) for 4 weeks</span>
-                    </li>
-                    <li className="flex items-start">
-                      <svg className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <span>At least 3 videos have 100+ views</span>
-                    </li>
-                    <li className="flex items-start">
-                      <svg className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <span>Views are coming from browse/suggested (check analytics)</span>
-                    </li>
-                    <li className="flex items-start">
-                      <svg className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <span>Identified which hook style works best</span>
-                    </li>
-                  </ul>
-                  <p className="text-xs text-gray-600 italic">If not met: Focus on hook improvement and niche clarity</p>
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Key Metrics to Track</h3>
-                  <ul className="space-y-1 text-sm text-gray-700">
-                    <li>• <strong>Views per video:</strong> Target 100-500 by Week 8</li>
-                    <li>• <strong>Retention rate:</strong> Target 60%+ average</li>
-                    <li>• <strong>Browse vs. Subscriber views:</strong> Browse should be 70%+ by Week 6</li>
-                    <li>• <strong>Posting consistency:</strong> 2-3 videos per week without gaps</li>
-                  </ul>
-                </div>
-              </div>
-            </section>
-
-            <section className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">When to Move to the Next Stage</h2>
-              <div className="space-y-4">
-                <div>
-                  <p className="font-semibold text-gray-900 mb-2">Ready to Move On When:</p>
-                  <ul className="space-y-2 text-sm text-gray-700">
-                    <li className="flex items-start">
-                      <svg className="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <span>Consistency achieved: 3+ videos in the last 2 weeks reached 100-500 views</span>
-                    </li>
-                    <li className="flex items-start">
-                      <svg className="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <span>Pattern established: You understand which formats and hooks work for your niche</span>
-                    </li>
-                    <li className="flex items-start">
-                      <svg className="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <span>Habit formed: Posting 2-3x/week feels sustainable, not forced</span>
-                    </li>
-                    <li className="flex items-start">
-                      <svg className="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                      </svg>
-                      <span>Data-driven: You're making decisions based on analytics, not guesswork</span>
-                    </li>
-                  </ul>
-                </div>
-                <div>
-                  <p className="font-semibold text-gray-900 mb-2">Not Ready If:</p>
-                  <ul className="space-y-2 text-sm text-gray-700">
-                    <li className="flex items-start">
-                      <span className="text-red-500 mr-2">✗</span>
-                      <span>Views are inconsistent (one video gets 500 views, next gets 20)</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-red-500 mr-2">✗</span>
-                      <span>You haven't identified what works yet (still experimenting randomly)</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-red-500 mr-2">✗</span>
-                      <span>Posting is still a struggle (missing weeks, feeling overwhelmed)</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </section>
-          </>
-        ) : (
-          <section className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
-            <div className="bg-gray-50 rounded-lg border border-gray-200 p-6">
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0">
-                  <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-gray-900 mb-2">Progress Evaluation & Next Steps</h3>
-                  <p className="text-sm text-gray-700 mb-4 leading-relaxed">
-                    Full access includes detailed weekly checkpoints with specific success criteria, key metrics to track, and clear guidance on when you're ready to move to the next stage.
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    This structured evaluation system provides objective feedback, preventing self-doubt and ensuring you know exactly when you're on track or need to adjust your approach.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
 
         {/* Soft Paywall Message - Only shown to free users */}
         {!hasFullAccess && (
@@ -548,7 +321,10 @@ export default function ExecutionPathPage({ params }: PageProps) {
                   </li>
                 </ul>
               </div>
-              <p className="text-sm text-gray-600">
+              <UpgradeButton className="btn-primary px-10 py-4 text-lg">
+                Upgrade to Starter - $9/month
+              </UpgradeButton>
+              <p className="mt-4 text-sm text-gray-600">
                 Pramana's structured approach reduces confusion and ensures you're focusing on the right actions at the right time for your stage.
               </p>
             </div>
@@ -558,4 +334,3 @@ export default function ExecutionPathPage({ params }: PageProps) {
     </main>
   )
 }
-
