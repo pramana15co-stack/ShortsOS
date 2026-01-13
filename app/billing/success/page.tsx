@@ -6,11 +6,12 @@ import { useSearchParams } from 'next/navigation'
 
 function BillingSuccessContent() {
   const searchParams = useSearchParams()
-  const sessionId = searchParams.get('session_id')
+  const paymentId = searchParams.get('payment_id')
+  const orderId = searchParams.get('order_id')
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Small delay to ensure session is processed
+    // Small delay to ensure payment is processed
     const timer = setTimeout(() => {
       setLoading(false)
     }, 2000)
@@ -92,9 +93,9 @@ function BillingSuccessContent() {
                 </Link>
               </div>
 
-              {sessionId && (
+              {paymentId && (
                 <p className="mt-6 text-sm text-gray-500">
-                  Session ID: {sessionId.substring(0, 20)}...
+                  Payment ID: {paymentId.substring(0, 20)}...
                 </p>
               )}
             </>

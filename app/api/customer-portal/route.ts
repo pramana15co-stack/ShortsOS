@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getStripe } from '@/lib/stripe'
+import { cancelRazorpaySubscription } from '@/lib/razorpay'
 import { createClient } from '@supabase/supabase-js'
 
 // Initialize Supabase client (optional - only if configured)
@@ -12,7 +12,7 @@ const supabase = supabaseUrl && supabaseServiceKey
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { userId } = body
+    const { userId, action = 'cancel' } = body
 
     if (!userId) {
       return NextResponse.json(
@@ -21,13 +21,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Get user's Stripe customer ID from database
-    let customerId: string | null = null
+    // Get user's Razorpay subscription ID from database
+    let subscriptionId: string | null = null
 
     if (supabase) {
       const { data, error } = await supabase
         .from('users')
-        .select('stripe_customer_id')
+        .select('razorpay_subscription_id')
         .eq('id', userId)
         .single()
 
@@ -39,31 +39,54 @@ export async function POST(request: NextRequest) {
         )
       }
 
-      customerId = data?.stripe_customer_id
+      subscriptionId = data?.razorpay_subscription_id
     } else {
       // Demo mode - would fetch from database
-      console.log('Demo mode: Would fetch customer ID for user', userId)
+      console.log('Demo mode: Would fetch subscription ID for user', userId)
     }
 
-    if (!customerId) {
+    if (!subscriptionId) {
       return NextResponse.json(
-        { error: 'No Stripe customer found for this user' },
+        { error: 'No active subscription found for this user' },
         { status: 404 }
       )
     }
 
-    // Create customer portal session
-    const stripe = getStripe()
-    const session = await stripe.billingPortal.sessions.create({
-      customer: customerId,
-      return_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/dashboard`,
-    })
+    // Handle subscription management actions
+    if (action === 'cancel') {
+      // Cancel Razorpay subscription
+      await cancelRazorpaySubscription(subscriptionId)
 
-    return NextResponse.json({ url: session.url })
+      // Update user in database
+      if (supabase) {
+        const { error } = await supabase
+          .from('users')
+          .update({
+            subscription_tier: 'free',
+            subscription_status: 'cancelled',
+            razorpay_subscription_id: null,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('id', userId)
+
+        if (error) {
+          console.error('Error updating user subscription:', error)
+        }
+      }
+
+      return NextResponse.json({ 
+        success: true, 
+        message: 'Subscription cancelled successfully' 
+      })
+    }
+
+    return NextResponse.json({ 
+      error: 'Invalid action' 
+    }, { status: 400 })
   } catch (error: any) {
-    console.error('Error creating customer portal session:', error)
+    console.error('Error managing subscription:', error)
     return NextResponse.json(
-      { error: error.message || 'Failed to create customer portal session' },
+      { error: error.message || 'Failed to manage subscription' },
       { status: 500 }
     )
   }

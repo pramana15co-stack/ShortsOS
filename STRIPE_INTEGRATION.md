@@ -148,3 +148,6 @@ Ensure your `users` table has these columns:
 3. Add usage tracking for free tier limits
 4. Add email notifications for subscription events
 
+
+
+

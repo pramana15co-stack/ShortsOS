@@ -1,9 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from '@/app/providers/AuthProvider'
 import { useAccess } from '@/lib/useAccess'
 import { useRouter } from 'next/navigation'
+
+// Declare Razorpay types for TypeScript
+declare global {
+  interface Window {
+    Razorpay: any
+  }
+}
 
 interface UpgradeButtonProps {
   plan?: 'starter'
@@ -16,6 +23,24 @@ export default function UpgradeButton({ plan = 'starter', className = '', childr
   const { isFree } = useAccess()
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [razorpayLoaded, setRazorpayLoaded] = useState(false)
+
+  // Load Razorpay script
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !window.Razorpay) {
+      const script = document.createElement('script')
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js'
+      script.async = true
+      script.onload = () => setRazorpayLoaded(true)
+      document.body.appendChild(script)
+
+      return () => {
+        document.body.removeChild(script)
+      }
+    } else if (window.Razorpay) {
+      setRazorpayLoaded(true)
+    }
+  }, [])
 
   const handleUpgrade = async () => {
     if (!user) {
@@ -28,9 +53,15 @@ export default function UpgradeButton({ plan = 'starter', className = '', childr
       return
     }
 
+    if (!razorpayLoaded) {
+      alert('Payment gateway is loading. Please wait a moment and try again.')
+      return
+    }
+
     setLoading(true)
 
     try {
+      // Create order on backend
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: {
@@ -39,23 +70,46 @@ export default function UpgradeButton({ plan = 'starter', className = '', childr
         body: JSON.stringify({
           userId: user.id,
           userEmail: user.email,
+          plan: plan,
         }),
       })
 
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to create checkout session')
+        throw new Error(data.error || 'Failed to create payment order')
       }
 
-      // Redirect to Stripe Checkout
-      if (data.url) {
-        window.location.href = data.url
-      } else {
-        throw new Error('No checkout URL received')
+      // Initialize Razorpay Checkout
+      const options = {
+        key: data.key,
+        amount: data.amount, // Amount in paise
+        currency: data.currency,
+        name: data.name || 'Pramana',
+        description: data.description || 'Starter Plan Subscription',
+        order_id: data.orderId,
+        prefill: {
+          email: data.prefill?.email || user.email,
+        },
+        theme: data.theme || {
+          color: '#6366f1',
+        },
+        handler: function (response: any) {
+          // Payment successful - redirect to success page
+          window.location.href = `/billing/success?payment_id=${response.razorpay_payment_id}&order_id=${response.razorpay_order_id}`
+        },
+        modal: {
+          ondismiss: function () {
+            // User closed the checkout modal
+            setLoading(false)
+          },
+        },
       }
+
+      const razorpay = new window.Razorpay(options)
+      razorpay.open()
     } catch (error: any) {
-      console.error('Error creating checkout session:', error)
+      console.error('Error creating payment order:', error)
       alert(error.message || 'Failed to start checkout. Please try again.')
       setLoading(false)
     }
@@ -69,8 +123,8 @@ export default function UpgradeButton({ plan = 'starter', className = '', childr
   return (
     <button
       onClick={handleUpgrade}
-      disabled={loading}
-      className={`${className} ${loading ? 'opacity-75 cursor-not-allowed' : ''}`}
+      disabled={loading || !razorpayLoaded}
+      className={`${className} ${loading || !razorpayLoaded ? 'opacity-75 cursor-not-allowed' : ''}`}
     >
       {loading ? (
         <span className="flex items-center gap-2">
@@ -86,4 +140,7 @@ export default function UpgradeButton({ plan = 'starter', className = '', childr
     </button>
   )
 }
+
+
+
 
