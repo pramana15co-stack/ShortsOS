@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import ChatWidget from '@/components/ChatWidget'
 import AuthProvider from './providers/AuthProvider'
+import { Analytics } from '@vercel/analytics/next'
 
 // Use system fonts for better deployment reliability
 const fontClass = 'font-sans'
@@ -43,6 +44,7 @@ export default function RootLayout({
           <Footer />
           <ChatWidget />
         </AuthProvider>
+        <Analytics />
       </body>
     </html>
   )
