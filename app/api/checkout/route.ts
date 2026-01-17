@@ -64,17 +64,26 @@ export async function POST(request: NextRequest) {
     // Create Razorpay order
     let order
     try {
+      // Generate receipt ID (Razorpay limit: 40 characters)
+      // Format: order_<short_user_id>_<timestamp>
+      // Use first 8 chars of userId + timestamp (ensures < 40 chars)
+      const shortUserId = userId.substring(0, 8)
+      const timestamp = Date.now().toString().slice(-10) // Last 10 digits of timestamp
+      const receipt = `order_${shortUserId}_${timestamp}` // Max: "order_" (6) + "_" (1) + 8 + "_" (1) + 10 = 26 chars
+      
       console.log('Creating Razorpay order with:', {
         amount,
         currency: 'INR',
         plan,
+        receipt,
+        receiptLength: receipt.length,
         userId: userId.substring(0, 8) + '...',
       })
       
       order = await createRazorpayOrder({
         amount: amount,
         currency: 'INR',
-        receipt: `order_${userId}_${Date.now()}`,
+        receipt: receipt, // Now guaranteed to be < 40 characters
         notes: {
           user_id: userId,
           user_email: userEmail,
