@@ -6,7 +6,7 @@ import { useAuth } from '@/app/providers/AuthProvider'
 
 interface Tool {
   name: string
-  category: 'video-editing' | 'script-generation' | 'ai-video' | 'thumbnail' | 'other'
+  category: 'video-editing' | 'script-generation' | 'ai-video' | 'thumbnail' | 'other' | 'creator-tools'
   pricing: 'free' | 'paid' | 'freemium'
   description: string
   bestFor: string
@@ -68,10 +68,60 @@ const tools: Tool[] = [
     rating: 'advanced'
   },
   
-  // Script Generation Tools
+  // Pramana Creator Tools
   {
-    name: 'ShortsOS Script Generator',
-    category: 'script-generation',
+    name: 'Creator Intelligence Audit',
+    category: 'creator-tools',
+    pricing: 'freemium',
+    description: 'Get personalized guidance based on your channel and goals. Understand your creator stage, what to post next, and what to avoid.',
+    bestFor: 'Creators who want clarity on their next steps',
+    url: '/creator-audit',
+    features: ['Personalized guidance', 'Creator stage analysis', 'Content recommendations', 'Posting rhythm advice', 'What to avoid'],
+    rating: 'beginner'
+  },
+  {
+    name: 'Content Planner',
+    category: 'creator-tools',
+    pricing: 'free',
+    description: 'Get format recommendations based on your niche, goals, and experience level. Know exactly what to create next.',
+    bestFor: 'Creators who want stage-aware format recommendations',
+    url: '/planner',
+    features: ['Stage-aware recommendations', 'Niche-specific formats', 'Goal-based guidance', 'Experience level matching', 'Free forever'],
+    rating: 'beginner'
+  },
+  {
+    name: 'AI Video Prompt Studio',
+    category: 'creator-tools',
+    pricing: 'freemium',
+    description: 'Generate high-quality prompts for AI video tools like Sora and Veo. Structured prompts with scene breakdowns and pacing guidance.',
+    bestFor: 'Creators using AI video generation tools',
+    url: '/prompt-studio',
+    features: ['Structured prompts', 'Scene-by-scene breakdown', 'Hook descriptions', 'Pacing guidance', 'Platform optimization'],
+    rating: 'beginner'
+  },
+  {
+    name: 'Hook & Caption Engine',
+    category: 'creator-tools',
+    pricing: 'freemium',
+    description: 'Create compelling hooks and optimized captions to improve retention. Platform-specific timing and emphasis suggestions.',
+    bestFor: 'Creators who want better retention and engagement',
+    url: '/hook-caption-engine',
+    features: ['Hook variations', 'Caption optimization', 'Timing suggestions', 'Emphasis words', 'Platform-specific'],
+    rating: 'beginner'
+  },
+  {
+    name: 'Post-Processing Intelligence',
+    category: 'creator-tools',
+    pricing: 'freemium',
+    description: 'Get actionable feedback on pacing, retention, and optimization. Rule-based guidance to enhance your videos.',
+    bestFor: 'Creators who want to improve video performance',
+    url: '/post-processing',
+    features: ['Hook speed analysis', 'Pacing recommendations', 'Caption density advice', 'Common mistakes', 'Improvement suggestions'],
+    rating: 'beginner'
+  },
+  {
+    name: 'Script Generator',
+    category: 'creator-tools',
     pricing: 'free',
     description: 'Generate complete 30-45 second YouTube Shorts scripts based on proven formats. Built specifically for Shorts creators.',
     bestFor: 'YouTube Shorts creators who want format-based scripts',
@@ -79,6 +129,28 @@ const tools: Tool[] = [
     features: ['Format-based templates', 'Hook + body + CTA', '30-45 second scripts', 'Topic customization', 'Free forever'],
     rating: 'beginner'
   },
+  {
+    name: 'Export Instructions',
+    category: 'creator-tools',
+    pricing: 'freemium',
+    description: 'Convert hooks and captions into step-by-step instructions for CapCut, Premiere Pro, and VN Editor.',
+    bestFor: 'Creators who want clear editing instructions',
+    url: '/export-instructions',
+    features: ['Editor-specific guides', 'Timing instructions', 'Font recommendations', 'Placement guidance', 'Step-by-step'],
+    rating: 'beginner'
+  },
+  {
+    name: 'Format Library',
+    category: 'creator-tools',
+    pricing: 'free',
+    description: 'Browse proven content formats with structured templates and execution guides. Know what works at your stage.',
+    bestFor: 'Creators who want proven format templates',
+    url: '/formats',
+    features: ['Proven formats', 'Execution guides', 'Template library', 'Stage-aware', 'Free access'],
+    rating: 'beginner'
+  },
+  
+  // Script Generation Tools (External)
   {
     name: 'Planable AI Script Generator',
     category: 'script-generation',
@@ -231,6 +303,7 @@ export default function ToolsPage() {
   const { user } = useAuth()
   const categories = [
     { id: 'all', label: 'All Tools', icon: '🛠️' },
+    { id: 'creator-tools', label: 'Creator Tools', icon: '✨' },
     { id: 'video-editing', label: 'Video Editing', icon: '✂️' },
     { id: 'script-generation', label: 'Script Generation', icon: '📝' },
     { id: 'ai-video', label: 'AI Video Creation', icon: '🤖' },

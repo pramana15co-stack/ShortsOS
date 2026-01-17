@@ -117,36 +117,6 @@ export default function Navbar() {
                   Creator Audit
                   <span className="absolute -top-1 -right-1 w-2 h-2 bg-indigo-500 rounded-full"></span>
                 </Link>
-                <Link
-                  href="/planner"
-                  className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 ${
-                    isActive('/planner')
-                      ? 'text-white bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg'
-                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
-                  }`}
-                >
-                  Planner
-                </Link>
-                <Link
-                  href="/formats"
-                  className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 ${
-                    isActive('/formats')
-                      ? 'text-white bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg'
-                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
-                  }`}
-                >
-                  Formats
-                </Link>
-                <Link
-                  href="/execution-paths"
-                  className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 ${
-                    isActive('/execution-paths')
-                      ? 'text-white bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg'
-                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
-                  }`}
-                >
-                  Paths
-                </Link>
               </>
             ) : (
               <>
@@ -371,36 +341,6 @@ export default function Navbar() {
                     Creator Audit
                     <span className="w-2 h-2 bg-indigo-500 rounded-full"></span>
                   </span>
-                </Link>
-                <Link 
-                  href="/planner" 
-                  className={`block px-4 py-3 text-sm font-semibold rounded-xl mx-2 mb-2 transition-all ${
-                    isActive('/planner')
-                      ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  Planner
-                </Link>
-                <Link 
-                  href="/formats" 
-                  className={`block px-4 py-3 text-sm font-semibold rounded-xl mx-2 mb-2 transition-all ${
-                    isActive('/formats')
-                      ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  Formats
-                </Link>
-                <Link 
-                  href="/execution-paths" 
-                  className={`block px-4 py-3 text-sm font-semibold rounded-xl mx-2 mb-2 transition-all ${
-                    isActive('/execution-paths')
-                      ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  Execution Paths
                 </Link>
                 {toolCategories.map((category, catIdx) => (
                   <div key={catIdx}>
