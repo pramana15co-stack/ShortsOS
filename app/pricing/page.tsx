@@ -361,12 +361,9 @@ export default function PricingPage() {
               <div className="mb-3 text-xs text-gray-500 text-center">
                 Early access pricing • No long-term commitment
               </div>
-              <button
-                onClick={() => setSelectedPlan('pro')}
-                className="btn-primary w-full text-center py-4"
-              >
+              <UpgradeButton plan="pro" className="btn-primary w-full text-center py-4">
                 Get Structured Guidance
-              </button>
+              </UpgradeButton>
             </div>
           </div>
 

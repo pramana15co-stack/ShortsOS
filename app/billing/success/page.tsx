@@ -2,21 +2,65 @@
 
 import { useEffect, useState, Suspense } from 'react'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
+import { useAuth } from '@/app/providers/AuthProvider'
 
 function BillingSuccessContent() {
   const searchParams = useSearchParams()
+  const router = useRouter()
+  const { user } = useAuth()
   const paymentId = searchParams.get('payment_id')
   const orderId = searchParams.get('order_id')
+  const signature = searchParams.get('signature')
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [plan, setPlan] = useState<string>('starter')
 
   useEffect(() => {
-    // Small delay to ensure payment is processed
-    const timer = setTimeout(() => {
-      setLoading(false)
-    }, 2000)
-    return () => clearTimeout(timer)
-  }, [])
+    const verifyPayment = async () => {
+      if (!paymentId || !orderId || !signature || !user) {
+        setError('Missing payment information')
+        setLoading(false)
+        return
+      }
+
+      try {
+        const response = await fetch('/api/payment/verify', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            paymentId,
+            orderId,
+            signature,
+            userId: user.id,
+          }),
+        })
+
+        const data = await response.json()
+
+        if (!response.ok) {
+          setError(data.error || 'Payment verification failed')
+          setLoading(false)
+          return
+        }
+
+        // Payment verified successfully
+        setPlan(data.plan || 'starter')
+        
+        // User data will be refreshed on next page load
+        // For now, we'll just show success message
+        setLoading(false)
+      } catch (err: any) {
+        console.error('Error verifying payment:', err)
+        setError('Failed to verify payment. Please contact support.')
+        setLoading(false)
+      }
+    }
+
+    verifyPayment()
+  }, [paymentId, orderId, signature, user])
 
   return (
     <main className="min-h-screen py-16 md:py-24 relative overflow-hidden">
@@ -32,6 +76,37 @@ function BillingSuccessContent() {
               </svg>
               <p className="text-gray-600">Processing your subscription...</p>
             </div>
+          ) : error ? (
+            <>
+              <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg className="w-10 h-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </div>
+              
+              <h1 className="text-4xl md:text-5xl font-extrabold mb-6 text-gray-900">
+                Payment Verification Failed
+              </h1>
+              
+              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+                {error}
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  href="/pricing"
+                  className="btn-primary px-10 py-4 text-lg"
+                >
+                  Back to Pricing
+                </Link>
+                <Link
+                  href="/support"
+                  className="btn-secondary px-10 py-4 text-lg"
+                >
+                  Contact Support
+                </Link>
+              </div>
+            </>
           ) : (
             <>
               <div className="w-20 h-20 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
@@ -41,11 +116,11 @@ function BillingSuccessContent() {
               </div>
               
               <h1 className="text-4xl md:text-5xl font-extrabold mb-6 text-gray-900">
-                Welcome to Starter!
+                Welcome to {plan === 'pro' ? 'Creator Pro' : 'Starter'}!
               </h1>
               
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Your subscription is now active. You have full access to all Starter plan features.
+                Your subscription is now active. You have full access to all {plan === 'pro' ? 'Creator Pro' : 'Starter'} plan features.
               </p>
 
               <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-8 mb-8 border border-indigo-200">

@@ -13,7 +13,7 @@ declare global {
 }
 
 interface UpgradeButtonProps {
-  plan?: 'starter'
+  plan?: 'starter' | 'pro'
   className?: string
   children?: React.ReactNode
 }
@@ -95,8 +95,8 @@ export default function UpgradeButton({ plan = 'starter', className = '', childr
           color: '#6366f1',
         },
         handler: function (response: any) {
-          // Payment successful - redirect to success page
-          window.location.href = `/billing/success?payment_id=${response.razorpay_payment_id}&order_id=${response.razorpay_order_id}`
+          // Payment successful - redirect to success page with signature
+          window.location.href = `/billing/success?payment_id=${response.razorpay_payment_id}&order_id=${response.razorpay_order_id}&signature=${response.razorpay_signature}`
         },
         modal: {
           ondismiss: function () {

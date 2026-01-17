@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { cancelRazorpaySubscription } from '@/lib/razorpay'
 import { createClient } from '@supabase/supabase-js'
 
 // Initialize Supabase client (optional - only if configured)
@@ -21,17 +20,15 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Get user's Razorpay subscription ID from database
-    let subscriptionId: string | null = null
-
+    // Verify user exists
     if (supabase) {
       const { data, error } = await supabase
         .from('users')
-        .select('razorpay_subscription_id')
+        .select('id, subscription_status')
         .eq('id', userId)
         .single()
 
-      if (error) {
+      if (error || !data) {
         console.error('Error fetching user:', error)
         return NextResponse.json(
           { error: 'User not found' },
@@ -39,38 +36,35 @@ export async function POST(request: NextRequest) {
         )
       }
 
-      subscriptionId = data?.razorpay_subscription_id
-    } else {
-      // Demo mode - would fetch from database
-      console.log('Demo mode: Would fetch subscription ID for user', userId)
-    }
-
-    if (!subscriptionId) {
-      return NextResponse.json(
-        { error: 'No active subscription found for this user' },
-        { status: 404 }
-      )
+      if (data.subscription_status !== 'active') {
+        return NextResponse.json(
+          { error: 'No active subscription found for this user' },
+          { status: 404 }
+        )
+      }
     }
 
     // Handle subscription management actions
+    // Note: We're using one-time payments, not subscriptions
+    // This endpoint is kept for future subscription support
     if (action === 'cancel') {
-      // Cancel Razorpay subscription
-      await cancelRazorpaySubscription(subscriptionId)
-
-      // Update user in database
+      // For one-time payments, just update user status
       if (supabase) {
         const { error } = await supabase
           .from('users')
           .update({
             subscription_tier: 'free',
             subscription_status: 'cancelled',
-            razorpay_subscription_id: null,
             updated_at: new Date().toISOString(),
           })
           .eq('id', userId)
 
         if (error) {
           console.error('Error updating user subscription:', error)
+          return NextResponse.json(
+            { error: 'Failed to cancel subscription' },
+            { status: 500 }
+          )
         }
       }
 

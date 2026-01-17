@@ -26,7 +26,25 @@ interface AccessState {
 function getUserTier(user: any): AccessTier {
   if (!user) return 'free'
   
-  // Check subscription_tier from database (set by webhook)
+  // Check if subscription is active and not expired
+  const subscriptionStatus = user.subscription_status
+  const planExpiry = user.plan_expiry
+  
+  // If subscription is not active, return free
+  if (subscriptionStatus !== 'active') {
+    return 'free'
+  }
+  
+  // Check if plan has expired
+  if (planExpiry) {
+    const expiryDate = new Date(planExpiry)
+    const now = new Date()
+    if (expiryDate < now) {
+      return 'free' // Plan expired
+    }
+  }
+  
+  // Check subscription_tier from database
   const tier = user.subscription_tier || user.tier
   if (tier === 'starter' || tier === 'paid') return 'starter'
   if (tier === 'pro') return 'pro'
