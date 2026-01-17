@@ -61,19 +61,26 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Create Razorpay order
-    const order = await createRazorpayOrder({
-      amount: amount,
+    // TEMPORARY DEBUG: Commented out Razorpay order creation
+    // const order = await createRazorpayOrder({
+    //   amount: amount,
+    //   currency: 'INR',
+    //   receipt: `order_${userId}_${Date.now()}`,
+    //   notes: {
+    //     user_id: userId,
+    //     user_email: userEmail,
+    //     plan: plan,
+    //     amount_charged: amount.toString(),
+    //     display_price: PLAN_PRICES[plan as keyof typeof PLAN_PRICES].toString(),
+    //   },
+    // })
+
+    // TEMPORARY DEBUG: Return hardcoded response
+    const order = {
+      id: 'test_order_id',
+      amount: amount * 100, // Convert to paise
       currency: 'INR',
-      receipt: `order_${userId}_${Date.now()}`,
-      notes: {
-        user_id: userId,
-        user_email: userEmail,
-        plan: plan,
-        amount_charged: amount.toString(),
-        display_price: PLAN_PRICES[plan as keyof typeof PLAN_PRICES].toString(),
-      },
-    })
+    }
 
     // Plan display names
     const planNames = {
@@ -95,7 +102,7 @@ export async function POST(request: NextRequest) {
     // Return order details for frontend Razorpay Checkout
     return NextResponse.json({
       orderId: order.id,
-      amount: order.amount, // Already in paise from createRazorpayOrder
+      amount: order.amount, // Already in paise
       currency: order.currency,
       key: publicKey,
       name: 'Pramana',
