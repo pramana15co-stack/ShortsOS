@@ -133,25 +133,42 @@ export async function POST(request: NextRequest) {
       },
     })
   } catch (error: any) {
+    // Log full error details for debugging
     console.error('❌ Error in checkout API:', {
       message: error.message,
       stack: error.stack,
       name: error.name,
+      statusCode: error.statusCode,
+      razorpayError: error.error,
     })
     
     // Provide more helpful error messages
     let errorMessage = error.message || 'Failed to create payment order'
     
     if (error.message?.includes('Razorpay credentials not configured')) {
-      errorMessage = 'Payment gateway not configured. Please contact support.'
+      errorMessage = 'Payment gateway not configured. Please check environment variables in Vercel dashboard.'
     } else if (error.message?.includes('Razorpay error')) {
       errorMessage = error.message
+    } else if (error.statusCode === 401) {
+      errorMessage = 'Invalid Razorpay credentials. Please verify your API keys in Vercel environment variables.'
+    } else if (error.statusCode === 400) {
+      errorMessage = `Razorpay API error: ${error.error?.description || error.message}`
     }
+    
+    // In production, log to Vercel but don't expose sensitive details
+    const isDevelopment = process.env.NODE_ENV === 'development'
     
     return NextResponse.json(
       { 
         error: errorMessage,
-        details: process.env.NODE_ENV === 'development' ? error.message : undefined,
+        // Only show detailed error in development
+        details: isDevelopment ? {
+          message: error.message,
+          statusCode: error.statusCode,
+          razorpayError: error.error,
+        } : undefined,
+        // Helpful message for production
+        help: !isDevelopment ? 'Check Vercel function logs for detailed error information.' : undefined,
       },
       { status: 500 }
     )
