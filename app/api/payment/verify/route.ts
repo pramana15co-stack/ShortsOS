@@ -51,7 +51,8 @@ export async function POST(request: NextRequest) {
     
     // Get plan from order notes
     const plan = (order.notes?.plan as string) || 'starter'
-    const amountPaid = payment.amount / 100 // Convert paise to rupees
+    const amountPaidPaise = payment.amount // Already in paise from Razorpay
+    const amountPaidRupees = amountPaidPaise / 100 // Convert to rupees for display
 
     // Calculate expiry date (30 days from now)
     const expiryDate = new Date()
@@ -67,7 +68,7 @@ export async function POST(request: NextRequest) {
           payment_id: paymentId,
           order_id: orderId,
           plan: plan,
-          amount: amountPaid,
+          amount: amountPaidPaise, // Store in paise (INTEGER)
           currency: payment.currency,
           status: payment.status,
           payment_date: new Date().toISOString(),
@@ -103,7 +104,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       plan,
-      amountPaid,
+      amountPaid: amountPaidRupees, // Return in rupees for API response
+      amountPaidPaise: amountPaidPaise, // Also include paise for reference
       expiryDate: expiryDate.toISOString(),
     })
   } catch (error: any) {
