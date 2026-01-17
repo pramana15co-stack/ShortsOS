@@ -28,9 +28,9 @@ export function getRazorpayInstance() {
   // Debug logging (helpful for troubleshooting)
   if (!keyId || !keySecret) {
     console.error('❌ Razorpay Environment Variables Missing:')
-    console.error('   RAZORPAY_KEY_ID:', keyId ? '✅ Set' : '❌ Missing')
-    console.error('   RAZORPAY_KEY_SECRET:', keySecret ? '✅ Set' : '❌ Missing')
-    console.error('   NEXT_PUBLIC_RAZORPAY_KEY_ID:', process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ? '✅ Set' : '❌ Missing')
+    console.error('   RAZORPAY_KEY_ID:', keyId ? `✅ Set (${keyId.substring(0, 12)}...)` : '❌ Missing')
+    console.error('   RAZORPAY_KEY_SECRET:', keySecret ? '✅ Set (hidden)' : '❌ Missing')
+    console.error('   NEXT_PUBLIC_RAZORPAY_KEY_ID:', process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ? `✅ Set (${process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID.substring(0, 12)}...)` : '❌ Missing')
     console.error('')
     console.error('💡 Solution:')
     console.error('   1. Create .env.local file in project root')
@@ -44,12 +44,21 @@ export function getRazorpayInstance() {
   // Validate key format
   if (!keyId.startsWith('rzp_test_') && !keyId.startsWith('rzp_live_')) {
     console.warn('⚠️  Warning: RAZORPAY_KEY_ID should start with "rzp_test_" or "rzp_live_"')
+    console.warn(`   Current key starts with: "${keyId.substring(0, 8)}"`)
   }
 
-  return new Razorpay({
-    key_id: keyId,
-    key_secret: keySecret,
-  })
+  try {
+    const razorpay = new Razorpay({
+      key_id: keyId,
+      key_secret: keySecret,
+    })
+    
+    console.log('✅ Razorpay instance created successfully')
+    return razorpay
+  } catch (initError: any) {
+    console.error('❌ Failed to initialize Razorpay:', initError.message)
+    throw new Error(`Failed to initialize Razorpay: ${initError.message}`)
+  }
 }
 
 /**
@@ -65,14 +74,41 @@ export async function createRazorpayOrder(params: {
 }): Promise<RazorpayOrder> {
   const razorpay = getRazorpayInstance()
 
-  const order = await razorpay.orders.create({
-    amount: params.amount * 100, // Convert rupees to paise
-    currency: params.currency || 'INR',
-    receipt: params.receipt,
-    notes: params.notes || {},
-  })
+  try {
+    const orderParams = {
+      amount: params.amount * 100, // Convert rupees to paise
+      currency: params.currency || 'INR',
+      receipt: params.receipt,
+      notes: params.notes || {},
+    }
+    
+    console.log('Calling Razorpay orders.create with:', {
+      amount: orderParams.amount,
+      currency: orderParams.currency,
+      receipt: orderParams.receipt.substring(0, 20) + '...',
+    })
 
-  return order as RazorpayOrder
+    const order = await razorpay.orders.create(orderParams)
+    
+    console.log('✅ Razorpay order created:', {
+      id: order.id,
+      amount: order.amount,
+      status: order.status,
+    })
+
+    return order as RazorpayOrder
+  } catch (error: any) {
+    console.error('❌ Razorpay order creation error:', {
+      message: error.message,
+      statusCode: error.statusCode,
+      error: error.error,
+      description: error.error?.description,
+      code: error.error?.code,
+    })
+    
+    // Re-throw with more context
+    throw error
+  }
 }
 
 /**

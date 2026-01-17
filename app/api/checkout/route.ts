@@ -62,18 +62,43 @@ export async function POST(request: NextRequest) {
     }
 
     // Create Razorpay order
-    const order = await createRazorpayOrder({
-      amount: amount,
-      currency: 'INR',
-      receipt: `order_${userId}_${Date.now()}`,
-      notes: {
-        user_id: userId,
-        user_email: userEmail,
-        plan: plan,
-        amount_charged: amount.toString(),
-        display_price: PLAN_PRICES[plan as keyof typeof PLAN_PRICES].toString(),
-      },
-    })
+    let order
+    try {
+      console.log('Creating Razorpay order with:', {
+        amount,
+        currency: 'INR',
+        plan,
+        userId: userId.substring(0, 8) + '...',
+      })
+      
+      order = await createRazorpayOrder({
+        amount: amount,
+        currency: 'INR',
+        receipt: `order_${userId}_${Date.now()}`,
+        notes: {
+          user_id: userId,
+          user_email: userEmail,
+          plan: plan,
+          amount_charged: amount.toString(),
+          display_price: PLAN_PRICES[plan as keyof typeof PLAN_PRICES].toString(),
+        },
+      })
+      
+      console.log('Razorpay order created successfully:', {
+        orderId: order.id,
+        amount: order.amount,
+        currency: order.currency,
+      })
+    } catch (razorpayError: any) {
+      console.error('❌ Razorpay order creation failed:', {
+        error: razorpayError.message,
+        statusCode: razorpayError.statusCode,
+        errorDescription: razorpayError.error?.description,
+        errorCode: razorpayError.error?.code,
+        fullError: JSON.stringify(razorpayError, null, 2),
+      })
+      throw new Error(`Razorpay error: ${razorpayError.message || 'Failed to create order'}. ${razorpayError.error?.description || ''}`)
+    }
 
     // Plan display names
     const planNames = {
@@ -108,9 +133,26 @@ export async function POST(request: NextRequest) {
       },
     })
   } catch (error: any) {
-    console.error('Error creating Razorpay order:', error)
+    console.error('❌ Error in checkout API:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name,
+    })
+    
+    // Provide more helpful error messages
+    let errorMessage = error.message || 'Failed to create payment order'
+    
+    if (error.message?.includes('Razorpay credentials not configured')) {
+      errorMessage = 'Payment gateway not configured. Please contact support.'
+    } else if (error.message?.includes('Razorpay error')) {
+      errorMessage = error.message
+    }
+    
     return NextResponse.json(
-      { error: error.message || 'Failed to create payment order' },
+      { 
+        error: errorMessage,
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined,
+      },
       { status: 500 }
     )
   }
