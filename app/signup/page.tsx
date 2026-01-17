@@ -63,6 +63,22 @@ export default function SignUpPage() {
       }
 
       if (data.user) {
+        // Ensure user exists in public.users table
+        try {
+          await fetch('/api/users/ensure', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              userId: data.user.id,
+            }),
+          })
+        } catch (ensureError) {
+          // Log but don't block signup - user can be created later
+          console.warn('Failed to ensure user in database:', ensureError)
+        }
+
         // Redirect to dashboard on success
         router.push('/dashboard')
       }

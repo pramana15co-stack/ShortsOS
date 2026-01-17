@@ -50,6 +50,23 @@ export default function AuthCallbackPage() {
         }
 
         if (session) {
+          // Ensure user exists in public.users table
+          if (session.user) {
+            try {
+              await fetch('/api/users/ensure', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  userId: session.user.id,
+                }),
+              })
+            } catch (ensureError) {
+              console.warn('Failed to ensure user in database:', ensureError)
+            }
+          }
+          
           // Successfully authenticated, redirect to dashboard
           router.push('/dashboard')
         } else {
@@ -57,8 +74,24 @@ export default function AuthCallbackPage() {
           if (supabase) {
             const {
               data: { subscription },
-            } = supabase.auth.onAuthStateChange((event, session) => {
+            } = supabase.auth.onAuthStateChange(async (event, session) => {
               if (event === 'SIGNED_IN' && session) {
+                // Ensure user exists in public.users table
+                if (session.user) {
+                  try {
+                    await fetch('/api/users/ensure', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({
+                        userId: session.user.id,
+                      }),
+                    })
+                  } catch (ensureError) {
+                    console.warn('Failed to ensure user in database:', ensureError)
+                  }
+                }
                 router.push('/dashboard')
               } else if (event === 'TOKEN_REFRESHED' && session) {
                 router.push('/dashboard')

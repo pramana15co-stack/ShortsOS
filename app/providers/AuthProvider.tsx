@@ -51,9 +51,28 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       // Listen for auth changes
       const {
         data: { subscription },
-      } = supabase.auth.onAuthStateChange((_event, session) => {
+      } = supabase.auth.onAuthStateChange(async (_event, session) => {
         setSession(session)
         setUser(session?.user ?? null)
+        
+        // Ensure user exists in public.users table when they sign in
+        if (session?.user) {
+          try {
+            await fetch('/api/users/ensure', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                userId: session.user.id,
+              }),
+            })
+          } catch (ensureError) {
+            // Log but don't block - user can be created later
+            console.warn('Failed to ensure user in database:', ensureError)
+          }
+        }
+        
         setLoading(false)
       })
 
