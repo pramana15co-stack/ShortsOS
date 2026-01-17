@@ -86,46 +86,44 @@ export async function POST(request: NextRequest) {
       expiryDate: expiryDate.toISOString(),
     })
 
-    // Ensure user exists in public.users (idempotent)
-    // This handles cases where user was created in auth but not in public.users
-    const { data: existingUser } = await supabase
-      .from('users')
-      .select('id')
-      .eq('id', userId)
+    // Ensure profile exists in public.profiles (idempotent)
+    // This handles cases where user was created in auth but not in public.profiles
+    console.log('🔍 Checking profile existence for user:', userId.substring(0, 8) + '...')
+    const { data: existingProfile } = await supabase
+      .from('profiles')
+      .select('id, user_id')
+      .eq('user_id', userId)
       .single()
 
-    if (!existingUser) {
-      // User doesn't exist in public.users - create with defaults
-      console.log('User not found in public.users, creating...')
+    if (!existingProfile) {
+      // Profile doesn't exist in public.profiles - create with defaults
+      console.log('📝 Profile not found in public.profiles, creating...')
       
-      // Try to get email from auth.users
-      let userEmail: string | null = null
-      try {
-        const { data: authUser } = await supabase.auth.admin.getUserById(userId)
-        userEmail = authUser?.user?.email || null
-      } catch (authError) {
-        console.warn('Could not fetch user email from auth.users:', authError)
-      }
-
-      const { error: createUserError } = await supabase
-        .from('users')
+      const { error: createProfileError } = await supabase
+        .from('profiles')
         .insert({
-          id: userId,
-          email: userEmail,
+          user_id: userId,
           subscription_tier: 'free', // Will be updated below
           subscription_status: 'inactive', // Will be updated below
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         })
 
-      if (createUserError && createUserError.code !== '23505') {
+      if (createProfileError && createProfileError.code !== '23505') {
         // 23505 = duplicate key (race condition), ignore
-        console.error('Error creating user:', createUserError)
+        console.error('❌ Error creating profile:', {
+          code: createProfileError.code,
+          message: createProfileError.message,
+          details: createProfileError.details,
+        })
         return NextResponse.json(
-          { error: 'Failed to create user record', details: createUserError.message },
+          { error: 'Failed to create profile record', details: createProfileError.message },
           { status: 500 }
         )
       }
+      console.log('✅ Profile created successfully')
+    } else {
+      console.log('✅ Profile exists:', { profileId: existingProfile.id })
     }
 
     // Step 1: Insert payment record into payments table
@@ -167,9 +165,10 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // Step 2: Update user subscription in users table
-    const { data: updatedUser, error: userError } = await supabase
-      .from('users')
+    // Step 2: Update profile subscription in profiles table
+    console.log('📝 Updating profile subscription...')
+    const { data: updatedProfile, error: profileError } = await supabase
+      .from('profiles')
       .update({
         subscription_tier: plan,
         subscription_status: 'active',
@@ -178,26 +177,31 @@ export async function POST(request: NextRequest) {
         razorpay_order_id: orderId,
         updated_at: new Date().toISOString(),
       })
-      .eq('id', userId)
+      .eq('user_id', userId)
       .select()
       .single()
 
-    if (userError) {
-      console.error('Error updating user subscription:', userError)
+    if (profileError) {
+      console.error('❌ Error updating profile subscription:', {
+        code: profileError.code,
+        message: profileError.message,
+        details: profileError.details,
+      })
       return NextResponse.json(
         { 
           error: 'Failed to update subscription. Payment was successful but subscription update failed.',
-          details: userError.message 
+          details: profileError.message 
         },
         { status: 500 }
       )
     }
 
-    console.log('✅ User subscription updated:', {
-      userId: updatedUser?.id?.substring(0, 8) + '...',
-      tier: updatedUser?.subscription_tier,
-      status: updatedUser?.subscription_status,
-      expiry: updatedUser?.plan_expiry,
+    console.log('✅ Profile subscription updated:', {
+      profileId: updatedProfile?.id,
+      userId: updatedProfile?.user_id?.substring(0, 8) + '...',
+      tier: updatedProfile?.subscription_tier,
+      status: updatedProfile?.subscription_status,
+      expiry: updatedProfile?.plan_expiry,
     })
 
     return NextResponse.json({

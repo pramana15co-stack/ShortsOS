@@ -35,18 +35,19 @@ export async function getAuthenticatedUser(request: NextRequest): Promise<any | 
       return null
     }
 
-    // Fetch user from database
-    const { data: user, error } = await supabase
-      .from('users')
+    // Fetch profile from database
+    const { data: profile, error } = await supabase
+      .from('profiles')
       .select('*')
-      .eq('id', userId)
+      .eq('user_id', userId)
       .single()
 
-    if (error || !user) {
+    if (error || !profile) {
+      console.error('❌ Error fetching profile:', error?.message)
       return null
     }
 
-    return user
+    return profile
   } catch (error) {
     console.error('Error getting authenticated user:', error)
     return null

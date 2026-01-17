@@ -45,8 +45,9 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         
         if (session?.user) {
           try {
-            // Ensure user exists in public.users
-            await fetch('/api/users/ensure', {
+            // Ensure profile exists in public.profiles
+            console.log('🔍 Ensuring profile exists for user:', session.user.id.substring(0, 8) + '...')
+            await fetch('/api/profiles/ensure', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -56,22 +57,28 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
               }),
             })
 
-            // Fetch user subscription data from public.users table
+            // Fetch profile subscription data from public.profiles table
             if (supabase) {
-              const { data: userData, error: userError } = await supabase
-                .from('users')
+              const { data: profileData, error: profileError } = await supabase
+                .from('profiles')
                 .select('*')
-                .eq('id', session.user.id)
+                .eq('user_id', session.user.id)
                 .single()
 
-              if (!userError && userData) {
-                // Merge auth user with subscription data
+              if (!profileError && profileData) {
+                console.log('✅ Profile loaded:', {
+                  profileId: profileData.id,
+                  tier: profileData.subscription_tier,
+                  status: profileData.subscription_status,
+                })
+                // Merge auth user with profile subscription data
                 setUser({
                   ...session.user,
-                  ...userData,
+                  ...profileData,
                 })
               } else {
-                // Fallback to just auth user if subscription data not found
+                console.warn('⚠️ Profile not found, using auth user only:', profileError?.message)
+                // Fallback to just auth user if profile data not found
                 setUser(session.user)
               }
             } else {
@@ -96,10 +103,11 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       } = supabase.auth.onAuthStateChange(async (_event, session) => {
         setSession(session)
         
-        // Ensure user exists in public.users table when they sign in
+        // Ensure profile exists in public.profiles table when they sign in
         if (session?.user) {
           try {
-            await fetch('/api/users/ensure', {
+            console.log('🔍 Ensuring profile exists for user:', session.user.id.substring(0, 8) + '...')
+            await fetch('/api/profiles/ensure', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -109,30 +117,36 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
               }),
             })
 
-            // Fetch user subscription data from public.users table
+            // Fetch profile subscription data from public.profiles table
             if (supabase) {
-              const { data: userData, error: userError } = await supabase
-                .from('users')
+              const { data: profileData, error: profileError } = await supabase
+                .from('profiles')
                 .select('*')
-                .eq('id', session.user.id)
+                .eq('user_id', session.user.id)
                 .single()
 
-              if (!userError && userData) {
-                // Merge auth user with subscription data
+              if (!profileError && profileData) {
+                console.log('✅ Profile loaded:', {
+                  profileId: profileData.id,
+                  tier: profileData.subscription_tier,
+                  status: profileData.subscription_status,
+                })
+                // Merge auth user with profile subscription data
                 setUser({
                   ...session.user,
-                  ...userData,
+                  ...profileData,
                 })
               } else {
-                // Fallback to just auth user if subscription data not found
+                console.warn('⚠️ Profile not found, using auth user only:', profileError?.message)
+                // Fallback to just auth user if profile data not found
                 setUser(session.user)
               }
             } else {
               setUser(session.user)
             }
           } catch (ensureError) {
-            // Log but don't block - user can be created later
-            console.warn('Failed to ensure user in database:', ensureError)
+            // Log but don't block - profile can be created later
+            console.warn('⚠️ Failed to ensure profile in database:', ensureError)
             setUser(session.user)
           }
         } else {

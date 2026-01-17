@@ -58,9 +58,9 @@ export default function LoginPage() {
       }
 
       if (data.user) {
-        // Ensure user exists in public.users table (idempotent)
+        // Ensure profile exists in public.profiles table (idempotent)
         try {
-          await fetch('/api/users/ensure', {
+          await fetch('/api/profiles/ensure', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -70,8 +70,8 @@ export default function LoginPage() {
             }),
           })
         } catch (ensureError) {
-          // Log but don't block login - user can be created later
-          console.warn('Failed to ensure user in database:', ensureError)
+          // Log but don't block login - profile can be created later
+          console.warn('Failed to ensure profile in database:', ensureError)
         }
 
         // Redirect to dashboard on success

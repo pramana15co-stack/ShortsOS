@@ -50,10 +50,10 @@ export default function AuthCallbackPage() {
         }
 
         if (session) {
-          // Ensure user exists in public.users table
+          // Ensure profile exists in public.profiles table
           if (session.user) {
             try {
-              await fetch('/api/users/ensure', {
+              await fetch('/api/profiles/ensure', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ export default function AuthCallbackPage() {
                 }),
               })
             } catch (ensureError) {
-              console.warn('Failed to ensure user in database:', ensureError)
+              console.warn('Failed to ensure profile in database:', ensureError)
             }
           }
           
