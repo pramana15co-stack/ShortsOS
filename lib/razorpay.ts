@@ -98,16 +98,46 @@ export async function createRazorpayOrder(params: {
 
     return order as RazorpayOrder
   } catch (error: any) {
-    console.error('❌ Razorpay order creation error:', {
+    // Enhanced error logging for Razorpay API errors
+    const errorDetails = {
       message: error.message,
       statusCode: error.statusCode,
+      status: error.status,
       error: error.error,
       description: error.error?.description,
       code: error.error?.code,
-    })
+      field: error.error?.field,
+      source: error.error?.source,
+      step: error.error?.step,
+      reason: error.error?.reason,
+      metadata: error.error?.metadata,
+    }
     
-    // Re-throw with more context
-    throw error
+    console.error('❌ Razorpay order creation error:', JSON.stringify(errorDetails, null, 2))
+    
+    // Create a more helpful error message
+    let helpfulMessage = error.message || 'Failed to create Razorpay order'
+    
+    if (error.statusCode === 401) {
+      helpfulMessage = 'Invalid Razorpay API credentials. Please verify your Key ID and Key Secret in Vercel environment variables.'
+    } else if (error.statusCode === 400) {
+      helpfulMessage = `Razorpay API error: ${error.error?.description || error.message}`
+      if (error.error?.field) {
+        helpfulMessage += ` (Field: ${error.error.field})`
+      }
+    } else if (error.statusCode === 429) {
+      helpfulMessage = 'Razorpay rate limit exceeded. Please try again in a few moments.'
+    } else if (error.statusCode >= 500) {
+      helpfulMessage = 'Razorpay service temporarily unavailable. Please try again later.'
+    }
+    
+    // Create new error with helpful message but preserve original error details
+    const enhancedError = new Error(helpfulMessage)
+    ;(enhancedError as any).statusCode = error.statusCode
+    ;(enhancedError as any).error = error.error
+    ;(enhancedError as any).originalError = error
+    
+    throw enhancedError
   }
 }
 
