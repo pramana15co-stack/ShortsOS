@@ -49,8 +49,12 @@ function BillingSuccessContent() {
         // Payment verified successfully
         setPlan(data.plan || 'starter')
         
-        // User data will be refreshed on next page load
-        // For now, we'll just show success message
+        // Redirect to dashboard after 2 seconds
+        // The dashboard will fetch fresh user data from Supabase
+        setTimeout(() => {
+          router.push('/dashboard?payment=success')
+        }, 2000)
+        
         setLoading(false)
       } catch (err: any) {
         console.error('Error verifying payment:', err)

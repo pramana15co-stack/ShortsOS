@@ -1,16 +1,21 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { useRequireAuth } from '@/lib/requireAuth'
 import { useAuth } from '@/app/providers/AuthProvider'
 import { getLastPlannerResult, PlannerHistoryItem } from '@/lib/getPlannerHistory'
+import SuccessBanner from '@/components/SuccessBanner'
 
-export default function Dashboard() {
+function DashboardContent() {
   const { loading } = useRequireAuth()
   const { user } = useAuth()
+  const searchParams = useSearchParams()
+  const showSuccessBanner = searchParams.get('payment') === 'success'
   const [lastPlan, setLastPlan] = useState<PlannerHistoryItem | null>(null)
   const [loadingPlan, setLoadingPlan] = useState(true)
+  const [bannerDismissed, setBannerDismissed] = useState(false)
 
   useEffect(() => {
     if (user && !loading) {
@@ -88,6 +93,14 @@ export default function Dashboard() {
             </Link>
           </div>
         </div>
+
+        {/* Success Banner - Shows after payment */}
+        {(showSuccessBanner || user?.subscription_status === 'active') && !bannerDismissed && (
+          <SuccessBanner
+            show={true}
+            onDismiss={() => setBannerDismissed(true)}
+          />
+        )}
 
         {/* Current Plan Status */}
         {lastPlan ? (
@@ -326,5 +339,28 @@ export default function Dashboard() {
         </div>
       </div>
     </main>
+  )
+}
+
+export default function Dashboard() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen py-16 md:py-24 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-white to-purple-50/30 pointer-events-none"></div>
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <div className="text-center">
+              <svg className="animate-spin h-12 w-12 text-indigo-600 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <p className="text-gray-600">Loading...</p>
+            </div>
+          </div>
+        </div>
+      </main>
+    }>
+      <DashboardContent />
+    </Suspense>
   )
 }

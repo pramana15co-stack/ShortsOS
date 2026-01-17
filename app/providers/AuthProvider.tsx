@@ -40,9 +40,51 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
 
     try {
       // Get initial session (Supabase automatically persists sessions)
-      supabase.auth.getSession().then(({ data: { session } }) => {
+      supabase.auth.getSession().then(async ({ data: { session } }) => {
         setSession(session)
-        setUser(session?.user ?? null)
+        
+        if (session?.user) {
+          try {
+            // Ensure user exists in public.users
+            await fetch('/api/users/ensure', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                userId: session.user.id,
+              }),
+            })
+
+            // Fetch user subscription data from public.users table
+            if (supabase) {
+              const { data: userData, error: userError } = await supabase
+                .from('users')
+                .select('*')
+                .eq('id', session.user.id)
+                .single()
+
+              if (!userError && userData) {
+                // Merge auth user with subscription data
+                setUser({
+                  ...session.user,
+                  ...userData,
+                })
+              } else {
+                // Fallback to just auth user if subscription data not found
+                setUser(session.user)
+              }
+            } else {
+              setUser(session.user)
+            }
+          } catch (error) {
+            console.warn('Failed to fetch user subscription data:', error)
+            setUser(session.user)
+          }
+        } else {
+          setUser(null)
+        }
+        
         setLoading(false)
       }).catch(() => {
         setLoading(false)
@@ -53,7 +95,6 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         data: { subscription },
       } = supabase.auth.onAuthStateChange(async (_event, session) => {
         setSession(session)
-        setUser(session?.user ?? null)
         
         // Ensure user exists in public.users table when they sign in
         if (session?.user) {
@@ -67,10 +108,35 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
                 userId: session.user.id,
               }),
             })
+
+            // Fetch user subscription data from public.users table
+            if (supabase) {
+              const { data: userData, error: userError } = await supabase
+                .from('users')
+                .select('*')
+                .eq('id', session.user.id)
+                .single()
+
+              if (!userError && userData) {
+                // Merge auth user with subscription data
+                setUser({
+                  ...session.user,
+                  ...userData,
+                })
+              } else {
+                // Fallback to just auth user if subscription data not found
+                setUser(session.user)
+              }
+            } else {
+              setUser(session.user)
+            }
           } catch (ensureError) {
             // Log but don't block - user can be created later
             console.warn('Failed to ensure user in database:', ensureError)
+            setUser(session.user)
           }
+        } else {
+          setUser(null)
         }
         
         setLoading(false)
