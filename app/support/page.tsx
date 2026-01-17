@@ -212,10 +212,10 @@ export default function SupportPage() {
                 Prefer to email directly?
               </p>
               <a
-                href="mailto:support@shortsos.com"
+                href="mailto:pramana15@pramana15.com"
                 className="text-primary-600 font-semibold hover:text-primary-700 text-sm"
               >
-                support@shortsos.com →
+                pramana15@pramana15.com →
               </a>
             </div>
             <div className="glass-effect rounded-xl p-6 premium-shadow">

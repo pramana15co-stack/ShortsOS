@@ -76,7 +76,7 @@ export default function PrivacyPage() {
               <li>Use our services without providing any personal information</li>
             </ul>
             <p className="text-gray-700 leading-relaxed mt-4">
-              To exercise these rights, contact Pramana15 support at <a href="mailto:support@shortsos.com" className="text-primary-600 hover:underline">support@shortsos.com</a>
+              To exercise these rights, contact Pramana15 support at <a href="mailto:pramana15@pramana15.com" className="text-primary-600 hover:underline">pramana15@pramana15.com</a>
             </p>
           </section>
 
@@ -100,7 +100,7 @@ export default function PrivacyPage() {
             <h2 className="text-2xl font-bold mb-4 text-gray-900">7. Contact Pramana15</h2>
             <p className="text-gray-700 leading-relaxed">
               If you have questions about this privacy policy, please contact Pramana15 support at{' '}
-              <a href="mailto:support@shortsos.com" className="text-primary-600 hover:underline">support@shortsos.com</a>
+              <a href="mailto:pramana15@pramana15.com" className="text-primary-600 hover:underline">pramana15@pramana15.com</a>
             </p>
           </section>
         </div>

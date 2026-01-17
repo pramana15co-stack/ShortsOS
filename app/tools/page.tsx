@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useAuth } from '@/app/providers/AuthProvider'
 
 interface Tool {
   name: string
@@ -227,6 +228,7 @@ const tools: Tool[] = [
 ]
 
 export default function ToolsPage() {
+  const { user } = useAuth()
   const categories = [
     { id: 'all', label: 'All Tools', icon: '🛠️' },
     { id: 'video-editing', label: 'Video Editing', icon: '✂️' },
@@ -341,53 +343,75 @@ export default function ToolsPage() {
 
         {/* Tools Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {filteredTools.map((tool, idx) => (
-            <div
-              key={tool.name}
-              className="glass-effect rounded-2xl p-6 premium-shadow hover-lift animate-fade-in"
-              style={{ animationDelay: `${idx * 0.1}s` }}
-            >
-              <div className="flex items-start justify-between mb-4">
-                <h3 className="text-xl font-bold text-gray-900">{tool.name}</h3>
-                {getRatingBadge(tool.rating)}
-              </div>
-              
-              <div className="mb-4">
-                {getPricingBadge(tool.pricing)}
-              </div>
-
-              <p className="text-gray-600 mb-4 text-sm leading-relaxed">{tool.description}</p>
-
-              <div className="mb-4">
-                <div className="text-xs font-semibold text-gray-500 mb-1">Best For:</div>
-                <div className="text-sm text-gray-700">{tool.bestFor}</div>
-              </div>
-
-              <div className="mb-4">
-                <div className="text-xs font-semibold text-gray-500 mb-2">Key Features:</div>
-                <ul className="space-y-1">
-                  {tool.features.slice(0, 3).map((feature, i) => (
-                    <li key={i} className="flex items-start text-sm text-gray-600">
-                      <span className="text-primary-600 mr-2">✓</span>
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                  {tool.features.length > 3 && (
-                    <li className="text-xs text-gray-500">+ {tool.features.length - 3} more</li>
-                  )}
-                </ul>
-              </div>
-
-              <a
-                href={tool.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full text-center px-4 py-2 bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300"
+          {filteredTools.map((tool, idx) => {
+            const isInternalTool = tool.url.startsWith('/')
+            const requiresAuth = isInternalTool && !user
+            
+            return (
+              <div
+                key={tool.name}
+                className={`glass-effect rounded-2xl p-6 premium-shadow hover-lift animate-fade-in ${
+                  requiresAuth ? 'opacity-90' : ''
+                }`}
+                style={{ animationDelay: `${idx * 0.1}s` }}
               >
-                Visit Tool →
-              </a>
-            </div>
-          ))}
+                <div className="flex items-start justify-between mb-4">
+                  <h3 className="text-xl font-bold text-gray-900">{tool.name}</h3>
+                  {getRatingBadge(tool.rating)}
+                </div>
+                
+                <div className="mb-4">
+                  {getPricingBadge(tool.pricing)}
+                </div>
+
+                <p className="text-gray-600 mb-4 text-sm leading-relaxed">{tool.description}</p>
+
+                <div className="mb-4">
+                  <div className="text-xs font-semibold text-gray-500 mb-1">Best For:</div>
+                  <div className="text-sm text-gray-700">{tool.bestFor}</div>
+                </div>
+
+                <div className="mb-4">
+                  <div className="text-xs font-semibold text-gray-500 mb-2">Key Features:</div>
+                  <ul className="space-y-1">
+                    {tool.features.slice(0, 3).map((feature, i) => (
+                      <li key={i} className="flex items-start text-sm text-gray-600">
+                        <span className="text-primary-600 mr-2">✓</span>
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                    {tool.features.length > 3 && (
+                      <li className="text-xs text-gray-500">+ {tool.features.length - 3} more</li>
+                    )}
+                  </ul>
+                </div>
+
+                {requiresAuth ? (
+                  <div className="space-y-3">
+                    <div className="p-3 bg-indigo-50 border border-indigo-200 rounded-lg">
+                      <p className="text-xs text-indigo-900 font-semibold mb-1">Sign in required</p>
+                      <p className="text-xs text-indigo-700">Create a free account to access this tool</p>
+                    </div>
+                    <Link
+                      href="/signup?redirect=/tools"
+                      className="block w-full text-center px-4 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 hover:shadow-lg transition-all duration-300"
+                    >
+                      Sign In to Access →
+                    </Link>
+                  </div>
+                ) : (
+                  <a
+                    href={tool.url}
+                    target={isInternalTool ? undefined : "_blank"}
+                    rel={isInternalTool ? undefined : "noopener noreferrer"}
+                    className="block w-full text-center px-4 py-2 bg-gradient-to-r from-primary-600 to-accent-600 text-white rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300"
+                  >
+                    {isInternalTool ? 'Try Tool →' : 'Visit Tool →'}
+                  </a>
+                )}
+              </div>
+            )
+          })}
         </div>
 
         {filteredTools.length === 0 && (
@@ -401,25 +425,53 @@ export default function ToolsPage() {
         {/* CTA Section */}
         <div className="max-w-4xl mx-auto text-center">
           <div className="glass-effect rounded-3xl p-12 premium-shadow animate-fade-in">
-            <h2 className="text-4xl font-bold mb-4 text-gray-900">Ready to Create Better Shorts?</h2>
+            <h2 className="text-4xl font-bold mb-4 text-gray-900">
+              {user ? 'Ready to Create Better Shorts?' : 'Start Creating Better Shorts'}
+            </h2>
             <p className="text-xl mb-8 text-gray-600 max-w-2xl mx-auto">
-              Use our free tools to plan, optimize, and grow your YouTube Shorts channel. 
-              No credit card required.
+              {user 
+                ? 'Use our free tools to plan, optimize, and grow your YouTube Shorts channel. No credit card required.'
+                : 'Sign in to access all our planning tools, AI features, and step-by-step guides. Free to start, no credit card required.'
+              }
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/dashboard"
-                className="inline-block bg-gradient-to-r from-primary-600 to-accent-600 text-white px-10 py-5 rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300"
-              >
-                Start Creating Free →
-              </Link>
-              <Link
-                href="/scripts"
-                className="inline-block glass-effect border-2 border-primary-200 text-primary-700 px-10 py-5 rounded-xl font-semibold text-lg hover:border-primary-400 transition-all duration-300"
-              >
-                Try Script Generator
-              </Link>
+              {user ? (
+                <>
+                  <Link
+                    href="/dashboard"
+                    className="inline-block bg-gradient-to-r from-primary-600 to-accent-600 text-white px-10 py-5 rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300"
+                  >
+                    Go to Dashboard →
+                  </Link>
+                  <Link
+                    href="/creator-audit"
+                    className="inline-block glass-effect border-2 border-primary-200 text-primary-700 px-10 py-5 rounded-xl font-semibold text-lg hover:border-primary-400 transition-all duration-300"
+                  >
+                    Try Creator Audit
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/signup"
+                    className="inline-block bg-gradient-to-r from-primary-600 to-accent-600 text-white px-10 py-5 rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300"
+                  >
+                    Sign Up Free →
+                  </Link>
+                  <Link
+                    href="/login"
+                    className="inline-block glass-effect border-2 border-primary-200 text-primary-700 px-10 py-5 rounded-xl font-semibold text-lg hover:border-primary-400 transition-all duration-300"
+                  >
+                    Sign In
+                  </Link>
+                </>
+              )}
             </div>
+            {!user && (
+              <p className="mt-6 text-sm text-gray-500">
+                Explore freely • Upgrade only when ready • No pressure
+              </p>
+            )}
           </div>
         </div>
       </div>

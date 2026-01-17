@@ -26,10 +26,10 @@ export default function ContactPage() {
               Send an email to the Pramana15 support team. The Pramana15 team will get back to you within 24–48 hours.
             </p>
             <a
-              href="mailto:support@shortsos.com"
+              href="mailto:pramana15@pramana15.com"
               className="text-primary-600 font-semibold hover:text-primary-700"
             >
-              support@shortsos.com →
+                pramana15@pramana15.com →
             </a>
           </div>
 

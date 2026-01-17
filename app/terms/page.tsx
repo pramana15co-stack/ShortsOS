@@ -120,7 +120,7 @@ export default function TermsPage() {
             <h2 className="text-2xl font-bold mb-4 text-gray-900">9. Contact Pramana15</h2>
             <p className="text-gray-700 leading-relaxed">
               Questions about these terms? Contact Pramana15 support at{' '}
-              <a href="mailto:support@shortsos.com" className="text-primary-600 hover:underline">support@shortsos.com</a>
+              <a href="mailto:pramana15@pramana15.com" className="text-primary-600 hover:underline">pramana15@pramana15.com</a>
             </p>
           </section>
         </div>
