@@ -83,13 +83,47 @@ export default function PromptStudioPage() {
 
   const generateScenes = (data: typeof formData): string[] => {
     const sceneCount = data.duration === '10s' ? 2 : data.duration === '20s' ? 3 : 4
-    return Array.from({ length: sceneCount }, (_, i) => {
-      return `Scene ${i + 1}: [Describe visual for this moment in the ${data.topic} narrative, ${data.tone} tone, ${data.style} style]`
-    })
+    const topic = data.topic.toLowerCase()
+    
+    const sceneTemplates = {
+      cinematic: [
+        `Scene 1: Wide establishing shot with ${data.tone === 'dramatic' ? 'dramatic lighting and high contrast' : data.tone === 'energetic' ? 'vibrant colors and dynamic composition' : 'soft, natural lighting'}. Show the main subject or environment related to "${data.topic}" with professional camera movement.`,
+        `Scene 2: Medium shot focusing on key action or transformation. ${data.tone === 'dramatic' ? 'Intense focus with shallow depth of field' : data.tone === 'energetic' ? 'Fast-paced movement with multiple angles' : 'Smooth, steady composition'}.`,
+        `Scene 3: Close-up detail shot highlighting the most important element. ${data.tone === 'dramatic' ? 'Extreme close-up with dramatic shadows' : data.tone === 'energetic' ? 'Dynamic close-up with motion blur effects' : 'Clean, well-lit close-up'}.`,
+        `Scene 4: Final reveal or outcome shot. ${data.tone === 'dramatic' ? 'Powerful conclusion with strong visual impact' : data.tone === 'energetic' ? 'Energetic finale with vibrant colors' : 'Peaceful resolution with balanced composition'}.`,
+      ],
+      storytelling: [
+        `Scene 1: Opening moment that establishes the narrative context. Show the beginning state or problem related to "${data.topic}". ${data.tone === 'dramatic' ? 'Create tension through visual storytelling' : data.tone === 'energetic' ? 'Start with action or movement' : 'Begin with a calm, relatable moment'}.`,
+        `Scene 2: Development of the story. Show the journey, process, or transformation. ${data.tone === 'dramatic' ? 'Build emotional intensity' : data.tone === 'energetic' ? 'Show progress with dynamic visuals' : 'Present the process clearly and smoothly'}.`,
+        `Scene 3: Key moment or turning point in the narrative. This is where the main value or insight is revealed. ${data.tone === 'dramatic' ? 'Emphasize the significance of this moment' : data.tone === 'energetic' ? 'Make this moment visually exciting' : 'Present this moment clearly and understandably'}.`,
+        `Scene 4: Resolution or outcome. Show the result, lesson learned, or transformation complete. ${data.tone === 'dramatic' ? 'End with a powerful visual conclusion' : data.tone === 'energetic' ? 'Conclude with energy and positivity' : 'End on a peaceful, satisfying note'}.`,
+      ],
+      motivation: [
+        `Scene 1: High-energy opening that immediately grabs attention. Show someone taking action or a powerful visual related to "${data.topic}". ${data.tone === 'dramatic' ? 'Intense, powerful imagery' : data.tone === 'energetic' ? 'Fast-paced, vibrant visuals' : 'Inspiring but calm visual'}.`,
+        `Scene 2: Show the process, effort, or journey. Demonstrate the work or steps involved. ${data.tone === 'dramatic' ? 'Emphasize the challenge and determination' : data.tone === 'energetic' ? 'Show dynamic movement and progress' : 'Present the process in an inspiring, clear way'}.`,
+        `Scene 3: Highlight the transformation, achievement, or result. Show what's possible. ${data.tone === 'dramatic' ? 'Powerful before/after or result shot' : data.tone === 'energetic' ? 'Celebratory, energetic result visualization' : 'Peaceful, satisfying outcome'}.`,
+        `Scene 4: Call to action or inspiring conclusion. Motivate viewers to take action. ${data.tone === 'dramatic' ? 'End with a powerful, memorable visual' : data.tone === 'energetic' ? 'Conclude with high energy and excitement' : 'End with calm inspiration'}.`,
+      ],
+      explainer: [
+        `Scene 1: Clear introduction to the topic. Show what "${data.topic}" is or the problem it solves. ${data.tone === 'dramatic' ? 'Present the problem or concept with visual impact' : data.tone === 'energetic' ? 'Introduce with engaging, dynamic visuals' : 'Present clearly and understandably'}.`,
+        `Scene 2: Break down the concept or show the first step. Use visual aids or demonstrations. ${data.tone === 'dramatic' ? 'Make the explanation visually compelling' : data.tone === 'energetic' ? 'Show the step with dynamic visuals' : 'Present the step clearly and simply'}.`,
+        `Scene 3: Continue the explanation or show the main concept. Build understanding. ${data.tone === 'dramatic' ? 'Emphasize key points with strong visuals' : data.tone === 'energetic' ? 'Keep the explanation engaging and dynamic' : 'Present information clearly and calmly'}.`,
+        `Scene 4: Summarize or show the complete picture. Reinforce the main takeaway. ${data.tone === 'dramatic' ? 'End with a memorable visual summary' : data.tone === 'energetic' ? 'Conclude with engaging, dynamic visuals' : 'End with a clear, peaceful summary'}.`,
+      ],
+    }
+
+    const templates = sceneTemplates[data.style] || sceneTemplates.explainer
+    return templates.slice(0, sceneCount).map((template, i) => `Scene ${i + 1}: ${template}`)
   }
 
   const generateHook = (data: typeof formData): string => {
-    return `Hook (0-2s): Start with [${data.tone} visual/action] that immediately captures attention. Show [key element related to ${data.topic}] in the first 2 seconds to maximize retention.`
+    const hookTemplates = {
+      dramatic: `Hook (0-2s): Open with a powerful, attention-grabbing visual that immediately establishes the intensity of "${data.topic}". Use high contrast, dramatic lighting, or a striking visual element that creates instant intrigue. The first frame should make viewers stop scrolling. Consider: a close-up of a key element, a dramatic transformation, or a visually striking moment that relates to your topic.`,
+      calm: `Hook (0-2s): Begin with a visually pleasing, peaceful introduction to "${data.topic}" that draws viewers in through aesthetic appeal. Use soft lighting, smooth composition, or a beautiful visual that creates immediate interest. The opening should feel inviting and professional. Consider: a serene establishing shot, a smooth reveal, or an aesthetically pleasing detail related to your topic.`,
+      energetic: `Hook (0-2s): Start with high-energy, dynamic visuals that immediately capture attention through movement and vibrancy. Show action, transformation, or an exciting moment related to "${data.topic}" in the first 2 seconds. Use fast cuts, vibrant colors, or dynamic camera movement. The opening should feel exciting and engaging. Consider: action in progress, a dynamic reveal, or energetic movement that relates to your topic.`,
+    }
+    
+    return hookTemplates[data.tone] || hookTemplates.calm
   }
 
   const generatePacing = (data: typeof formData): string[] => {
@@ -291,17 +325,88 @@ export default function PromptStudioPage() {
         </div>
 
         {/* Info Section */}
-        <div className="mt-12 card">
-          <h3 className="text-xl font-bold mb-4 text-gray-900">How to Use This Prompt</h3>
-          <div className="space-y-3 text-gray-700">
-            <p>1. Copy the main prompt and paste it into your AI video generator (Sora, Veo, Runway, etc.)</p>
-            <p>2. Use the scene breakdown to generate individual scenes if your tool supports multi-scene generation</p>
-            <p>3. Reference the pacing guidance when editing to ensure optimal viewer retention</p>
-            <p>4. The hook description helps you understand what should appear in the first 2 seconds</p>
+        <div className="mt-12 space-y-6">
+          <div className="card">
+            <h3 className="text-xl font-bold mb-4 text-gray-900">How to Use This Prompt</h3>
+            <div className="space-y-4 text-gray-700">
+              <div>
+                <p className="font-semibold mb-2">1. Main Prompt Usage</p>
+                <p className="text-sm">Copy the main prompt and paste it directly into your AI video generator (Sora, Veo, Runway, Pika, etc.). This prompt is optimized for the style, tone, and duration you selected. The prompt includes technical specifications that help AI tools generate better results.</p>
+              </div>
+              <div>
+                <p className="font-semibold mb-2">2. Scene-by-Scene Generation</p>
+                <p className="text-sm">If your AI video tool supports multi-scene generation or you're creating a sequence, use each scene description individually. Generate each scene separately, then combine them in your video editor. This approach gives you more control over each moment.</p>
+              </div>
+              <div>
+                <p className="font-semibold mb-2">3. Hook Optimization</p>
+                <p className="text-sm">The hook description tells you exactly what should appear in the first 2 seconds. This is critical for retention—most viewers decide whether to continue watching in the first 2-3 seconds. Use this guidance to ensure your generated video starts strong.</p>
+              </div>
+              <div>
+                <p className="font-semibold mb-2">4. Pacing Reference</p>
+                <p className="text-sm">Reference the visual pacing guidance when editing or when generating multiple scenes. The timing breakdown ensures your video maintains viewer attention throughout. Each section has a specific purpose: hook (attention), setup (context), main content (value), and CTA (action).</p>
+              </div>
+            </div>
           </div>
-          <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+
+          <div className="card">
+            <h3 className="text-xl font-bold mb-4 text-gray-900">Best Practices for AI Video Prompts</h3>
+            <div className="space-y-4">
+              <div>
+                <p className="font-semibold text-gray-900 mb-2">Be Specific, Not Vague</p>
+                <p className="text-sm text-gray-700">Instead of "a video about productivity," use "a morning routine showing specific actions." The more specific your topic, the better the AI can generate relevant visuals.</p>
+              </div>
+              <div>
+                <p className="font-semibold text-gray-900 mb-2">Match Style to Content</p>
+                <p className="text-sm text-gray-700">Cinematic works for dramatic transformations. Storytelling suits narratives. Explainer fits educational content. Motivation works for inspiring content. Choose the style that matches your content's purpose.</p>
+              </div>
+              <div>
+                <p className="font-semibold text-gray-900 mb-2">Consider Platform Differences</p>
+                <p className="text-sm text-gray-700">YouTube Shorts viewers expect different pacing than Instagram Reels. Shorts can be slightly longer and more detailed. Reels benefit from faster hooks and more visual appeal. The prompts are optimized for each platform.</p>
+              </div>
+              <div>
+                <p className="font-semibold text-gray-900 mb-2">Iterate and Refine</p>
+                <p className="text-sm text-gray-700">If your first generation doesn't match your vision, adjust the topic description or try a different style/tone combination. AI video generation often requires iteration to get the perfect result.</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="card">
+            <h3 className="text-xl font-bold mb-4 text-gray-900">Common Mistakes to Avoid</h3>
+            <div className="space-y-3">
+              <div className="flex items-start gap-3">
+                <span className="text-red-500 font-bold">✗</span>
+                <div>
+                  <p className="font-semibold text-gray-900">Too Generic Topics</p>
+                  <p className="text-sm text-gray-700">"Productivity tips" is too vague. Use "5-minute morning routine that boosts energy" instead.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-red-500 font-bold">✗</span>
+                <div>
+                  <p className="font-semibold text-gray-900">Ignoring the Hook</p>
+                  <p className="text-sm text-gray-700">The first 2 seconds determine retention. Don't skip the hook guidance—it's the most important part.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-red-500 font-bold">✗</span>
+                <div>
+                  <p className="font-semibold text-gray-900">Mismatched Style and Tone</p>
+                  <p className="text-sm text-gray-700">Using "dramatic" tone for a calm meditation video creates confusion. Match tone to your content's actual mood.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-red-500 font-bold">✗</span>
+                <div>
+                  <p className="font-semibold text-gray-900">Not Using Scene Breakdown</p>
+                  <p className="text-sm text-gray-700">The scene breakdown helps you create better sequences. Use it to plan your video structure before generation.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
             <p className="text-sm text-blue-900">
-              <strong>Note:</strong> Pramana does not generate videos. This tool helps you create better prompts for external AI video generators.
+              <strong>Important Note:</strong> Pramana does not generate videos or images. This tool helps you create better, more structured prompts for external AI video generators like Sora, Veo, Runway, Pika, and others. The prompts are designed to produce better results when used with these tools.
             </p>
           </div>
         </div>

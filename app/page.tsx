@@ -19,12 +19,7 @@ export default function Home() {
     return () => clearInterval(interval)
   }, [])
 
-  const stats = [
-    { value: '10,000+', label: 'Active Creators', icon: '👥' },
-    { value: '78%', label: 'Success Rate', icon: '📈' },
-    { value: '$1.2M+', label: 'Creator Earnings', icon: '💰' },
-    { value: '50K+', label: 'Videos Planned', icon: '🎬' },
-  ]
+  // Removed inflated stats - keeping it honest and trustworthy
 
   const steps = [
     {
@@ -140,18 +135,18 @@ export default function Home() {
             
             {/* Main Heading */}
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 text-gray-900 leading-[1.1]">
-              Decide what to create.<br />
-              <span className="text-gray-600">Know when to create it.</span><br />
-              <span className="text-gradient">Execute it correctly.</span>
+              Clarity for short-form creators.<br />
+              <span className="text-gray-700">Structure, not stress.</span>
             </h1>
             
             {/* Description */}
-            <p className="text-xl md:text-2xl text-gray-700 mb-4 max-w-2xl mx-auto leading-relaxed font-medium">
-              Pramana helps short-form creators make better content decisions without wasting time or money.
+            <p className="text-xl md:text-2xl text-gray-700 mb-6 max-w-2xl mx-auto leading-relaxed font-normal">
+              Pramana helps you know what to create, when to create it, and how to execute it correctly. 
+              Built for early-stage creators who want clarity, not hacks.
             </p>
             
-            <p className="text-lg text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-              A decision and execution system for YouTube Shorts creators who feel lost, not lazy.
+            <p className="text-base text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+              Explore freely. Upgrade only when ready. No pressure.
             </p>
 
             {/* CTA Buttons */}
@@ -160,55 +155,61 @@ export default function Home() {
                 href="/dashboard" 
                 className="btn-primary text-lg px-10 py-5"
               >
-                Get Started Free →
+                Get Started Free
               </Link>
               <Link 
                 href="/planner" 
                 className="btn-secondary text-lg px-10 py-5"
               >
-                Start Planning
+                Explore Tools
               </Link>
+            </div>
+            
+            {/* Value Proposition - 4 Questions */}
+            <div className="mt-16 grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+              <div className="text-center p-6 bg-white/60 backdrop-blur-sm rounded-xl border border-gray-200/50">
+                <div className="text-2xl font-bold text-gray-900 mb-2">Who this is for</div>
+                <div className="text-gray-700">Early-stage creators who want clarity and structure, not more confusion.</div>
+              </div>
+              <div className="text-center p-6 bg-white/60 backdrop-blur-sm rounded-xl border border-gray-200/50">
+                <div className="text-2xl font-bold text-gray-900 mb-2">What problem it solves</div>
+                <div className="text-gray-700">Decision fatigue, conflicting advice, and not knowing what to create next.</div>
+              </div>
+              <div className="text-center p-6 bg-white/60 backdrop-blur-sm rounded-xl border border-gray-200/50">
+                <div className="text-2xl font-bold text-gray-900 mb-2">Why it's different</div>
+                <div className="text-gray-700">Stage-aware guidance that tells you what works at YOUR level, not generic tips.</div>
+              </div>
+              <div className="text-center p-6 bg-white/60 backdrop-blur-sm rounded-xl border border-gray-200/50">
+                <div className="text-2xl font-bold text-gray-900 mb-2">Why upgrade makes sense</div>
+                <div className="text-gray-700">Remove limits, get structured paths, and unlock full clarity when you're ready.</div>
+              </div>
             </div>
 
             {/* Trust Indicators */}
-            <div className="flex flex-wrap gap-6 items-center justify-center pt-8 border-t border-gray-200/50">
-              <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+            <div className="flex flex-wrap gap-6 items-center justify-center pt-12 border-t border-gray-200/50">
+              <div className="flex items-center gap-2 text-gray-700">
+                <svg className="w-5 h-5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span className="text-sm font-semibold text-gray-800">100% Free to Start</span>
+                <span className="text-sm font-medium">Free to start, no credit card</span>
               </div>
-              <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+              <div className="flex items-center gap-2 text-gray-700">
+                <svg className="w-5 h-5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span className="text-sm font-semibold text-gray-800">Planning Tools Only</span>
+                <span className="text-sm font-medium">Built for beginners</span>
               </div>
-              <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+              <div className="flex items-center gap-2 text-gray-700">
+                <svg className="w-5 h-5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
-                <span className="text-sm font-semibold text-gray-800">Structured Templates</span>
+                <span className="text-sm font-medium">Focused on clarity, not hacks</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="section-alt">
-        <div className="container mx-auto px-6 max-w-6xl">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-            {stats.map((stat, idx) => (
-              <div key={idx} className="card text-center p-6">
-                <div className="text-4xl mb-3">{stat.icon}</div>
-                <div className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-2">{stat.value}</div>
-                <div className="text-sm text-gray-600 font-medium">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Problem/Solution Section */}
       <section className="section">

@@ -36,6 +36,7 @@ export default function Navbar() {
         { href: '/hook-caption-engine', label: 'Hook & Caption', icon: '💬', requiresAuth: false },
         { href: '/post-processing', label: 'Post-Processing', icon: '🔧', requiresAuth: false },
         { href: '/export-instructions', label: 'Export Instructions', icon: '📤', requiresAuth: false },
+        { href: '/creator-audit', label: 'Creator Audit', icon: '🔍', requiresAuth: false, premium: true },
       ],
     },
     {

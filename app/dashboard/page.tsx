@@ -50,6 +50,7 @@ export default function Dashboard() {
 
   const quickActions = [
     { title: 'Content Planner', description: 'Get format recommendations', icon: '🎯', href: '/planner', color: 'from-blue-500 to-indigo-600' },
+    { title: 'Creator Audit', description: 'Get personalized guidance', icon: '🔍', href: '/creator-audit', color: 'from-indigo-500 to-purple-600', premium: true },
     { title: 'Format Library', description: 'Browse proven formats', icon: '📚', href: '/formats', color: 'from-purple-500 to-pink-600' },
     { title: 'Prompt Studio', description: 'Generate AI video prompts', icon: '🎬', href: '/prompt-studio', color: 'from-violet-500 to-purple-600' },
     { title: 'Hook & Caption Engine', description: 'Create hooks and captions', icon: '🎣', href: '/hook-caption-engine', color: 'from-orange-500 to-amber-600' },

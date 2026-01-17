@@ -82,6 +82,24 @@ export default function PricingPage() {
                 Creators who are just starting out or want to understand how Pramana works. 
                 You're exploring, building confidence, and establishing a planning routine.
               </p>
+              
+              <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <h4 className="font-semibold text-gray-900 mb-3">In 10 minutes, you can:</h4>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-start gap-2">
+                    <span className="text-indigo-600 mt-0.5">•</span>
+                    <span>Explore all planning tools and see how they work</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-indigo-600 mt-0.5">•</span>
+                    <span>Understand what formats work for your niche</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-indigo-600 mt-0.5">•</span>
+                    <span>Build confidence in your content planning process</span>
+                  </li>
+                </ul>
+              </div>
             </div>
 
             <div className="mb-8">
@@ -137,7 +155,12 @@ export default function PricingPage() {
           </div>
 
           {/* Tier 2: Starter */}
-          <div className="card p-10 max-w-5xl mx-auto border-2 border-indigo-200 bg-gradient-to-br from-indigo-50/30 to-white">
+          <div className="card p-10 max-w-5xl mx-auto border-2 border-indigo-300 bg-indigo-50/50 relative">
+            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+              <span className="px-4 py-1.5 bg-indigo-600 text-white rounded-full text-xs font-bold shadow-lg">
+                Recommended
+              </span>
+            </div>
             <div className="flex items-start justify-between mb-8">
               <div className="flex-1">
                 <div className="inline-block px-4 py-2 bg-indigo-100 text-indigo-700 rounded-full text-sm font-bold mb-4">
@@ -165,6 +188,24 @@ export default function PricingPage() {
                 Creators who've tried the free plan and want to move past confusion. 
                 You're ready to commit to a structured approach but need clear, step-by-step guidance.
               </p>
+              
+              <div className="mt-6 p-4 bg-indigo-50 rounded-lg border border-indigo-200">
+                <h4 className="font-semibold text-gray-900 mb-3">In 10 minutes, you can:</h4>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-start gap-2">
+                    <span className="text-indigo-600 mt-0.5">•</span>
+                    <span>Know exactly what to post next without decision fatigue</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-indigo-600 mt-0.5">•</span>
+                    <span>Follow a clear execution path from planning to publishing</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-indigo-600 mt-0.5">•</span>
+                    <span>Remove confusion and get structured guidance tailored to your stage</span>
+                  </li>
+                </ul>
+              </div>
             </div>
 
             <div className="mb-8">
@@ -213,8 +254,11 @@ export default function PricingPage() {
               <p className="text-sm text-gray-600 mb-4">
                 <strong>Outcome:</strong> You'll know exactly what to create, when to create it, and how to execute it correctly.
               </p>
+              <div className="mb-3 text-xs text-gray-500 text-center">
+                Early access pricing • No long-term commitment
+              </div>
               <UpgradeButton className="btn-primary w-full text-center py-4">
-                Get Started
+                Unlock Full Clarity
               </UpgradeButton>
             </div>
           </div>
@@ -248,6 +292,24 @@ export default function PricingPage() {
                 Creators who've established a routine and want to scale. You're posting consistently, 
                 seeing results, and ready to optimize for growth and monetization.
               </p>
+              
+              <div className="mt-6 p-4 bg-purple-50 rounded-lg border border-purple-200">
+                <h4 className="font-semibold text-gray-900 mb-3">In 10 minutes, you can:</h4>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-600 mt-0.5">•</span>
+                    <span>Access all execution paths to scale efficiently</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-600 mt-0.5">•</span>
+                    <span>Get advanced optimization recommendations for every video</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-purple-600 mt-0.5">•</span>
+                    <span>Build consistency and optimize for sustainable growth</span>
+                  </li>
+                </ul>
+              </div>
             </div>
 
             <div className="mb-8">
@@ -296,11 +358,14 @@ export default function PricingPage() {
               <p className="text-sm text-gray-600 mb-4">
                 <strong>Outcome:</strong> You'll scale efficiently, optimize consistently, and build sustainable growth.
               </p>
+              <div className="mb-3 text-xs text-gray-500 text-center">
+                Early access pricing • No long-term commitment
+              </div>
               <button
                 onClick={() => setSelectedPlan('pro')}
                 className="btn-primary w-full text-center py-4"
               >
-                Get Started
+                Get Structured Guidance
               </button>
             </div>
           </div>
@@ -385,11 +450,13 @@ export default function PricingPage() {
               </p>
               <button
                 onClick={() => setSelectedPlan('operator')}
-                className="btn-secondary w-full text-center py-4 opacity-75"
-                disabled
+                className="btn-secondary w-full text-center py-4"
               >
-                Coming Soon
+                Join Waitlist
               </button>
+              <p className="text-xs text-gray-500 text-center mt-2">
+                We'll notify you when Operator is available
+              </p>
             </div>
           </div>
         </div>
