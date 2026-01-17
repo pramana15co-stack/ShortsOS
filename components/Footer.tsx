@@ -40,6 +40,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/creator-audit" className="text-gray-600 hover:text-indigo-600 transition-colors font-medium">
+                  Creator Audit
+                </Link>
+              </li>
+              <li>
                 <Link href="/tools" className="text-gray-600 hover:text-indigo-600 transition-colors font-medium">
                   Creator Tools
                 </Link>

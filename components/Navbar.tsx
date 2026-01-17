@@ -107,6 +107,17 @@ export default function Navbar() {
                   Dashboard
                 </Link>
                 <Link
+                  href="/creator-audit"
+                  className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 relative ${
+                    isActive('/creator-audit')
+                      ? 'text-white bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg'
+                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  }`}
+                >
+                  Creator Audit
+                  <span className="absolute -top-1 -right-1 w-2 h-2 bg-indigo-500 rounded-full"></span>
+                </Link>
+                <Link
                   href="/planner"
                   className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 ${
                     isActive('/planner')
@@ -139,6 +150,17 @@ export default function Navbar() {
               </>
             ) : (
               <>
+                <Link
+                  href="/creator-audit"
+                  className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 relative ${
+                    isActive('/creator-audit')
+                      ? 'text-white bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg'
+                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                  }`}
+                >
+                  Creator Audit
+                  <span className="absolute -top-1 -right-1 w-2 h-2 bg-indigo-500 rounded-full"></span>
+                </Link>
                 <Link
                   href="/formats"
                   className={`px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-300 ${
@@ -338,6 +360,19 @@ export default function Navbar() {
                   Dashboard
                 </Link>
                 <Link 
+                  href="/creator-audit" 
+                  className={`block px-4 py-3 text-sm font-semibold rounded-xl mx-2 mb-2 transition-all relative ${
+                    isActive('/creator-audit')
+                      ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <span className="flex items-center gap-2">
+                    Creator Audit
+                    <span className="w-2 h-2 bg-indigo-500 rounded-full"></span>
+                  </span>
+                </Link>
+                <Link 
                   href="/planner" 
                   className={`block px-4 py-3 text-sm font-semibold rounded-xl mx-2 mb-2 transition-all ${
                     isActive('/planner')
@@ -393,6 +428,19 @@ export default function Navbar() {
               </>
             ) : (
               <>
+                <Link 
+                  href="/creator-audit" 
+                  className={`block px-4 py-3 text-sm font-semibold rounded-xl mx-2 mb-2 transition-all relative ${
+                    isActive('/creator-audit')
+                      ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  <span className="flex items-center gap-2">
+                    Creator Audit
+                    <span className="w-2 h-2 bg-indigo-500 rounded-full"></span>
+                  </span>
+                </Link>
                 <Link 
                   href="/formats" 
                   className={`block px-4 py-3 text-sm font-semibold rounded-xl mx-2 mb-2 transition-all ${
