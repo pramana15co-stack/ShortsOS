@@ -64,6 +64,7 @@ export default function Navbar() {
   }
 
   const resources = [
+    { href: '/tools', label: 'Creator Tools', icon: '🛠️' },
     { href: '/execution-paths', label: 'Execution Paths', icon: '🗺️' },
     { href: '/pricing', label: 'Pricing', icon: '💰' },
     { href: '/about', label: 'About', icon: 'ℹ️' },

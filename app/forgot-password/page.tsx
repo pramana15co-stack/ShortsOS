@@ -43,11 +43,19 @@ export default function ForgotPasswordPage() {
       })
 
       if (resetError) {
-        // Don't reveal if email exists or not for security (always show success-like message)
-        // But log the actual error for debugging
+        // Log the actual error for debugging
         console.error('Password reset error:', resetError)
-        // Show generic message to user
-        setError('Unable to send reset email. Please check your email address and try again.')
+        
+        // Provide more helpful error messages
+        if (resetError.message.includes('rate limit') || resetError.message.includes('too many')) {
+          setError('Too many requests. Please wait a few minutes before trying again.')
+        } else if (resetError.message.includes('email')) {
+          setError('Unable to send reset email. Please verify your email address and try again.')
+        } else if (resetError.message.includes('redirect')) {
+          setError('Configuration error. Please contact support at pramana15@pramana15.com')
+        } else {
+          setError('Unable to send reset email. Please check your email address and try again. If the problem persists, contact support at pramana15@pramana15.com')
+        }
         setLoading(false)
         return
       }
