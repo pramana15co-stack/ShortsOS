@@ -81,12 +81,23 @@ export async function POST(request: NextRequest) {
       pro: 'Creator Pro Plan',
     }
 
+    // Get public key for frontend
+    const publicKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID
+    
+    if (!publicKey) {
+      console.error('❌ NEXT_PUBLIC_RAZORPAY_KEY_ID is not set!')
+      return NextResponse.json(
+        { error: 'Payment gateway configuration error. Please contact support.' },
+        { status: 500 }
+      )
+    }
+
     // Return order details for frontend Razorpay Checkout
     return NextResponse.json({
       orderId: order.id,
       amount: order.amount, // Already in paise from createRazorpayOrder
       currency: order.currency,
-      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+      key: publicKey,
       name: 'Pramana',
       description: `${planNames[plan as keyof typeof planNames]} - Monthly Subscription`,
       prefill: {
