@@ -150,7 +150,7 @@ export default function Home() {
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
               <Link 
                 href="/dashboard" 
                 className="btn-primary text-lg px-10 py-5"
@@ -158,35 +158,115 @@ export default function Home() {
                 Get Started Free
               </Link>
               <Link 
-                href="/planner" 
+                href="/creator-audit" 
                 className="btn-secondary text-lg px-10 py-5"
               >
-                Explore Tools
+                Try Creator Audit
               </Link>
             </div>
             
-            {/* Value Proposition - 4 Questions */}
-            <div className="mt-16 grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-              <div className="text-center p-6 bg-white/60 backdrop-blur-sm rounded-xl border border-gray-200/50">
-                <div className="text-2xl font-bold text-gray-900 mb-2">Who this is for</div>
-                <div className="text-gray-700">Early-stage creators who want clarity and structure, not more confusion.</div>
+            {/* How We Help - Visual Feature Preview */}
+            <div className="mt-20 max-w-5xl mx-auto">
+              <div className="text-center mb-12">
+                <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
+                  How We Help You Create Better Content
+                </h2>
+                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                  Everything you need to go from idea to published video, without the confusion
+                </p>
               </div>
-              <div className="text-center p-6 bg-white/60 backdrop-blur-sm rounded-xl border border-gray-200/50">
-                <div className="text-2xl font-bold text-gray-900 mb-2">What problem it solves</div>
-                <div className="text-gray-700">Decision fatigue, conflicting advice, and not knowing what to create next.</div>
+
+              <div className="grid md:grid-cols-3 gap-6 mb-12">
+                {/* Feature 1 */}
+                <div className="group relative">
+                  <div className="absolute inset-0 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl"></div>
+                  <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                    <div className="w-14 h-14 bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-xl flex items-center justify-center mb-6 shadow-lg">
+                      <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">Know What to Create</h3>
+                    <p className="text-gray-600 leading-relaxed mb-4">
+                      Get personalized format recommendations based on your niche, goals, and creator stage. No more guessing.
+                    </p>
+                    <Link href="/creator-audit" className="text-indigo-600 hover:text-indigo-700 font-semibold text-sm flex items-center gap-2 group/link">
+                      Try Creator Audit
+                      <svg className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Feature 2 */}
+                <div className="group relative">
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl"></div>
+                  <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                    <div className="w-14 h-14 bg-gradient-to-br from-purple-600 to-purple-700 rounded-xl flex items-center justify-center mb-6 shadow-lg">
+                      <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">Execute It Correctly</h3>
+                    <p className="text-gray-600 leading-relaxed mb-4">
+                      Access proven templates, hooks, scripts, and step-by-step guides. Follow a clear path, not random tips.
+                    </p>
+                    <Link href="/formats" className="text-purple-600 hover:text-purple-700 font-semibold text-sm flex items-center gap-2 group/link">
+                      Browse Formats
+                      <svg className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Feature 3 */}
+                <div className="group relative">
+                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-100 to-teal-100 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl"></div>
+                  <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-gray-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                    <div className="w-14 h-14 bg-gradient-to-br from-emerald-600 to-teal-600 rounded-xl flex items-center justify-center mb-6 shadow-lg">
+                      <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">Optimize & Improve</h3>
+                    <p className="text-gray-600 leading-relaxed mb-4">
+                      Get AI-powered prompts, hook suggestions, and post-processing feedback to make every video better.
+                    </p>
+                    <Link href="/prompt-studio" className="text-emerald-600 hover:text-emerald-700 font-semibold text-sm flex items-center gap-2 group/link">
+                      Try AI Tools
+                      <svg className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </Link>
+                  </div>
+                </div>
               </div>
-              <div className="text-center p-6 bg-white/60 backdrop-blur-sm rounded-xl border border-gray-200/50">
-                <div className="text-2xl font-bold text-gray-900 mb-2">Why it's different</div>
-                <div className="text-gray-700">Stage-aware guidance that tells you what works at YOUR level, not generic tips.</div>
-              </div>
-              <div className="text-center p-6 bg-white/60 backdrop-blur-sm rounded-xl border border-gray-200/50">
-                <div className="text-2xl font-bold text-gray-900 mb-2">Why upgrade makes sense</div>
-                <div className="text-gray-700">Remove limits, get structured paths, and unlock full clarity when you're ready.</div>
+
+              {/* Quick Stats / Benefits */}
+              <div className="grid md:grid-cols-4 gap-4 mt-12">
+                <div className="text-center p-6 bg-white/60 backdrop-blur-sm rounded-xl border border-gray-200/50">
+                  <div className="text-3xl font-extrabold text-indigo-600 mb-2">3 Steps</div>
+                  <div className="text-sm text-gray-600">From idea to published video</div>
+                </div>
+                <div className="text-center p-6 bg-white/60 backdrop-blur-sm rounded-xl border border-gray-200/50">
+                  <div className="text-3xl font-extrabold text-purple-600 mb-2">10+ Tools</div>
+                  <div className="text-sm text-gray-600">All in one platform</div>
+                </div>
+                <div className="text-center p-6 bg-white/60 backdrop-blur-sm rounded-xl border border-gray-200/50">
+                  <div className="text-3xl font-extrabold text-emerald-600 mb-2">100% Free</div>
+                  <div className="text-sm text-gray-600">To get started</div>
+                </div>
+                <div className="text-center p-6 bg-white/60 backdrop-blur-sm rounded-xl border border-gray-200/50">
+                  <div className="text-3xl font-extrabold text-teal-600 mb-2">Stage-Aware</div>
+                  <div className="text-sm text-gray-600">Guidance for your level</div>
+                </div>
               </div>
             </div>
 
             {/* Trust Indicators */}
-            <div className="flex flex-wrap gap-6 items-center justify-center pt-12 border-t border-gray-200/50">
+            <div className="flex flex-wrap gap-6 items-center justify-center pt-16 border-t border-gray-200/50 mt-16">
               <div className="flex items-center gap-2 text-gray-700">
                 <svg className="w-5 h-5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
