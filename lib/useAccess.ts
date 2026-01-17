@@ -2,6 +2,7 @@
 
 import { useAuth } from '@/app/providers/AuthProvider'
 import { useState, useEffect } from 'react'
+import { isUserPaid, getUserTier, canAccessTier, getDaysUntilExpiry, isPlanExpiringSoon } from '@/lib/planValidation'
 
 export type AccessTier = 'free' | 'starter' | 'pro' | 'agency'
 
@@ -13,44 +14,16 @@ interface AccessState {
   isPro: boolean
   isAgency: boolean
   loading: boolean
-  // Legacy properties for backward compatibility
+  // Plan validation
   isPaid: boolean
+  daysUntilExpiry: number | null
+  isExpiringSoon: boolean
+  // Legacy properties for backward compatibility
   canAccessPromptStudio: boolean
   canAccessHookCaption: boolean
   canAccessPostProcessing: boolean
   canAccessExportInstructions: boolean
   promptStudioRemaining: number | 'unlimited'
-}
-
-// Helper to determine tier from user object
-function getUserTier(user: any): AccessTier {
-  if (!user) return 'free'
-  
-  // Check if subscription is active and not expired
-  const subscriptionStatus = user.subscription_status
-  const planExpiry = user.plan_expiry
-  
-  // If subscription is not active, return free
-  if (subscriptionStatus !== 'active') {
-    return 'free'
-  }
-  
-  // Check if plan has expired
-  if (planExpiry) {
-    const expiryDate = new Date(planExpiry)
-    const now = new Date()
-    if (expiryDate < now) {
-      return 'free' // Plan expired
-    }
-  }
-  
-  // Check subscription_tier from database
-  const tier = user.subscription_tier || user.tier
-  if (tier === 'starter' || tier === 'paid') return 'starter'
-  if (tier === 'pro') return 'pro'
-  if (tier === 'agency' || tier === 'operator') return 'agency'
-  
-  return 'free'
 }
 
 export function useAccess(): AccessState {
@@ -66,27 +39,21 @@ export function useAccess(): AccessState {
     }
   }, [user, authLoading])
 
+  // Use centralized validation functions (single source of truth)
+  const isPaid = isUserPaid(user)
   const canAccess = (requiredTier: AccessTier): boolean => {
     if (loading) return false
-    
-    if (requiredTier === 'free') return true
-    
-    // Tier hierarchy: free < starter < pro < agency
-    const tierHierarchy: Record<AccessTier, number> = {
-      free: 0,
-      starter: 1,
-      pro: 2,
-      agency: 3,
-    }
-    
-    return tierHierarchy[tier] >= tierHierarchy[requiredTier]
+    return canAccessTier(user, requiredTier)
   }
 
   const isFree = tier === 'free'
   const isStarter = tier === 'starter' || tier === 'pro' || tier === 'agency'
   const isPro = tier === 'pro' || tier === 'agency'
   const isAgency = tier === 'agency'
-  const isPaid = isStarter // Legacy alias
+
+  // Plan expiry information
+  const daysUntilExpiry = getDaysUntilExpiry(user)
+  const isExpiringSoon = isPlanExpiringSoon(user)
 
   // Feature access flags
   const canAccessPromptStudio = true // Both tiers can access
@@ -105,8 +72,11 @@ export function useAccess(): AccessState {
     isPro,
     isAgency,
     loading: loading || authLoading,
-    // Legacy properties
+    // Plan validation (single source of truth)
     isPaid,
+    daysUntilExpiry,
+    isExpiringSoon,
+    // Legacy properties
     canAccessPromptStudio,
     canAccessHookCaption,
     canAccessPostProcessing,

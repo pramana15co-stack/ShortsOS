@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useAccess } from '@/lib/useAccess'
-import Link from 'next/link'
+import UpgradeGate from '@/components/UpgradeGate'
 
 type Platform = 'youtube' | 'instagram'
 type Frequency = 'daily' | '3-4-per-week' | 'weekly' | 'occasional'
@@ -31,36 +31,7 @@ export default function CreatorAuditPage() {
   const [result, setResult] = useState<AuditResult | null>(null)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
 
-  if (!hasAccess) {
-    return (
-      <main className="min-h-screen py-16 md:py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-white to-purple-50/30 pointer-events-none"></div>
-        
-        <div className="container mx-auto px-4 max-w-3xl relative z-10">
-          <div className="card p-12 text-center">
-            <div className="w-16 h-16 bg-gradient-to-br from-indigo-600 to-indigo-700 rounded-2xl flex items-center justify-center mx-auto mb-6">
-              <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-              </svg>
-            </div>
-            <h1 className="text-3xl font-extrabold mb-4 text-gray-900">Creator Intelligence Audit</h1>
-            <p className="text-lg text-gray-600 mb-6">
-              Get personalized guidance based on your channel and goals. This feature helps you understand your creator stage and what to focus on next.
-            </p>
-            <p className="text-gray-700 mb-8">
-              Upgrade to Starter or Pro to access structured guidance that removes confusion and helps you make better content decisions.
-            </p>
-            <Link href="/pricing" className="btn-primary px-8 py-4 inline-block">
-              View Pricing Plans
-            </Link>
-            <p className="text-sm text-gray-500 mt-4">
-              Unlock full clarity • Get structured guidance • Remove confusion
-            </p>
-          </div>
-        </div>
-      </main>
-    )
-  }
+  // Wrap content in UpgradeGate for clean access control
 
   const handleLinkSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -160,6 +131,7 @@ Your next step: Choose one format from the recommendations above and create 3-4 
 
   return (
     <main className="min-h-screen py-16 md:py-24 relative overflow-hidden">
+      <UpgradeGate requiredTier="starter">
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-white to-purple-50/30 pointer-events-none"></div>
       
       <div className="container mx-auto px-4 max-w-6xl relative z-10">
@@ -359,6 +331,7 @@ Your next step: Choose one format from the recommendations above and create 3-4 
           </div>
         )}
       </div>
+      </UpgradeGate>
     </main>
   )
 }
