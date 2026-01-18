@@ -55,6 +55,7 @@ function getServiceRoleClient() {
  */
 export async function POST(request: NextRequest) {
   const startTime = Date.now()
+  const requestId = `req_${Date.now()}_${Math.random().toString(36).substring(7)}`
   
   try {
     // Get access token from Authorization header
@@ -70,20 +71,22 @@ export async function POST(request: NextRequest) {
     const accessToken = authHeader.substring(7) // Remove "Bearer " prefix
 
     // Get authenticated user from token
-    console.log('🔍 [BOOTSTRAP] Getting user from access token...')
+    console.log(`🔍 [BOOTSTRAP ${requestId}] Getting user from access token...`)
     const user = await getAuthenticatedUser(accessToken)
     
     if (!user) {
-      console.error('❌ [BOOTSTRAP] Invalid or expired access token')
+      console.error(`❌ [BOOTSTRAP ${requestId}] Invalid or expired access token`)
       return NextResponse.json(
         { error: 'Invalid or expired access token' },
         { status: 401 }
       )
     }
 
-    console.log('✅ [BOOTSTRAP] Authenticated user:', {
+    console.log(`✅ [BOOTSTRAP ${requestId}] Authenticated user:`, {
       userId: user.id.substring(0, 8) + '...',
       email: user.email || 'no email',
+      emailVerified: !!user.email_confirmed_at,
+      timestamp: new Date().toISOString(),
     })
 
     // Get service role client for database operations
@@ -96,21 +99,24 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if profile already exists
-    console.log('🔍 [BOOTSTRAP] Checking if profile exists for user:', user.id.substring(0, 8) + '...')
+    // Check if profile already exists (idempotency check)
+    console.log(`🔍 [BOOTSTRAP ${requestId}] Checking if profile exists:`, {
+      userId: user.id.substring(0, 8) + '...',
+    })
     const { data: existingProfile, error: fetchError } = await supabase
       .from('profiles')
-      .select('id, user_id, subscription_tier, subscription_status')
+      .select('id, user_id, subscription_tier, subscription_status, created_at')
       .eq('user_id', user.id)
       .single()
 
-    // If profile exists, return success (idempotent)
+    // If profile exists, return success (idempotent) - no retry needed
     if (existingProfile) {
-      console.log('✅ [BOOTSTRAP] Profile already exists:', {
+      console.log(`✅ [BOOTSTRAP ${requestId}] Profile already exists (idempotent):`, {
         profileId: existingProfile.id,
         userId: existingProfile.user_id.substring(0, 8) + '...',
         tier: existingProfile.subscription_tier,
         status: existingProfile.subscription_status,
+        created: existingProfile.created_at,
         duration: Date.now() - startTime + 'ms',
       })
       return NextResponse.json({
@@ -118,6 +124,7 @@ export async function POST(request: NextRequest) {
         message: 'Profile already exists',
         created: false,
         profileId: existingProfile.id,
+        requestId,
       })
     }
 
@@ -138,9 +145,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Profile doesn't exist - create it
-    console.log('📝 [BOOTSTRAP] Profile does not exist, creating new profile...')
-    console.log('💾 [BOOTSTRAP] Inserting profile row for user:', user.id.substring(0, 8) + '...')
+    // Profile doesn't exist - create it (idempotent insert)
+    console.log(`📝 [BOOTSTRAP ${requestId}] Profile does not exist, creating new profile:`, {
+      userId: user.id.substring(0, 8) + '...',
+    })
     
     const { data: newProfile, error: insertError } = await supabase
       .from('profiles')
@@ -155,13 +163,15 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (insertError) {
-      // Handle duplicate key error (race condition)
+      // Handle duplicate key error (race condition) - idempotent
       if (insertError.code === '23505') {
-        console.log('✅ [BOOTSTRAP] Profile created by another request (race condition)')
+        console.log(`✅ [BOOTSTRAP ${requestId}] Profile created by another request (race condition handled):`, {
+          userId: user.id.substring(0, 8) + '...',
+        })
         // Fetch the existing profile
         const { data: existingProfile } = await supabase
           .from('profiles')
-          .select('id, user_id')
+          .select('id, user_id, subscription_tier, subscription_status')
           .eq('user_id', user.id)
           .single()
         
@@ -170,15 +180,17 @@ export async function POST(request: NextRequest) {
           message: 'Profile created by another request',
           created: false,
           profileId: existingProfile?.id,
+          requestId,
         })
       }
 
-      console.error('❌ [BOOTSTRAP] Error creating profile:', {
+      console.error(`❌ [BOOTSTRAP ${requestId}] Error creating profile:`, {
         code: insertError.code,
         message: insertError.message,
         details: insertError.details,
         hint: insertError.hint,
         userId: user.id.substring(0, 8) + '...',
+        duration: Date.now() - startTime + 'ms',
       })
       return NextResponse.json(
         { 
@@ -199,7 +211,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    console.log('✅ [BOOTSTRAP] Profile created successfully:', {
+    console.log(`✅ [BOOTSTRAP ${requestId}] Profile created successfully:`, {
       profileId: newProfile.id,
       userId: newProfile.user_id.substring(0, 8) + '...',
       tier: newProfile.subscription_tier,
@@ -217,9 +229,10 @@ export async function POST(request: NextRequest) {
         subscription_tier: newProfile.subscription_tier,
         subscription_status: newProfile.subscription_status,
       },
+      requestId,
     })
   } catch (error: any) {
-    console.error('❌ [BOOTSTRAP] Unexpected error:', {
+    console.error(`❌ [BOOTSTRAP ${requestId}] Unexpected error:`, {
       message: error.message,
       stack: error.stack,
       name: error.name,
@@ -229,6 +242,7 @@ export async function POST(request: NextRequest) {
       { 
         error: error.message || 'Internal server error',
         type: error.name || 'UnknownError',
+        requestId,
       },
       { status: 500 }
     )

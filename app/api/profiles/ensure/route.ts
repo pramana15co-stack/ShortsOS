@@ -36,6 +36,7 @@ const getServiceRoleClient = () => {
  */
 export async function POST(request: NextRequest) {
   const startTime = Date.now()
+  const requestId = `req_${Date.now()}_${Math.random().toString(36).substring(7)}`
   
   try {
     // Get service role client
@@ -66,28 +67,32 @@ export async function POST(request: NextRequest) {
     }
 
     // Log auth user ID
-    console.log('🔍 [PROFILE ENSURE] Starting for user:', userId.substring(0, 8) + '...')
-    console.log('📋 [PROFILE ENSURE] Environment check:', {
+    console.log(`🔍 [PROFILE ENSURE ${requestId}] Starting for user:`, userId.substring(0, 8) + '...')
+    console.log(`📋 [PROFILE ENSURE ${requestId}] Environment check:`, {
       hasServiceKey: !!supabaseServiceKey,
       serviceKeyLength: supabaseServiceKey?.length || 0,
       serviceKeyPrefix: supabaseServiceKey?.substring(0, 20) + '...' || 'missing',
+      timestamp: new Date().toISOString(),
     })
 
-    // Check if profile already exists in public.profiles
-    console.log('🔍 [PROFILE ENSURE] Checking if profile exists...')
+    // Check if profile already exists in public.profiles (idempotency check)
+    console.log(`🔍 [PROFILE ENSURE ${requestId}] Checking if profile exists:`, {
+      userId: userId.substring(0, 8) + '...',
+    })
     const { data: existingProfile, error: fetchError } = await supabase
       .from('profiles')
-      .select('id, user_id, subscription_tier, subscription_status')
+      .select('id, user_id, subscription_tier, subscription_status, created_at')
       .eq('user_id', userId)
       .single()
 
-    // If profile exists, return success (idempotent)
+    // If profile exists, return success (idempotent) - no retry needed
     if (existingProfile) {
-      console.log('✅ [PROFILE ENSURE] Profile already exists:', {
+      console.log(`✅ [PROFILE ENSURE ${requestId}] Profile already exists (idempotent):`, {
         profileId: existingProfile.id,
         userId: existingProfile.user_id.substring(0, 8) + '...',
         tier: existingProfile.subscription_tier,
         status: existingProfile.subscription_status,
+        created: existingProfile.created_at,
         duration: Date.now() - startTime + 'ms',
       })
       return NextResponse.json({
@@ -95,6 +100,7 @@ export async function POST(request: NextRequest) {
         message: 'Profile already exists',
         created: false,
         profileId: existingProfile.id,
+        requestId,
       })
     }
 
@@ -121,8 +127,10 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Profile doesn't exist - create one
-    console.log('📝 [PROFILE ENSURE] Creating new profile for user:', userId.substring(0, 8) + '...')
+    // Profile doesn't exist - create one (idempotent insert)
+    console.log(`📝 [PROFILE ENSURE ${requestId}] Creating new profile:`, {
+      userId: userId.substring(0, 8) + '...',
+    })
 
     // Verify user exists in auth.users first
     let userExists = false
@@ -160,7 +168,9 @@ export async function POST(request: NextRequest) {
 
     // Insert profile into public.profiles with defaults
     // Service role client bypasses RLS automatically
-    console.log('💾 [PROFILE ENSURE] Inserting profile row...')
+    console.log(`💾 [PROFILE ENSURE ${requestId}] Inserting profile row:`, {
+      userId: userId.substring(0, 8) + '...',
+    })
     const { data: newProfile, error: insertError } = await supabase
       .from('profiles')
       .insert({
@@ -174,13 +184,15 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (insertError) {
-      // If it's a duplicate key error, profile was created between check and insert (race condition)
+      // If it's a duplicate key error, profile was created between check and insert (race condition) - idempotent
       if (insertError.code === '23505') {
-        console.log('✅ [PROFILE ENSURE] Profile created by another request (race condition handled)')
+        console.log(`✅ [PROFILE ENSURE ${requestId}] Profile created by another request (race condition handled):`, {
+          userId: userId.substring(0, 8) + '...',
+        })
         // Fetch the existing profile
         const { data: existingProfile } = await supabase
           .from('profiles')
-          .select('id, user_id')
+          .select('id, user_id, subscription_tier, subscription_status')
           .eq('user_id', userId)
           .single()
         
@@ -189,15 +201,17 @@ export async function POST(request: NextRequest) {
           message: 'Profile created by another request',
           created: false,
           profileId: existingProfile?.id,
+          requestId,
         })
       }
 
-      console.error('❌ [PROFILE ENSURE] Error creating profile:', {
+      console.error(`❌ [PROFILE ENSURE ${requestId}] Error creating profile:`, {
         code: insertError.code,
         message: insertError.message,
         details: insertError.details,
         hint: insertError.hint,
         userId: userId.substring(0, 8) + '...',
+        duration: Date.now() - startTime + 'ms',
       })
       return NextResponse.json(
         { 
@@ -218,7 +232,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    console.log('✅ [PROFILE ENSURE] Profile created successfully:', {
+    console.log(`✅ [PROFILE ENSURE ${requestId}] Profile created successfully:`, {
       profileId: newProfile.id,
       userId: newProfile.user_id.substring(0, 8) + '...',
       tier: newProfile.subscription_tier,
@@ -236,9 +250,10 @@ export async function POST(request: NextRequest) {
         subscription_tier: newProfile.subscription_tier,
         subscription_status: newProfile.subscription_status,
       },
+      requestId,
     })
   } catch (error: any) {
-    console.error('❌ [PROFILE ENSURE] Unexpected error:', {
+    console.error(`❌ [PROFILE ENSURE ${requestId}] Unexpected error:`, {
       message: error.message,
       stack: error.stack,
       name: error.name,
@@ -248,6 +263,7 @@ export async function POST(request: NextRequest) {
       { 
         error: error.message || 'Internal server error',
         type: error.name || 'UnknownError',
+        requestId,
       },
       { status: 500 }
     )
