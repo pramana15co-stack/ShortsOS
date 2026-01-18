@@ -88,8 +88,8 @@ export async function POST(request: NextRequest) {
 
     // Ensure profile exists in public.profiles (idempotent)
     // This handles cases where user was created in auth but not in public.profiles
-    console.log('🔍 Checking profile existence for user:', userId.substring(0, 8) + '...')
-    const { data: existingProfile } = await supabase
+    console.log('🔍 [PAYMENT] Checking profile existence for user:', userId.substring(0, 8) + '...')
+    const { data: existingProfile, error: profileCheckError } = await supabase
       .from('profiles')
       .select('id, user_id')
       .eq('user_id', userId)
@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
 
     if (!existingProfile) {
       // Profile doesn't exist in public.profiles - create with defaults
-      console.log('📝 Profile not found in public.profiles, creating...')
+      console.log('📝 [PAYMENT] Profile not found, creating...')
       
       const { error: createProfileError } = await supabase
         .from('profiles')
@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
 
       if (createProfileError && createProfileError.code !== '23505') {
         // 23505 = duplicate key (race condition), ignore
-        console.error('❌ Error creating profile:', {
+        console.error('❌ [PAYMENT] Error creating profile:', {
           code: createProfileError.code,
           message: createProfileError.message,
           details: createProfileError.details,
@@ -121,12 +121,13 @@ export async function POST(request: NextRequest) {
           { status: 500 }
         )
       }
-      console.log('✅ Profile created successfully')
+      console.log('✅ [PAYMENT] Profile created successfully')
     } else {
-      console.log('✅ Profile exists:', { profileId: existingProfile.id })
+      console.log('✅ [PAYMENT] Profile exists:', { profileId: existingProfile.id })
     }
 
     // Step 1: Insert payment record into payments table
+    console.log('💾 [PAYMENT] Inserting payment record...')
     const { data: paymentRecord, error: paymentError } = await supabase
       .from('payments')
       .insert({
@@ -145,28 +146,34 @@ export async function POST(request: NextRequest) {
     if (paymentError) {
       // Check if it's a duplicate (payment already processed)
       if (paymentError.code === '23505') {
-        console.warn('Payment already exists in database:', paymentId)
-        // Continue to update user - payment was already recorded
+        console.warn('⚠️ [PAYMENT] Payment already exists in database:', paymentId.substring(0, 12) + '...')
+        // Continue to update profile - payment was already recorded
       } else {
-        console.error('Error saving payment record:', paymentError)
+        console.error('❌ [PAYMENT] Error saving payment record:', {
+          code: paymentError.code,
+          message: paymentError.message,
+          details: paymentError.details,
+        })
         return NextResponse.json(
           { 
             error: 'Failed to save payment record',
-            details: paymentError.message 
+            details: paymentError.message,
+            code: paymentError.code,
           },
           { status: 500 }
         )
       }
     } else {
-      console.log('✅ Payment record saved:', {
+      console.log('✅ [PAYMENT] Payment record saved:', {
         paymentId: paymentRecord?.payment_id?.substring(0, 12) + '...',
         plan: paymentRecord?.plan,
         amount: paymentRecord?.amount,
+        userId: userId.substring(0, 8) + '...',
       })
     }
 
     // Step 2: Update profile subscription in profiles table
-    console.log('📝 Updating profile subscription...')
+    console.log('📝 [PAYMENT] Updating profile subscription...')
     const { data: updatedProfile, error: profileError } = await supabase
       .from('profiles')
       .update({
@@ -182,26 +189,37 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (profileError) {
-      console.error('❌ Error updating profile subscription:', {
+      console.error('❌ [PAYMENT] Error updating profile subscription:', {
         code: profileError.code,
         message: profileError.message,
         details: profileError.details,
+        hint: profileError.hint,
+        userId: userId.substring(0, 8) + '...',
       })
       return NextResponse.json(
         { 
           error: 'Failed to update subscription. Payment was successful but subscription update failed.',
-          details: profileError.message 
+          details: profileError.message,
+          code: profileError.code,
         },
         { status: 500 }
       )
     }
 
-    console.log('✅ Profile subscription updated:', {
-      profileId: updatedProfile?.id,
-      userId: updatedProfile?.user_id?.substring(0, 8) + '...',
-      tier: updatedProfile?.subscription_tier,
-      status: updatedProfile?.subscription_status,
-      expiry: updatedProfile?.plan_expiry,
+    if (!updatedProfile) {
+      console.error('❌ [PAYMENT] Profile update returned no data')
+      return NextResponse.json(
+        { error: 'Profile update returned no data' },
+        { status: 500 }
+      )
+    }
+
+    console.log('✅ [PAYMENT] Profile subscription updated:', {
+      profileId: updatedProfile.id,
+      userId: updatedProfile.user_id?.substring(0, 8) + '...',
+      tier: updatedProfile.subscription_tier,
+      status: updatedProfile.subscription_status,
+      expiry: updatedProfile.plan_expiry,
     })
 
     return NextResponse.json({

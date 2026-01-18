@@ -10,12 +10,48 @@ import SuccessBanner from '@/components/SuccessBanner'
 
 function DashboardContent() {
   const { loading } = useRequireAuth()
-  const { user } = useAuth()
+  const { user, session } = useAuth()
   const searchParams = useSearchParams()
   const showSuccessBanner = searchParams.get('payment') === 'success'
   const [lastPlan, setLastPlan] = useState<PlannerHistoryItem | null>(null)
   const [loadingPlan, setLoadingPlan] = useState(true)
   const [bannerDismissed, setBannerDismissed] = useState(false)
+  const [profileBootstrapped, setProfileBootstrapped] = useState(false)
+
+  // Bootstrap profile on dashboard load (once per session)
+  useEffect(() => {
+    if (session?.access_token && !profileBootstrapped) {
+      console.log('🔍 [DASHBOARD] Bootstrapping profile...')
+      fetch('/api/bootstrap-profile', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(async (response) => {
+          if (!response.ok) {
+            const error = await response.json().catch(() => ({}))
+            console.error('❌ [DASHBOARD] Profile bootstrap failed:', {
+              status: response.status,
+              error: error.error || 'Unknown error',
+            })
+          } else {
+            const result = await response.json().catch(() => ({}))
+            console.log('✅ [DASHBOARD] Profile bootstrap result:', {
+              created: result.created,
+              profileId: result.profileId,
+            })
+          }
+        })
+        .catch((error) => {
+          console.error('❌ [DASHBOARD] Profile bootstrap error:', error)
+        })
+        .finally(() => {
+          setProfileBootstrapped(true)
+        })
+    }
+  }, [session?.access_token, profileBootstrapped])
 
   useEffect(() => {
     if (user && !loading) {

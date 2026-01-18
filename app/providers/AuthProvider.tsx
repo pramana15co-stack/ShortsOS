@@ -15,6 +15,7 @@ interface AuthContextType {
   session: any | null
   loading: boolean
   signOut: () => Promise<void>
+  refreshSession: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -22,6 +23,7 @@ const AuthContext = createContext<AuthContextType>({
   session: null,
   loading: false,
   signOut: async () => {},
+  refreshSession: async () => {},
 })
 
 export const useAuth = () => useContext(AuthContext)
@@ -182,13 +184,44 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
     if (!supabase) return
     try {
       await supabase.auth.signOut()
+      setUser(null)
+      setSession(null)
     } catch (error) {
       console.warn('Sign out error:', error)
     }
   }
 
+  const refreshSession = async () => {
+    if (!supabase) return
+    try {
+      const { data: { session: newSession } } = await supabase.auth.getSession()
+      setSession(newSession)
+      if (newSession?.user) {
+        // Fetch profile data
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('user_id', newSession.user.id)
+          .single()
+        
+        if (profileData) {
+          setUser({
+            ...newSession.user,
+            ...profileData,
+          })
+        } else {
+          setUser(newSession.user)
+        }
+      } else {
+        setUser(null)
+      }
+    } catch (error) {
+      console.warn('Refresh session error:', error)
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ user, session, loading, signOut }}>
+    <AuthContext.Provider value={{ user, session, loading, signOut, refreshSession }}>
       {children}
     </AuthContext.Provider>
   )
