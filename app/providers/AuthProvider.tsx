@@ -46,8 +46,8 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
         if (session?.user) {
           try {
             // Ensure profile exists in public.profiles
-            console.log('🔍 Ensuring profile exists for user:', session.user.id.substring(0, 8) + '...')
-            await fetch('/api/profiles/ensure', {
+            console.log('🔍 [AUTH] Ensuring profile exists for user:', session.user.id.substring(0, 8) + '...')
+            const ensureResponse = await fetch('/api/profiles/ensure', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -56,6 +56,21 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
                 userId: session.user.id,
               }),
             })
+
+            if (!ensureResponse.ok) {
+              const errorData = await ensureResponse.json().catch(() => ({}))
+              console.error('❌ [AUTH] Failed to ensure profile:', {
+                status: ensureResponse.status,
+                error: errorData.error || 'Unknown error',
+                details: errorData.details,
+              })
+            } else {
+              const result = await ensureResponse.json().catch(() => ({}))
+              console.log('✅ [AUTH] Profile ensure result:', {
+                created: result.created,
+                profileId: result.profileId,
+              })
+            }
 
             // Fetch profile subscription data from public.profiles table
             if (supabase) {
