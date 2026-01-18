@@ -13,8 +13,21 @@ export default function Navbar() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
 
   const handleLogout = async () => {
-    await signOut()
-    router.push('/')
+    try {
+      console.log('🚪 [NAVBAR] Logout initiated')
+      // Sign out and wait for completion
+      await signOut()
+      console.log('✅ [NAVBAR] Sign out complete, redirecting to home')
+      // Redirect to home page
+      router.push('/')
+      // Force a router refresh to ensure clean state
+      router.refresh()
+    } catch (error) {
+      console.error('❌ [NAVBAR] Logout error:', error)
+      // Still redirect even if there's an error
+      router.push('/')
+      router.refresh()
+    }
   }
 
   // Organized tool categories for mega menu

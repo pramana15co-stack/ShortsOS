@@ -117,13 +117,24 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       // Listen for auth changes
       const {
         data: { subscription },
-      } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      } = supabase.auth.onAuthStateChange(async (event, session) => {
+        console.log('🔄 [AUTH] Auth state changed:', event, session ? 'session exists' : 'no session')
+        
         setSession(session)
+        
+        // Handle sign out event explicitly
+        if (event === 'SIGNED_OUT' || !session) {
+          console.log('🚪 [AUTH] User signed out, clearing state')
+          setUser(null)
+          setSession(null)
+          setLoading(false)
+          return
+        }
         
         // Ensure profile exists in public.profiles table when they sign in
         if (session?.user) {
           try {
-            console.log('🔍 Ensuring profile exists for user:', session.user.id.substring(0, 8) + '...')
+            console.log('🔍 [AUTH] Ensuring profile exists for user:', session.user.id.substring(0, 8) + '...')
             await fetch('/api/profiles/ensure', {
               method: 'POST',
               headers: {
@@ -143,7 +154,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
                 .single()
 
               if (!profileError && profileData) {
-                console.log('✅ Profile loaded:', {
+                console.log('✅ [AUTH] Profile loaded:', {
                   profileId: profileData.id,
                   tier: profileData.subscription_tier,
                   status: profileData.subscription_status,
@@ -154,7 +165,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
                   ...profileData,
                 })
               } else {
-                console.warn('⚠️ Profile not found, using auth user only:', profileError?.message)
+                console.warn('⚠️ [AUTH] Profile not found, using auth user only:', profileError?.message)
                 // Fallback to just auth user if profile data not found
                 setUser(session.user)
               }
@@ -163,7 +174,7 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
             }
           } catch (ensureError) {
             // Log but don't block - profile can be created later
-            console.warn('⚠️ Failed to ensure profile in database:', ensureError)
+            console.warn('⚠️ [AUTH] Failed to ensure profile in database:', ensureError)
             setUser(session.user)
           }
         } else {
@@ -181,13 +192,45 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const signOut = async () => {
-    if (!supabase) return
-    try {
-      await supabase.auth.signOut()
+    if (!supabase) {
+      console.warn('⚠️ [SIGNOUT] Supabase not configured')
+      // Clear state anyway
       setUser(null)
       setSession(null)
-    } catch (error) {
-      console.warn('Sign out error:', error)
+      return
+    }
+    
+    try {
+      console.log('🚪 [SIGNOUT] Starting sign out process...')
+      
+      // Sign out from Supabase (this will trigger onAuthStateChange with SIGNED_OUT event)
+      const { error } = await supabase.auth.signOut()
+      
+      if (error) {
+        console.error('❌ [SIGNOUT] Error signing out:', error)
+        throw error
+      }
+      
+      // Clear state immediately (onAuthStateChange will also handle this, but do it here for immediate UI update)
+      console.log('✅ [SIGNOUT] Sign out successful, clearing state')
+      setUser(null)
+      setSession(null)
+      
+      // Force a session check to ensure state is cleared
+      const { data: { session: verifySession } } = await supabase.auth.getSession()
+      if (verifySession) {
+        console.warn('⚠️ [SIGNOUT] Session still exists after signOut, forcing clear')
+        setUser(null)
+        setSession(null)
+      }
+      
+      console.log('✅ [SIGNOUT] Sign out complete')
+    } catch (error: any) {
+      console.error('❌ [SIGNOUT] Sign out error:', error)
+      // Clear state even on error to prevent stuck UI
+      setUser(null)
+      setSession(null)
+      throw error
     }
   }
 
