@@ -32,6 +32,8 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<SimpleUser | null>(null)
   const [session, setSession] = useState<any | null>(null)
   const [loading, setLoading] = useState(true)
+  // Cache profile bootstrap per session to avoid redundant calls
+  const [profileBootstrapCache, setProfileBootstrapCache] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     if (!supabase) {
@@ -40,16 +42,50 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       return
     }
 
-    try {
-      // Get initial session (Supabase automatically persists sessions)
-      supabase.auth.getSession().then(async ({ data: { session } }) => {
-        setSession(session)
-        
-        if (session?.user) {
-          try {
-            // Ensure profile exists in public.profiles
-            console.log('🔍 [AUTH] Ensuring profile exists for user:', session.user.id.substring(0, 8) + '...')
-            const ensureResponse = await fetch('/api/profiles/ensure', {
+    let mounted = true
+
+    // Use onAuthStateChange only - it fires immediately with current session
+    // This eliminates the need for getSession() call
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (!mounted) return
+
+      console.log('🔄 [AUTH] Auth state changed:', event, session ? 'session exists' : 'no session')
+      
+      setSession(session)
+      
+      // Handle sign out event explicitly
+      if (event === 'SIGNED_OUT' || !session) {
+        console.log('🚪 [AUTH] User signed out, clearing state')
+        setUser(null)
+        setSession(null)
+        setLoading(false)
+        // Clear bootstrap cache on logout
+        setProfileBootstrapCache(new Set())
+        return
+      }
+      
+      // Handle sign in - set user immediately (non-blocking)
+      if (session?.user) {
+        // Set user immediately with auth data (don't wait for profile)
+        // This makes UI responsive instantly
+        setUser(session.user)
+        setLoading(false)
+
+        // Check if we've already bootstrapped this session
+        const sessionKey = `${session.user.id}-${session.access_token?.substring(0, 10)}`
+        const needsBootstrap = !profileBootstrapCache.has(sessionKey)
+
+        if (needsBootstrap) {
+          // Mark as bootstrapped immediately to prevent duplicate calls
+          setProfileBootstrapCache(prev => new Set(prev).add(sessionKey))
+
+          // Bootstrap profile and fetch subscription data in background (non-blocking)
+          // This doesn't block the UI - user can already see the dashboard
+          Promise.all([
+            // Ensure profile exists
+            fetch('/api/profiles/ensure', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -57,139 +93,84 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
               body: JSON.stringify({
                 userId: session.user.id,
               }),
-            })
+            }).catch(err => {
+              console.warn('⚠️ [AUTH] Profile ensure failed (non-blocking):', err)
+              return null
+            }),
 
-            if (!ensureResponse.ok) {
-              const errorData = await ensureResponse.json().catch(() => ({}))
-              console.error('❌ [AUTH] Failed to ensure profile:', {
-                status: ensureResponse.status,
-                error: errorData.error || 'Unknown error',
-                details: errorData.details,
+            // Fetch profile subscription data
+            supabase
+              ? Promise.resolve(
+                  supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('user_id', session.user.id)
+                    .single()
+                )
+                  .then(({ data: profileData, error: profileError }) => {
+                    if (!mounted) return null
+                    if (profileError) {
+                      console.warn('⚠️ [AUTH] Profile fetch failed (non-blocking):', profileError.message)
+                      return null
+                    }
+                    return profileData
+                  })
+                  .catch(err => {
+                    console.warn('⚠️ [AUTH] Profile fetch error (non-blocking):', err)
+                    return null
+                  })
+              : Promise.resolve(null)
+          ]).then(([ensureResult, profileData]) => {
+            if (!mounted) return
+
+            // Update user with profile data if available
+            if (profileData) {
+              console.log('✅ [AUTH] Profile loaded (background):', {
+                profileId: profileData.id,
+                tier: profileData.subscription_tier,
+                status: profileData.subscription_status,
               })
-            } else {
-              const result = await ensureResponse.json().catch(() => ({}))
-              console.log('✅ [AUTH] Profile ensure result:', {
-                created: result.created,
-                profileId: result.profileId,
+              setUser({
+                ...session.user,
+                ...profileData,
               })
             }
-
-            // Fetch profile subscription data from public.profiles table
-            if (supabase) {
-              const { data: profileData, error: profileError } = await supabase
+          })
+        } else {
+          // Session already bootstrapped, just fetch profile data
+          if (supabase) {
+            Promise.resolve(
+              supabase
                 .from('profiles')
                 .select('*')
                 .eq('user_id', session.user.id)
                 .single()
-
-              if (!profileError && profileData) {
-                console.log('✅ Profile loaded:', {
-                  profileId: profileData.id,
-                  tier: profileData.subscription_tier,
-                  status: profileData.subscription_status,
-                })
-                // Merge auth user with profile subscription data
-                setUser({
-                  ...session.user,
-                  ...profileData,
-                })
-              } else {
-                console.warn('⚠️ Profile not found, using auth user only:', profileError?.message)
-                // Fallback to just auth user if profile data not found
-                setUser(session.user)
-              }
-            } else {
-              setUser(session.user)
-            }
-          } catch (error) {
-            console.warn('Failed to fetch user subscription data:', error)
-            setUser(session.user)
+            )
+              .then(({ data: profileData, error: profileError }) => {
+                if (!mounted) return
+                if (!profileError && profileData) {
+                  setUser({
+                    ...session.user,
+                    ...profileData,
+                  })
+                }
+              })
+              .catch(err => {
+                console.warn('⚠️ [AUTH] Profile fetch error:', err)
+              })
           }
-        } else {
-          setUser(null)
         }
-        
+      } else {
+        setUser(null)
         setLoading(false)
-      }).catch(() => {
-        setLoading(false)
-      })
+      }
+    })
 
-      // Listen for auth changes
-      const {
-        data: { subscription },
-      } = supabase.auth.onAuthStateChange(async (event, session) => {
-        console.log('🔄 [AUTH] Auth state changed:', event, session ? 'session exists' : 'no session')
-        
-        setSession(session)
-        
-        // Handle sign out event explicitly
-        if (event === 'SIGNED_OUT' || !session) {
-          console.log('🚪 [AUTH] User signed out, clearing state')
-          setUser(null)
-          setSession(null)
-          setLoading(false)
-          return
-        }
-        
-        // Ensure profile exists in public.profiles table when they sign in
-        if (session?.user) {
-          try {
-            console.log('🔍 [AUTH] Ensuring profile exists for user:', session.user.id.substring(0, 8) + '...')
-            await fetch('/api/profiles/ensure', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                userId: session.user.id,
-              }),
-            })
-
-            // Fetch profile subscription data from public.profiles table
-            if (supabase) {
-              const { data: profileData, error: profileError } = await supabase
-                .from('profiles')
-                .select('*')
-                .eq('user_id', session.user.id)
-                .single()
-
-              if (!profileError && profileData) {
-                console.log('✅ [AUTH] Profile loaded:', {
-                  profileId: profileData.id,
-                  tier: profileData.subscription_tier,
-                  status: profileData.subscription_status,
-                })
-                // Merge auth user with profile subscription data
-                setUser({
-                  ...session.user,
-                  ...profileData,
-                })
-              } else {
-                console.warn('⚠️ [AUTH] Profile not found, using auth user only:', profileError?.message)
-                // Fallback to just auth user if profile data not found
-                setUser(session.user)
-              }
-            } else {
-              setUser(session.user)
-            }
-          } catch (ensureError) {
-            // Log but don't block - profile can be created later
-            console.warn('⚠️ [AUTH] Failed to ensure profile in database:', ensureError)
-            setUser(session.user)
-          }
-        } else {
-          setUser(null)
-        }
-        
-        setLoading(false)
-      })
-
-      return () => subscription.unsubscribe()
-    } catch (error) {
-      console.warn('Auth initialization error:', error)
-      setLoading(false)
+    return () => {
+      mounted = false
+      subscription.unsubscribe()
     }
-  }, [])
+  }, []) // Empty deps - only run once on mount
 
   const signOut = async () => {
     if (!supabase) {
