@@ -1,10 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useAuth } from '@/app/providers/AuthProvider'
 import { useAccess } from '@/lib/useAccess'
+import Link from 'next/link'
 
 export default function HookCaptionEnginePage() {
-  const { isFree } = useAccess()
+  const { user, session } = useAuth()
+  const { isFree, isPaid } = useAccess()
   const [formData, setFormData] = useState({
     topic: '',
     platform: 'youtube-shorts' as 'youtube-shorts' | 'instagram-reels',
@@ -18,14 +21,75 @@ export default function HookCaptionEnginePage() {
   } | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
   const [copied, setCopied] = useState<string | null>(null)
+  const [usageInfo, setUsageInfo] = useState<{ allowed: boolean; remaining: number; limit: number } | null>(null)
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
 
-  const generate = () => {
+  // Check usage on mount
+  useEffect(() => {
+    if (user && !isPaid) {
+      checkUsage()
+    }
+  }, [user, isPaid])
+
+  const checkUsage = async () => {
+    if (!user?.id || !session?.access_token) return
+
+    try {
+      const response = await fetch('/api/usage/check', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          feature: 'hook-caption',
+          userId: user.id,
+        }),
+      })
+
+      const data = await response.json()
+      setUsageInfo(data)
+    } catch (error) {
+      console.error('Error checking usage:', error)
+    }
+  }
+
+  const generate = async () => {
     if (!formData.topic.trim()) {
       alert('Please enter a video topic or idea')
       return
     }
 
+    // Check usage for free users
+    if (!isPaid && user) {
+      await checkUsage()
+      if (usageInfo && !usageInfo.allowed) {
+        setShowUpgradeModal(true)
+        return
+      }
+    }
+
     setIsGenerating(true)
+
+    // Record usage for free users
+    if (!isPaid && user && session?.access_token) {
+      try {
+        await fetch('/api/usage/record', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({
+            feature: 'hook-caption',
+            userId: user.id,
+          }),
+        })
+        await checkUsage()
+      } catch (error) {
+        console.error('Error recording usage:', error)
+      }
+    }
 
     setTimeout(() => {
       const topic = formData.topic.toLowerCase()
@@ -109,10 +173,53 @@ export default function HookCaptionEnginePage() {
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-white to-purple-50/30 pointer-events-none"></div>
       
       <div className="container mx-auto px-4 max-w-6xl relative z-10">
+        {/* Upgrade Modal */}
+        {showUpgradeModal && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="card max-w-md w-full">
+              <h3 className="text-2xl font-bold mb-4 text-gray-900">Daily Limit Reached</h3>
+              <p className="text-gray-600 mb-6">
+                You've used all {usageInfo?.limit || 10} free hook/caption generations for today. 
+                Upgrade to Starter or Pro for unlimited access.
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowUpgradeModal(false)}
+                  className="btn-secondary flex-1 py-3"
+                >
+                  Maybe Later
+                </button>
+                <Link
+                  href="/pricing"
+                  className="btn-primary flex-1 py-3 text-center"
+                  onClick={() => setShowUpgradeModal(false)}
+                >
+                  Upgrade Now
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="mb-12">
           <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900">
             Hook & Caption Engine
           </h1>
+          {isFree && usageInfo && (
+            <div className={`mt-4 p-3 rounded-lg ${
+              usageInfo.remaining > 0 
+                ? 'bg-blue-50 border border-blue-200' 
+                : 'bg-yellow-50 border border-yellow-200'
+            }`}>
+              <p className={`text-sm font-semibold ${
+                usageInfo.remaining > 0 ? 'text-blue-900' : 'text-yellow-900'
+              }`}>
+                {usageInfo.remaining > 0 
+                  ? `Free tier: ${usageInfo.remaining} of ${usageInfo.limit} generations remaining today`
+                  : `You've used all ${usageInfo.limit} free generations today. Upgrade for unlimited access.`}
+              </p>
+            </div>
+          )}
           <p className="text-xl text-gray-600 max-w-3xl leading-relaxed">
             Generate compelling hooks and optimized captions to improve retention and clarity. Text-only output for your video editing workflow.
           </p>

@@ -18,8 +18,7 @@ interface AuditResult {
 }
 
 export default function CreatorAuditPage() {
-  const { canAccess, isFree } = useAccess()
-  const hasAccess = canAccess('starter')
+  const { isPaid, isStarter } = useAccess()
   
   const [step, setStep] = useState<'input' | 'questions' | 'result'>('input')
   const [formData, setFormData] = useState({
@@ -131,7 +130,7 @@ Your next step: Choose one format from the recommendations above and create 3-4 
 
   return (
     <main className="min-h-screen py-16 md:py-24 relative overflow-hidden">
-      <UpgradeGate requiredTier="starter">
+      <UpgradeGate requiredTier="starter" showUpgradeCTA={!isPaid}>
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-white to-purple-50/30 pointer-events-none"></div>
       
       <div className="container mx-auto px-4 max-w-6xl relative z-10">

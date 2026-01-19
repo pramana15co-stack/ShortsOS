@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAuth } from '@/app/providers/AuthProvider'
 import { useAccess } from '@/lib/useAccess'
 import Link from 'next/link'
+import UpgradeGate from '@/components/UpgradeGate'
 
 type Platform = 'youtube-shorts' | 'instagram-reels'
 type VideoStyle = 'cinematic' | 'storytelling' | 'motivation' | 'explainer'
@@ -18,8 +19,8 @@ interface PromptOutput {
 }
 
 export default function PromptStudioPage() {
-  const { user } = useAuth()
-  const { isFree, promptStudioRemaining } = useAccess()
+  const { user, session } = useAuth()
+  const { isFree, isPaid } = useAccess()
   const [formData, setFormData] = useState({
     platform: 'youtube-shorts' as Platform,
     style: 'storytelling' as VideoStyle,
@@ -30,19 +31,76 @@ export default function PromptStudioPage() {
   const [output, setOutput] = useState<PromptOutput | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
   const [copied, setCopied] = useState<string | null>(null)
+  const [usageInfo, setUsageInfo] = useState<{ allowed: boolean; remaining: number; limit: number } | null>(null)
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
 
-  const generatePrompt = () => {
+  // Check usage on mount and when user changes
+  useEffect(() => {
+    if (user && !isPaid) {
+      checkUsage()
+    }
+  }, [user, isPaid])
+
+  const checkUsage = async () => {
+    if (!user?.id || !session?.access_token) return
+
+    try {
+      const response = await fetch('/api/usage/check', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          feature: 'prompt-studio',
+          userId: user.id,
+        }),
+      })
+
+      const data = await response.json()
+      setUsageInfo(data)
+    } catch (error) {
+      console.error('Error checking usage:', error)
+    }
+  }
+
+  const generatePrompt = async () => {
     if (!formData.topic.trim()) {
       alert('Please enter a topic or video idea')
       return
     }
 
-    if (isFree && typeof promptStudioRemaining === 'number' && promptStudioRemaining <= 0) {
-      // Show upgrade prompt
-      return
+    // Check usage for free users
+    if (!isPaid && user) {
+      await checkUsage()
+      if (usageInfo && !usageInfo.allowed) {
+        setShowUpgradeModal(true)
+        return
+      }
     }
 
     setIsGenerating(true)
+
+    // Record usage for free users
+    if (!isPaid && user && session?.access_token) {
+      try {
+        await fetch('/api/usage/record', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({
+            feature: 'prompt-studio',
+            userId: user.id,
+          }),
+        })
+        // Refresh usage after recording
+        await checkUsage()
+      } catch (error) {
+        console.error('Error recording usage:', error)
+      }
+    }
 
     // Simulate generation delay
     setTimeout(() => {
@@ -147,6 +205,34 @@ export default function PromptStudioPage() {
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-white to-purple-50/30 pointer-events-none"></div>
       
       <div className="container mx-auto px-4 max-w-7xl relative z-10">
+        {/* Upgrade Modal */}
+        {showUpgradeModal && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="card max-w-md w-full">
+              <h3 className="text-2xl font-bold mb-4 text-gray-900">Daily Limit Reached</h3>
+              <p className="text-gray-600 mb-6">
+                You've used all {usageInfo?.limit || 5} free prompt generations for today. 
+                Upgrade to Starter or Pro for unlimited access.
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowUpgradeModal(false)}
+                  className="btn-secondary flex-1 py-3"
+                >
+                  Maybe Later
+                </button>
+                <Link
+                  href="/pricing"
+                  className="btn-primary flex-1 py-3 text-center"
+                  onClick={() => setShowUpgradeModal(false)}
+                >
+                  Upgrade Now
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className="mb-12">
           <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900">
@@ -155,9 +241,19 @@ export default function PromptStudioPage() {
           <p className="text-xl text-gray-600 max-w-3xl leading-relaxed">
             Generate high-quality prompts for AI video tools like Sora and Veo. Pramana helps you structure prompts that produce better results.
           </p>
-          {isFree && (
-            <div className="mt-4 text-sm text-gray-600">
-              Free tier: {typeof promptStudioRemaining === 'number' ? `${promptStudioRemaining} generations remaining today` : 'Unlimited'}
+          {isFree && usageInfo && (
+            <div className={`mt-4 p-3 rounded-lg ${
+              usageInfo.remaining > 0 
+                ? 'bg-blue-50 border border-blue-200' 
+                : 'bg-yellow-50 border border-yellow-200'
+            }`}>
+              <p className={`text-sm font-semibold ${
+                usageInfo.remaining > 0 ? 'text-blue-900' : 'text-yellow-900'
+              }`}>
+                {usageInfo.remaining > 0 
+                  ? `Free tier: ${usageInfo.remaining} of ${usageInfo.limit} generations remaining today`
+                  : `You've used all ${usageInfo.limit} free generations today. Upgrade for unlimited access.`}
+              </p>
             </div>
           )}
         </div>

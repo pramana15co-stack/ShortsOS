@@ -8,6 +8,7 @@ import { useAuth } from '@/app/providers/AuthProvider'
 import { getLastPlannerResult, PlannerHistoryItem } from '@/lib/getPlannerHistory'
 import SuccessBanner from '@/components/SuccessBanner'
 import EmailVerificationBanner from '@/components/EmailVerificationBanner'
+import SubscriptionManagement from '@/components/SubscriptionManagement'
 
 function DashboardContent() {
   const { loading } = useRequireAuth()
@@ -220,6 +221,14 @@ function DashboardContent() {
             ))}
           </div>
         </div>
+
+        {/* Subscription Management */}
+        {user && (
+          <div className="mb-10">
+            <h2 className="text-3xl font-extrabold text-gray-900 mb-6">Subscription</h2>
+            <SubscriptionManagement />
+          </div>
+        )}
 
         {/* Tools & Resources */}
         <div className="mb-10">
