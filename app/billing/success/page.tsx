@@ -8,7 +8,7 @@ import { useAuth } from '@/app/providers/AuthProvider'
 function BillingSuccessContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
-  const { user } = useAuth()
+  const { user, session } = useAuth()
   const paymentId = searchParams.get('payment_id')
   const orderId = searchParams.get('order_id')
   const signature = searchParams.get('signature')
@@ -24,17 +24,29 @@ function BillingSuccessContent() {
         return
       }
 
+      if (!session?.access_token) {
+        setError('Session expired. Please log in again.')
+        setLoading(false)
+        return
+      }
+
+      // Get plan from URL params or default to starter
+      const urlParams = new URLSearchParams(window.location.search)
+      const planParam = urlParams.get('plan') || 'starter'
+
       try {
-        const response = await fetch('/api/payment/verify', {
+
+        const response = await fetch('/api/razorpay/verify', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`,
           },
           body: JSON.stringify({
-            paymentId,
-            orderId,
-            signature,
-            userId: user.id,
+            razorpay_payment_id: paymentId,
+            razorpay_order_id: orderId,
+            razorpay_signature: signature,
+            plan: planParam,
           }),
         })
 
@@ -47,10 +59,9 @@ function BillingSuccessContent() {
         }
 
         // Payment verified successfully
-        setPlan(data.plan || 'starter')
+        setPlan(data.plan || planParam)
         
         // Redirect to dashboard after 2 seconds
-        // The dashboard will fetch fresh user data from Supabase
         setTimeout(() => {
           router.push('/dashboard?payment=success')
         }, 2000)
@@ -64,7 +75,7 @@ function BillingSuccessContent() {
     }
 
     verifyPayment()
-  }, [paymentId, orderId, signature, user])
+  }, [paymentId, orderId, signature, user, router])
 
   return (
     <main className="min-h-screen py-16 md:py-24 relative overflow-hidden">

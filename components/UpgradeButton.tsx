@@ -19,7 +19,7 @@ interface UpgradeButtonProps {
 }
 
 export default function UpgradeButton({ plan = 'starter', className = '', children }: UpgradeButtonProps) {
-  const { user } = useAuth()
+  const { user, session } = useAuth()
   const { isFree } = useAccess()
   const router = useRouter()
   const [loading, setLoading] = useState(false)
@@ -58,18 +58,23 @@ export default function UpgradeButton({ plan = 'starter', className = '', childr
       return
     }
 
+    if (!session?.access_token) {
+      alert('Session expired. Please log in again.')
+      router.push('/login')
+      return
+    }
+
     setLoading(true)
 
     try {
       // Create order on backend
-      const response = await fetch('/api/checkout', {
+      const response = await fetch('/api/razorpay/create-order', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
         },
         body: JSON.stringify({
-          userId: user.id,
-          userEmail: user.email,
           plan: plan,
         }),
       })
@@ -94,9 +99,36 @@ export default function UpgradeButton({ plan = 'starter', className = '', childr
         theme: data.theme || {
           color: '#6366f1',
         },
-        handler: function (response: any) {
-          // Payment successful - redirect to success page with signature
-          window.location.href = `/billing/success?payment_id=${response.razorpay_payment_id}&order_id=${response.razorpay_order_id}&signature=${response.razorpay_signature}`
+        handler: async function (response: any) {
+          // Payment successful - call verify endpoint
+          try {
+            const verifyResponse = await fetch('/api/razorpay/verify', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session.access_token}`,
+              },
+              body: JSON.stringify({
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature,
+                plan: plan,
+              }),
+            })
+
+            const verifyData = await verifyResponse.json()
+
+            if (!verifyResponse.ok) {
+              throw new Error(verifyData.error || 'Payment verification failed')
+            }
+
+            // Redirect to dashboard on success
+            router.push('/dashboard?payment=success')
+          } catch (verifyError: any) {
+            console.error('Payment verification error:', verifyError)
+            alert(verifyError.message || 'Payment verification failed. Please contact support.')
+            setLoading(false)
+          }
         },
         modal: {
           ondismiss: function () {

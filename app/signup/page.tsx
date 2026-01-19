@@ -62,21 +62,19 @@ export default function SignUpPage() {
         return
       }
 
-      if (data.user) {
+      if (data.user && data.session?.access_token) {
         // Ensure profile exists in public.profiles table
         try {
-          await fetch('/api/profiles/ensure', {
+          await fetch('/api/bootstrap-profile', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
+              'Authorization': `Bearer ${data.session.access_token}`,
             },
-            body: JSON.stringify({
-              userId: data.user.id,
-            }),
           })
         } catch (ensureError) {
           // Log but don't block signup - profile can be created later
-          console.warn('Failed to ensure profile in database:', ensureError)
+          console.warn('Failed to bootstrap profile in database:', ensureError)
         }
 
         // Redirect to dashboard on success

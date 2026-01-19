@@ -1,14 +1,49 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/app/providers/AuthProvider'
 import UpgradeButton from '@/components/UpgradeButton'
+import { supabase } from '@/lib/supabaseClient'
 
 export default function PricingPage() {
   const { user } = useAuth()
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
   const [pricingRegion, setPricingRegion] = useState<'india' | 'global'>('global')
+  const [hasPreviousPayments, setHasPreviousPayments] = useState<boolean | null>(null)
+  const [loadingPaymentCheck, setLoadingPaymentCheck] = useState(true)
+
+  // Check if user has previous payments to determine discount eligibility
+  useEffect(() => {
+    const checkPaymentHistory = async () => {
+      if (!user || !supabase) {
+        setHasPreviousPayments(false)
+        setLoadingPaymentCheck(false)
+        return
+      }
+
+      try {
+        const { data: payments, error } = await supabase
+          .from('payments')
+          .select('id')
+          .eq('user_id', user.id)
+          .limit(1)
+
+        if (!error && payments && payments.length > 0) {
+          setHasPreviousPayments(true)
+        } else {
+          setHasPreviousPayments(false)
+        }
+      } catch (error) {
+        console.error('Error checking payment history:', error)
+        setHasPreviousPayments(false)
+      } finally {
+        setLoadingPaymentCheck(false)
+      }
+    }
+
+    checkPaymentHistory()
+  }, [user])
 
   return (
     <main className="min-h-screen py-16 md:py-24 relative overflow-hidden">
@@ -172,12 +207,30 @@ export default function PricingPage() {
                 </p>
               </div>
               <div className="text-right">
-                <div className="text-5xl font-extrabold text-gray-900">
-                  {pricingRegion === 'india' ? '₹799' : '$9'}
-                </div>
-                <div className="text-sm text-gray-500 mt-1">per month</div>
-                {pricingRegion === 'india' && (
-                  <div className="text-xs text-gray-400 mt-1">≈ $9 USD</div>
+                {pricingRegion === 'india' ? (
+                  <div>
+                    {!loadingPaymentCheck && !hasPreviousPayments ? (
+                      <>
+                        <div className="flex items-baseline justify-end gap-2 mb-1">
+                          <span className="text-3xl font-bold text-gray-400 line-through">₹799</span>
+                          <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">
+                            Early Creator Discount
+                          </span>
+                        </div>
+                        <div className="text-5xl font-extrabold text-gray-900">₹499</div>
+                        <div className="text-sm text-green-600 font-semibold mt-1">Save ₹300</div>
+                      </>
+                    ) : (
+                      <div className="text-5xl font-extrabold text-gray-900">₹799</div>
+                    )}
+                    <div className="text-sm text-gray-500 mt-1">per month</div>
+                    <div className="text-xs text-gray-400 mt-1">≈ $9 USD</div>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="text-5xl font-extrabold text-gray-900">$9</div>
+                    <div className="text-sm text-gray-500 mt-1">per month</div>
+                  </div>
                 )}
               </div>
             </div>
@@ -254,6 +307,13 @@ export default function PricingPage() {
               <p className="text-sm text-gray-600 mb-4">
                 <strong>Outcome:</strong> You'll know exactly what to create, when to create it, and how to execute it correctly.
               </p>
+              {!loadingPaymentCheck && !hasPreviousPayments && pricingRegion === 'india' && (
+                <div className="mb-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                  <p className="text-sm text-green-800 font-semibold text-center">
+                    🎉 Early Creator Discount: Pay only ₹499 for your first month (Save ₹300)
+                  </p>
+                </div>
+              )}
               <div className="mb-3 text-xs text-gray-500 text-center">
                 Early access pricing • No long-term commitment
               </div>

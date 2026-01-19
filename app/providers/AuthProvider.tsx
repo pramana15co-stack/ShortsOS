@@ -84,17 +84,15 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
           // Bootstrap profile and fetch subscription data in background (non-blocking)
           // This doesn't block the UI - user can already see the dashboard
           Promise.all([
-            // Ensure profile exists
-            fetch('/api/profiles/ensure', {
+            // Ensure profile exists using bootstrap-profile API
+            fetch('/api/bootstrap-profile', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session.access_token}`,
               },
-              body: JSON.stringify({
-                userId: session.user.id,
-              }),
             }).catch(err => {
-              console.warn('⚠️ [AUTH] Profile ensure failed (non-blocking):', err)
+              console.warn('⚠️ [AUTH] Profile bootstrap failed (non-blocking):', err)
               return null
             }),
 

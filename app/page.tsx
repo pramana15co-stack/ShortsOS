@@ -1,8 +1,15 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, Suspense } from 'react'
+import dynamic from 'next/dynamic'
 import { testimonials } from '@/data/testimonials'
+
+// Lazy-load Three.js component (only on homepage)
+const ThreeScene = dynamic(() => import('@/components/ThreeScene'), {
+  ssr: false,
+  loading: () => null, // No loading state - just don't show until loaded
+})
 
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false)
@@ -151,6 +158,11 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-white to-purple-50/30 pointer-events-none"></div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(99,102,241,0.1),transparent_50%)] pointer-events-none"></div>
         
+        {/* Three.js Scene - Lazy loaded, non-blocking */}
+        <Suspense fallback={null}>
+          <ThreeScene />
+        </Suspense>
+        
         <div className="container mx-auto px-6 max-w-6xl relative z-10">
           <div className={`max-w-4xl mx-auto text-center ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'} transition-all duration-700`}>
             {/* Badge */}
@@ -159,36 +171,59 @@ export default function Home() {
               <span className="text-xs font-bold text-gray-700 uppercase tracking-wider">Built by Pramana</span>
             </div>
             
-            {/* Main Heading */}
+            {/* Main Heading - Outcome-focused */}
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 text-gray-900 leading-[1.1]">
-              Clarity for short-form creators.<br />
-              <span className="text-gray-700">Structure, not stress.</span>
+              <span className="block mb-2">Stop guessing what to create.</span>
+              <span className="text-gray-700">Start creating with confidence.</span>
             </h1>
             
-            {/* Description */}
-            <p className="text-xl md:text-2xl text-gray-700 mb-6 max-w-2xl mx-auto leading-relaxed font-normal">
-              Pramana helps you know what to create, when to create it, and how to execute it correctly. 
-              Built for early-stage creators who want clarity, not hacks.
+            {/* Description - Outcome-focused */}
+            <p className="text-xl md:text-2xl text-gray-700 mb-4 max-w-2xl mx-auto leading-relaxed font-normal">
+              Get clear format recommendations, proven templates, and step-by-step guides. 
+              Built for creators who want real results, not shortcuts.
             </p>
             
             <p className="text-base text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-              Explore freely. Upgrade only when ready. No pressure.
+              Free to start. Upgrade when you're ready. No credit card required.
             </p>
 
-            {/* CTA Buttons */}
+            {/* CTA Buttons - Clear primary action */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
               <Link 
-                href="/dashboard" 
-                className="btn-primary text-lg px-10 py-5"
+                href="/signup" 
+                className="group relative inline-flex items-center justify-center px-10 py-5 text-lg font-bold text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 overflow-hidden"
               >
-                Get Started Free
+                <span className="relative z-10">Start Free</span>
+                <span className="absolute inset-0 bg-gradient-to-r from-indigo-700 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
               </Link>
               <Link 
-                href="/creator-audit" 
-                className="btn-secondary text-lg px-10 py-5"
+                href="/execution-paths" 
+                className="inline-flex items-center justify-center px-10 py-5 text-lg font-semibold text-gray-700 bg-white border-2 border-gray-300 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition-all duration-300 hover:scale-105"
               >
-                Try Creator Audit
+                See How It Works
               </Link>
+            </div>
+            
+            {/* Credibility Signal */}
+            <div className="flex items-center justify-center gap-6 text-sm text-gray-500 mb-8">
+              <div className="flex items-center gap-2">
+                <svg className="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>No credit card</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <svg className="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Free forever</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <svg className="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Builder-first</span>
+              </div>
             </div>
             
             {/* How We Help - Visual Feature Preview */}
@@ -789,24 +824,25 @@ export default function Home() {
                 Ready to Start Creating?
               </h2>
               <p className="text-xl text-white/90 mb-10 max-w-2xl mx-auto leading-relaxed">
-                Join thousands of creators using Pramana to make better content decisions. Free to start, no credit card required.
+                Join creators using Pramana to make better content decisions. Free to start, no credit card required.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
-                  href="/dashboard"
-                  className="bg-white text-indigo-600 px-10 py-5 rounded-xl font-bold text-lg hover:scale-105 transition-transform shadow-xl"
+                  href="/signup"
+                  className="group relative bg-white text-indigo-600 px-10 py-5 rounded-xl font-bold text-lg hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl overflow-hidden"
                 >
-                  Get Started Free
+                  <span className="relative z-10">Start Free</span>
+                  <span className="absolute inset-0 bg-indigo-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                 </Link>
                 <Link
-                  href="/pricing"
-                  className="bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white px-10 py-5 rounded-xl font-bold text-lg hover:bg-white/20 transition-all shadow-xl"
+                  href="/execution-paths"
+                  className="bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white px-10 py-5 rounded-xl font-bold text-lg hover:bg-white/20 hover:border-white/50 transition-all duration-300 shadow-xl"
                 >
-                  View Pricing
+                  See How It Works
                 </Link>
               </div>
               <p className="mt-8 text-base text-white/80">
-                No credit card • No time limits • Start creating today
+                No credit card • Free forever • Start creating today
               </p>
             </div>
           </div>
