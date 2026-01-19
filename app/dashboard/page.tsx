@@ -11,12 +11,25 @@ import EmailVerificationBanner from '@/components/EmailVerificationBanner'
 
 function DashboardContent() {
   const { loading } = useRequireAuth()
-  const { user, session } = useAuth()
+  const { user, session, refreshSession } = useAuth()
   const searchParams = useSearchParams()
   const showSuccessBanner = searchParams.get('payment') === 'success'
   const [lastPlan, setLastPlan] = useState<PlannerHistoryItem | null>(null)
   const [loadingPlan, setLoadingPlan] = useState(true)
   const [bannerDismissed, setBannerDismissed] = useState(false)
+
+  // Refresh profile data after successful payment
+  useEffect(() => {
+    if (showSuccessBanner && session?.access_token) {
+      console.log('🔄 [DASHBOARD] Payment success detected, refreshing profile...')
+      // Refresh session to get updated profile data
+      refreshSession().then(() => {
+        console.log('✅ [DASHBOARD] Profile refreshed after payment')
+      }).catch((error) => {
+        console.error('❌ [DASHBOARD] Failed to refresh profile:', error)
+      })
+    }
+  }, [showSuccessBanner, session?.access_token, refreshSession])
 
   // Profile bootstrap is now handled in AuthProvider, no need to duplicate here
 

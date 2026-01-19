@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createRazorpayOrder } from '@/lib/razorpay'
 import { createClient } from '@supabase/supabase-js'
+import { requireEnvVars } from '@/lib/envValidation'
 
 // Initialize Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -22,6 +23,16 @@ export async function POST(request: NextRequest) {
   const requestId = `req_${Date.now()}_${Math.random().toString(36).substring(7)}`
   
   try {
+    // Validate environment variables
+    try {
+      requireEnvVars()
+    } catch (envError: any) {
+      console.error(`❌ [CREATE-ORDER ${requestId}] Env validation failed:`, envError.message)
+      return NextResponse.json(
+        { error: 'Server configuration error. Please contact support.' },
+        { status: 500 }
+      )
+    }
     const body = await request.json()
     const { plan = 'starter' } = body
 

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { verifyPaymentSignature, getPaymentDetails, getRazorpayInstance } from '@/lib/razorpay'
 import { createClient } from '@supabase/supabase-js'
+import { requireEnvVars } from '@/lib/envValidation'
 
 // Initialize Supabase client
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -14,6 +15,16 @@ export async function POST(request: NextRequest) {
   const requestId = `req_${Date.now()}_${Math.random().toString(36).substring(7)}`
   
   try {
+    // Validate environment variables
+    try {
+      requireEnvVars()
+    } catch (envError: any) {
+      console.error(`❌ [VERIFY ${requestId}] Env validation failed:`, envError.message)
+      return NextResponse.json(
+        { error: 'Server configuration error. Please contact support.' },
+        { status: 500 }
+      )
+    }
     const body = await request.json()
     const { 
       razorpay_payment_id, 
@@ -240,7 +251,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check current profile state
-    const { data: currentProfile, error: currentProfileError } = await supabase
+    let { data: currentProfile, error: currentProfileError } = await supabase
       .from('profiles')
       .select('id, user_id, subscription_tier, subscription_status, plan_expiry, razorpay_payment_id')
       .eq('user_id', userId)
@@ -260,13 +271,76 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Auto-create profile if it doesn't exist (bulletproof)
     if (!currentProfile) {
-      console.error(`❌ [VERIFY ${requestId}] Profile not found for user:`, {
+      console.log(`📝 [VERIFY ${requestId}] Profile not found, creating automatically:`, {
         userId: userId.substring(0, 8) + '...',
       })
+      
+      const { data: newProfile, error: createError } = await supabase
+        .from('profiles')
+        .insert({
+          user_id: userId,
+          subscription_tier: 'free', // Will be updated below
+          subscription_status: 'inactive', // Will be updated below
+          plan_expiry: null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        })
+        .select()
+        .single()
+
+      if (createError) {
+        if (createError.code === '23505') {
+          // Race condition - profile created by another request
+          console.log(`✅ [VERIFY ${requestId}] Profile created by another request (race condition)`)
+          const { data: existingProfile } = await supabase
+            .from('profiles')
+            .select('id, user_id, subscription_tier, subscription_status, plan_expiry, razorpay_payment_id')
+            .eq('user_id', userId)
+            .single()
+          
+          if (existingProfile) {
+            currentProfile = existingProfile
+          } else {
+            console.error(`❌ [VERIFY ${requestId}] Failed to fetch profile after race condition:`, createError)
+            return NextResponse.json(
+              { error: 'Failed to create or fetch profile. Please try again.' },
+              { status: 500 }
+            )
+          }
+        } else {
+          console.error(`❌ [VERIFY ${requestId}] Error creating profile:`, {
+            code: createError.code,
+            message: createError.message,
+            details: createError.details,
+          })
+          return NextResponse.json(
+            { error: 'Failed to create profile. Payment was successful but profile creation failed.', details: createError.message },
+            { status: 500 }
+          )
+        }
+      } else if (newProfile) {
+        currentProfile = newProfile
+        console.log(`✅ [VERIFY ${requestId}] Profile created successfully:`, {
+          profileId: newProfile.id,
+          userId: newProfile.user_id.substring(0, 8) + '...',
+        })
+      } else {
+        console.error(`❌ [VERIFY ${requestId}] Profile creation returned no data`)
+        return NextResponse.json(
+          { error: 'Profile creation returned no data' },
+          { status: 500 }
+        )
+      }
+    }
+
+    // Ensure profile exists at this point
+    if (!currentProfile) {
+      console.error(`❌ [VERIFY ${requestId}] Profile still not found after creation attempt`)
       return NextResponse.json(
-        { error: 'Profile not found. Please ensure profile exists before payment.' },
-        { status: 404 }
+        { error: 'Failed to create or fetch profile. Please try again.' },
+        { status: 500 }
       )
     }
 

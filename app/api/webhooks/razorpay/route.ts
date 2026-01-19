@@ -83,39 +83,119 @@ export async function POST(request: NextRequest) {
 }
 
 async function handlePaymentCaptured(payment: any) {
+  const requestId = `webhook_${Date.now()}_${Math.random().toString(36).substring(7)}`
   const userId = payment.notes?.user_id
   const orderId = payment.order_id
+  const paymentId = payment.id
+  const plan = payment.notes?.plan || 'starter'
+
+  console.log(`🚀 [WEBHOOK ${requestId}] Payment captured:`, {
+    paymentId: paymentId?.substring(0, 12) + '...',
+    orderId: orderId?.substring(0, 12) + '...',
+    userId: userId?.substring(0, 8) + '...',
+    plan,
+  })
 
   if (!userId) {
-    console.error('No user_id in payment notes')
+    console.error(`❌ [WEBHOOK ${requestId}] No user_id in payment notes`)
     return
   }
 
-  // Update user subscription
-  if (supabase) {
-    const { error } = await supabase
-      .from('users')
-      .update({
-        razorpay_customer_id: payment.customer_id,
-        razorpay_order_id: orderId,
-        razorpay_payment_id: payment.id,
-        subscription_tier: payment.notes?.plan || 'starter',
+  if (!supabase) {
+    console.error(`❌ [WEBHOOK ${requestId}] Supabase not configured`)
+    return
+  }
+
+  // Check if payment already processed (idempotency)
+  const { data: existingPayment } = await supabase
+    .from('payments')
+    .select('id, payment_id, status')
+    .eq('payment_id', paymentId)
+    .single()
+
+  if (existingPayment) {
+    console.log(`✅ [WEBHOOK ${requestId}] Payment already processed (idempotent):`, {
+      paymentId: existingPayment.payment_id?.substring(0, 12) + '...',
+      status: existingPayment.status,
+    })
+    return
+  }
+
+  // Insert payment record
+  const { error: paymentError } = await supabase
+    .from('payments')
+    .insert({
+      user_id: userId,
+      payment_id: paymentId,
+      order_id: orderId,
+      plan: plan,
+      amount: payment.amount || 0,
+      currency: payment.currency || 'INR',
+      status: 'success',
+      payment_date: new Date().toISOString(),
+    })
+
+  if (paymentError && paymentError.code !== '23505') {
+    console.error(`❌ [WEBHOOK ${requestId}] Error inserting payment:`, paymentError)
+  } else {
+    console.log(`✅ [WEBHOOK ${requestId}] Payment record inserted`)
+  }
+
+  // Ensure profile exists, then update
+  const { data: existingProfile } = await supabase
+    .from('profiles')
+    .select('id, user_id, subscription_tier, subscription_status, razorpay_payment_id')
+    .eq('user_id', userId)
+    .single()
+
+  if (!existingProfile) {
+    // Create profile if it doesn't exist
+    console.log(`📝 [WEBHOOK ${requestId}] Profile not found, creating...`)
+    const { error: createError } = await supabase
+      .from('profiles')
+      .insert({
+        user_id: userId,
+        subscription_tier: plan,
         subscription_status: 'active',
+        plan_expiry: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(), // 30 days
+        razorpay_payment_id: paymentId,
+        razorpay_order_id: orderId,
+        created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })
-      .eq('id', userId)
 
-    if (error) {
-      console.error('Error updating user subscription:', error)
+    if (createError && createError.code !== '23505') {
+      console.error(`❌ [WEBHOOK ${requestId}] Error creating profile:`, createError)
+    } else {
+      console.log(`✅ [WEBHOOK ${requestId}] Profile created and upgraded`)
     }
   } else {
-    console.log('Demo mode: Would update user subscription', {
-      userId,
-      orderId,
-      paymentId: payment.id,
-      tier: payment.notes?.plan || 'starter',
-      status: 'active',
-    })
+    // Update existing profile (idempotent - only if not already updated)
+    if (existingProfile.razorpay_payment_id === paymentId) {
+      console.log(`✅ [WEBHOOK ${requestId}] Profile already updated with this payment (idempotent)`)
+      return
+    }
+
+    const expiryDate = new Date()
+    expiryDate.setDate(expiryDate.getDate() + 30)
+
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({
+        subscription_tier: plan,
+        subscription_status: 'active',
+        plan_expiry: expiryDate.toISOString(),
+        razorpay_payment_id: paymentId,
+        razorpay_order_id: orderId,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('user_id', userId)
+
+    if (updateError) {
+      console.error(`❌ [WEBHOOK ${requestId}] Error updating profile:`, updateError)
+    } else {
+      console.log(`✅ [WEBHOOK ${requestId}] Profile upgraded successfully`)
+    }
   }
 }
 

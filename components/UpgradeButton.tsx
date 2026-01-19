@@ -102,6 +102,8 @@ export default function UpgradeButton({ plan = 'starter', className = '', childr
         handler: async function (response: any) {
           // Payment successful - call verify endpoint
           try {
+            setLoading(true) // Keep loading during verification
+            
             const verifyResponse = await fetch('/api/razorpay/verify', {
               method: 'POST',
               headers: {
@@ -122,11 +124,20 @@ export default function UpgradeButton({ plan = 'starter', className = '', childr
               throw new Error(verifyData.error || 'Payment verification failed')
             }
 
-            // Redirect to dashboard on success
-            router.push('/dashboard?payment=success')
+            console.log('✅ Payment verified successfully:', verifyData)
+
+            // Force refresh profile data by calling refreshSession
+            // This ensures the UI shows updated subscription status
+            if (window.location.pathname !== '/dashboard') {
+              // Redirect to dashboard with success flag
+              window.location.href = '/dashboard?payment=success'
+            } else {
+              // Already on dashboard - refresh the page to show updated status
+              window.location.href = '/dashboard?payment=success'
+            }
           } catch (verifyError: any) {
-            console.error('Payment verification error:', verifyError)
-            alert(verifyError.message || 'Payment verification failed. Please contact support.')
+            console.error('❌ Payment verification error:', verifyError)
+            alert(verifyError.message || 'Payment verification failed. Please contact support with payment ID: ' + response.razorpay_payment_id)
             setLoading(false)
           }
         },
