@@ -9,6 +9,7 @@ import { getLastPlannerResult, PlannerHistoryItem } from '@/lib/getPlannerHistor
 import SuccessBanner from '@/components/SuccessBanner'
 import EmailVerificationBanner from '@/components/EmailVerificationBanner'
 import SubscriptionManagement from '@/components/SubscriptionManagement'
+import CreditsDisplay from '@/components/CreditsDisplay'
 
 function DashboardContent() {
   const { loading } = useRequireAuth()
@@ -105,9 +106,12 @@ function DashboardContent() {
                 Welcome back, {user?.email?.split('@')[0] || 'Creator'}! Here's your content planning control center.
               </p>
             </div>
-            <Link href="/pricing" className="hidden md:block btn-primary px-6 py-3 text-sm">
-              View Packages
-            </Link>
+            <div className="flex items-center gap-4">
+              <CreditsDisplay />
+              <Link href="/pricing" className="hidden md:block btn-primary px-6 py-3 text-sm">
+                View Packages
+              </Link>
+            </div>
           </div>
         </div>
 

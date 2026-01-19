@@ -1,8 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { useAuth } from '@/app/providers/AuthProvider'
 import { useAccess } from '@/lib/useAccess'
+import { getCreditsInfo, hasEnoughCredits, getCreditCost } from '@/lib/credits'
 import UpgradeGate from '@/components/UpgradeGate'
+import CreditsDisplay from '@/components/CreditsDisplay'
 
 type Platform = 'youtube' | 'instagram'
 type Frequency = 'daily' | '3-4-per-week' | 'weekly' | 'occasional'
@@ -18,7 +22,10 @@ interface AuditResult {
 }
 
 export default function CreatorAuditPage() {
+  const { user } = useAuth()
   const { isPaid, isStarter } = useAccess()
+  const [credits, setCredits] = useState<number | null>(null)
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
   
   const [step, setStep] = useState<'input' | 'questions' | 'result'>('input')
   const [formData, setFormData] = useState({
@@ -29,6 +36,22 @@ export default function CreatorAuditPage() {
   })
   const [result, setResult] = useState<AuditResult | null>(null)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
+
+  useEffect(() => {
+    if (user) {
+      checkCredits()
+    }
+  }, [user, isPaid])
+
+  const checkCredits = async () => {
+    if (!user?.id) return
+    try {
+      const info = await getCreditsInfo(user.id, isPaid)
+      setCredits(info.credits)
+    } catch (error) {
+      console.error('Error checking credits:', error)
+    }
+  }
 
   // Wrap content in UpgradeGate for clean access control
 
@@ -41,9 +64,53 @@ export default function CreatorAuditPage() {
     setStep('questions')
   }
 
-  const handleQuestionsSubmit = (e: React.FormEvent) => {
+  const handleQuestionsSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    // Check credits for free users
+    if (!isPaid && user) {
+      await checkCredits()
+      if (!hasEnoughCredits(credits || 0, 'creator-audit', isPaid)) {
+        setShowUpgradeModal(true)
+        return
+      }
+    }
+
     setIsAnalyzing(true)
+
+    // Use credits for free users
+    if (!isPaid && user) {
+      try {
+        const response = await fetch('/api/credits/use', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: user.id,
+            feature: 'creator-audit',
+          }),
+        })
+
+        const data = await response.json()
+        if (!data.success) {
+          setIsAnalyzing(false)
+          if (data.error === 'Insufficient credits') {
+            setShowUpgradeModal(true)
+          } else {
+            alert(data.error || 'Failed to use credits')
+          }
+          return
+        }
+
+        setCredits(data.creditsRemaining)
+      } catch (error) {
+        console.error('Error using credits:', error)
+        setIsAnalyzing(false)
+        alert('Failed to process request. Please try again.')
+        return
+      }
+    }
     
     // Simulate analysis
     setTimeout(() => {
@@ -134,14 +201,56 @@ Your next step: Choose one format from the recommendations above and create 3-4 
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-white to-purple-50/30 pointer-events-none"></div>
       
       <div className="container mx-auto px-4 max-w-6xl relative z-10">
+        {/* Upgrade Modal */}
+        {showUpgradeModal && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="card max-w-md w-full">
+              <div className="w-16 h-16 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-3xl">💎</span>
+              </div>
+              <h3 className="text-2xl font-bold mb-2 text-gray-900 text-center">Insufficient Credits</h3>
+              <p className="text-gray-600 mb-4 text-center">
+                This premium feature costs <span className="font-bold text-indigo-600">{getCreditCost('creator-audit')} credits</span>. 
+                You have <span className="font-bold">{credits || 0} credits</span> remaining.
+              </p>
+              <p className="text-sm text-gray-500 mb-6 text-center">
+                Upgrade to Starter or Pro for unlimited access to all premium features.
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowUpgradeModal(false)}
+                  className="btn-secondary flex-1 py-3"
+                >
+                  Maybe Later
+                </button>
+                <Link
+                  href="/pricing"
+                  className="btn-primary flex-1 py-3 text-center"
+                  onClick={() => setShowUpgradeModal(false)}
+                >
+                  Upgrade Now
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900">
-            Creator Intelligence Audit
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl leading-relaxed">
-            Get personalized guidance based on your channel and goals. Understand your creator stage, 
-            what to post next, and what to avoid. This is a decision system, not an analytics tool.
-          </p>
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+              <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900">
+                Creator Intelligence Audit
+              </h1>
+              <p className="text-xl text-gray-600 max-w-3xl leading-relaxed">
+                Get personalized, actionable guidance based on your channel and goals. 
+                Understand your creator stage, what to post next, and what to avoid. 
+                This is a strategic decision system, not a basic analytics tool.
+              </p>
+            </div>
+            <div className="ml-4">
+              <CreditsDisplay feature="creator-audit" />
+            </div>
+          </div>
         </div>
 
         {step === 'input' && (

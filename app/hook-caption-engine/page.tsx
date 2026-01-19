@@ -3,7 +3,9 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/app/providers/AuthProvider'
 import { useAccess } from '@/lib/useAccess'
+import { getCreditsInfo, hasEnoughCredits, getCreditCost } from '@/lib/credits'
 import Link from 'next/link'
+import CreditsDisplay from '@/components/CreditsDisplay'
 
 export default function HookCaptionEnginePage() {
   const { user, session } = useAuth()
@@ -21,36 +23,24 @@ export default function HookCaptionEnginePage() {
   } | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
   const [copied, setCopied] = useState<string | null>(null)
-  const [usageInfo, setUsageInfo] = useState<{ allowed: boolean; remaining: number; limit: number } | null>(null)
+  const [credits, setCredits] = useState<number | null>(null)
   const [showUpgradeModal, setShowUpgradeModal] = useState(false)
 
-  // Check usage on mount
+  // Check credits on mount
   useEffect(() => {
-    if (user && !isPaid) {
-      checkUsage()
+    if (user) {
+      checkCredits()
     }
   }, [user, isPaid])
 
-  const checkUsage = async () => {
-    if (!user?.id || !session?.access_token) return
+  const checkCredits = async () => {
+    if (!user?.id) return
 
     try {
-      const response = await fetch('/api/usage/check', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify({
-          feature: 'hook-caption',
-          userId: user.id,
-        }),
-      })
-
-      const data = await response.json()
-      setUsageInfo(data)
+      const info = await getCreditsInfo(user.id, isPaid)
+      setCredits(info.credits)
     } catch (error) {
-      console.error('Error checking usage:', error)
+      console.error('Error checking credits:', error)
     }
   }
 
@@ -60,10 +50,10 @@ export default function HookCaptionEnginePage() {
       return
     }
 
-    // Check usage for free users
+    // Check credits for free users
     if (!isPaid && user) {
-      await checkUsage()
-      if (usageInfo && !usageInfo.allowed) {
+      await checkCredits()
+      if (!hasEnoughCredits(credits || 0, 'hook-caption', isPaid)) {
         setShowUpgradeModal(true)
         return
       }
@@ -71,23 +61,37 @@ export default function HookCaptionEnginePage() {
 
     setIsGenerating(true)
 
-    // Record usage for free users
-    if (!isPaid && user && session?.access_token) {
+    // Use credits for free users
+    if (!isPaid && user) {
       try {
-        await fetch('/api/usage/record', {
+        const response = await fetch('/api/credits/use', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${session.access_token}`,
           },
           body: JSON.stringify({
-            feature: 'hook-caption',
             userId: user.id,
+            feature: 'hook-caption',
           }),
         })
-        await checkUsage()
+
+        const data = await response.json()
+        if (!data.success) {
+          setIsGenerating(false)
+          if (data.error === 'Insufficient credits') {
+            setShowUpgradeModal(true)
+          } else {
+            alert(data.error || 'Failed to use credits')
+          }
+          return
+        }
+
+        setCredits(data.creditsRemaining)
       } catch (error) {
-        console.error('Error recording usage:', error)
+        console.error('Error using credits:', error)
+        setIsGenerating(false)
+        alert('Failed to process request. Please try again.')
+        return
       }
     }
 
@@ -177,10 +181,16 @@ export default function HookCaptionEnginePage() {
         {showUpgradeModal && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="card max-w-md w-full">
-              <h3 className="text-2xl font-bold mb-4 text-gray-900">Daily Limit Reached</h3>
-              <p className="text-gray-600 mb-6">
-                You've used all {usageInfo?.limit || 10} free hook/caption generations for today. 
-                Upgrade to Starter or Pro for unlimited access.
+              <div className="w-16 h-16 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-3xl">💎</span>
+              </div>
+              <h3 className="text-2xl font-bold mb-2 text-gray-900 text-center">Insufficient Credits</h3>
+              <p className="text-gray-600 mb-4 text-center">
+                This feature costs <span className="font-bold text-indigo-600">{getCreditCost('hook-caption')} credits</span>. 
+                You have <span className="font-bold">{credits || 0} credits</span> remaining.
+              </p>
+              <p className="text-sm text-gray-500 mb-6 text-center">
+                Upgrade to Starter or Pro for unlimited access to all features.
               </p>
               <div className="flex gap-3">
                 <button
@@ -202,27 +212,20 @@ export default function HookCaptionEnginePage() {
         )}
 
         <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900">
-            Hook & Caption Engine
-          </h1>
-          {isFree && usageInfo && (
-            <div className={`mt-4 p-3 rounded-lg ${
-              usageInfo.remaining > 0 
-                ? 'bg-blue-50 border border-blue-200' 
-                : 'bg-yellow-50 border border-yellow-200'
-            }`}>
-              <p className={`text-sm font-semibold ${
-                usageInfo.remaining > 0 ? 'text-blue-900' : 'text-yellow-900'
-              }`}>
-                {usageInfo.remaining > 0 
-                  ? `Free tier: ${usageInfo.remaining} of ${usageInfo.limit} generations remaining today`
-                  : `You've used all ${usageInfo.limit} free generations today. Upgrade for unlimited access.`}
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+              <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900">
+                Hook & Caption Engine
+              </h1>
+              <p className="text-xl text-gray-600 max-w-3xl leading-relaxed">
+                Generate high-converting hooks and optimized captions that improve retention and engagement. 
+                Built specifically for Shorts creators, not generic AI tools.
               </p>
             </div>
-          )}
-          <p className="text-xl text-gray-600 max-w-3xl leading-relaxed">
-            Generate compelling hooks and optimized captions to improve retention and clarity. Text-only output for your video editing workflow.
-          </p>
+            <div className="ml-4">
+              <CreditsDisplay feature="hook-caption" />
+            </div>
+          </div>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">

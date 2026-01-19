@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/app/providers/AuthProvider'
 import { useAccess } from '@/lib/useAccess'
+import { getCreditsInfo, hasEnoughCredits, getCreditCost } from '@/lib/credits'
 import Link from 'next/link'
-import UpgradeGate from '@/components/UpgradeGate'
+import CreditsDisplay from '@/components/CreditsDisplay'
 
 type Platform = 'youtube-shorts' | 'instagram-reels'
 type VideoStyle = 'cinematic' | 'storytelling' | 'motivation' | 'explainer'
@@ -31,36 +32,24 @@ export default function PromptStudioPage() {
   const [output, setOutput] = useState<PromptOutput | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
   const [copied, setCopied] = useState<string | null>(null)
-  const [usageInfo, setUsageInfo] = useState<{ allowed: boolean; remaining: number; limit: number } | null>(null)
+  const [credits, setCredits] = useState<number | null>(null)
   const [showUpgradeModal, setShowUpgradeModal] = useState(false)
 
-  // Check usage on mount and when user changes
+  // Check credits on mount and when user changes
   useEffect(() => {
-    if (user && !isPaid) {
-      checkUsage()
+    if (user) {
+      checkCredits()
     }
   }, [user, isPaid])
 
-  const checkUsage = async () => {
-    if (!user?.id || !session?.access_token) return
+  const checkCredits = async () => {
+    if (!user?.id) return
 
     try {
-      const response = await fetch('/api/usage/check', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify({
-          feature: 'prompt-studio',
-          userId: user.id,
-        }),
-      })
-
-      const data = await response.json()
-      setUsageInfo(data)
+      const info = await getCreditsInfo(user.id, isPaid)
+      setCredits(info.credits)
     } catch (error) {
-      console.error('Error checking usage:', error)
+      console.error('Error checking credits:', error)
     }
   }
 
@@ -70,10 +59,11 @@ export default function PromptStudioPage() {
       return
     }
 
-    // Check usage for free users
+    // Check credits for free users
     if (!isPaid && user) {
-      await checkUsage()
-      if (usageInfo && !usageInfo.allowed) {
+      await checkCredits()
+      const creditCost = getCreditCost('prompt-studio')
+      if (!hasEnoughCredits(credits || 0, 'prompt-studio', isPaid)) {
         setShowUpgradeModal(true)
         return
       }
@@ -81,24 +71,38 @@ export default function PromptStudioPage() {
 
     setIsGenerating(true)
 
-    // Record usage for free users
-    if (!isPaid && user && session?.access_token) {
+    // Use credits for free users
+    if (!isPaid && user) {
       try {
-        await fetch('/api/usage/record', {
+        const response = await fetch('/api/credits/use', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${session.access_token}`,
           },
           body: JSON.stringify({
-            feature: 'prompt-studio',
             userId: user.id,
+            feature: 'prompt-studio',
           }),
         })
-        // Refresh usage after recording
-        await checkUsage()
+
+        const data = await response.json()
+        if (!data.success) {
+          setIsGenerating(false)
+          if (data.error === 'Insufficient credits') {
+            setShowUpgradeModal(true)
+          } else {
+            alert(data.error || 'Failed to use credits')
+          }
+          return
+        }
+
+        // Update credits display
+        setCredits(data.creditsRemaining)
       } catch (error) {
-        console.error('Error recording usage:', error)
+        console.error('Error using credits:', error)
+        setIsGenerating(false)
+        alert('Failed to process request. Please try again.')
+        return
       }
     }
 
@@ -209,10 +213,16 @@ export default function PromptStudioPage() {
         {showUpgradeModal && (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="card max-w-md w-full">
-              <h3 className="text-2xl font-bold mb-4 text-gray-900">Daily Limit Reached</h3>
-              <p className="text-gray-600 mb-6">
-                You've used all {usageInfo?.limit || 5} free prompt generations for today. 
-                Upgrade to Starter or Pro for unlimited access.
+              <div className="w-16 h-16 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-3xl">💎</span>
+              </div>
+              <h3 className="text-2xl font-bold mb-2 text-gray-900 text-center">Insufficient Credits</h3>
+              <p className="text-gray-600 mb-4 text-center">
+                This feature costs <span className="font-bold text-indigo-600">{getCreditCost('prompt-studio')} credits</span>. 
+                You have <span className="font-bold">{credits || 0} credits</span> remaining.
+              </p>
+              <p className="text-sm text-gray-500 mb-6 text-center">
+                Upgrade to Starter or Pro for unlimited access to all features.
               </p>
               <div className="flex gap-3">
                 <button
@@ -235,27 +245,20 @@ export default function PromptStudioPage() {
 
         {/* Header */}
         <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900">
-            AI Video Prompt Studio
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl leading-relaxed">
-            Generate high-quality prompts for AI video tools like Sora and Veo. Pramana helps you structure prompts that produce better results.
-          </p>
-          {isFree && usageInfo && (
-            <div className={`mt-4 p-3 rounded-lg ${
-              usageInfo.remaining > 0 
-                ? 'bg-blue-50 border border-blue-200' 
-                : 'bg-yellow-50 border border-yellow-200'
-            }`}>
-              <p className={`text-sm font-semibold ${
-                usageInfo.remaining > 0 ? 'text-blue-900' : 'text-yellow-900'
-              }`}>
-                {usageInfo.remaining > 0 
-                  ? `Free tier: ${usageInfo.remaining} of ${usageInfo.limit} generations remaining today`
-                  : `You've used all ${usageInfo.limit} free generations today. Upgrade for unlimited access.`}
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+              <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900">
+                AI Video Prompt Studio
+              </h1>
+              <p className="text-xl text-gray-600 max-w-3xl leading-relaxed">
+                Generate professional-grade prompts for AI video tools like Sora, Veo, and Runway. 
+                Our structured approach ensures better results than generic AI tools.
               </p>
             </div>
-          )}
+            <div className="ml-4">
+              <CreditsDisplay feature="prompt-studio" />
+            </div>
+          </div>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">

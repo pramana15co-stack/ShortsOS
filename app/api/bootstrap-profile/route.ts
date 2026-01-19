@@ -156,6 +156,7 @@ export async function POST(request: NextRequest) {
         user_id: user.id,
         subscription_tier: 'free',
         subscription_status: 'inactive',
+        credits: 50, // Give new users 50 credits to start
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })

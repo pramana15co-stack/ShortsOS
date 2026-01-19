@@ -1,15 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useState, useRef, Suspense } from 'react'
-import dynamic from 'next/dynamic'
+import { useEffect, useState, useRef } from 'react'
 import { testimonials } from '@/data/testimonials'
-
-// Lazy-load Three.js component (only on homepage)
-const ThreeScene = dynamic(() => import('@/components/ThreeScene'), {
-  ssr: false,
-  loading: () => null, // No loading state - just don't show until loaded
-})
 
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false)
@@ -156,12 +149,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 md:py-28 lg:py-32">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-white to-purple-50/30 pointer-events-none"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(99,102,241,0.1),transparent_50%)] pointer-events-none"></div>
-        
-        {/* Three.js Scene - Lazy loaded, non-blocking */}
-        <Suspense fallback={null}>
-          <ThreeScene />
-        </Suspense>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(99,102,241,0.08),transparent_50%)] pointer-events-none"></div>
         
         <div className="container mx-auto px-6 max-w-6xl relative z-10">
           <div className={`max-w-4xl mx-auto text-center ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'} transition-all duration-700`}>
