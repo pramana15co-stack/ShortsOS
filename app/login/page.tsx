@@ -51,8 +51,18 @@ export default function LoginPage() {
         password: formData.password,
       })
 
+      // Log full Supabase response for debugging
+      console.log('🔍 [LOGIN] Full Supabase response:', {
+        hasUser: !!data?.user,
+        hasSession: !!data?.session,
+        error: signInError,
+        errorStringified: signInError ? JSON.stringify(signInError, null, 2) : null,
+      })
+
       if (signInError) {
-        setError(getAuthErrorMessage(signInError))
+        const errorMessage = getAuthErrorMessage(signInError)
+        // Ensure we always set a string, never an object
+        setError(typeof errorMessage === 'string' ? errorMessage : 'Sign in failed. Please try again.')
         setLoading(false)
         return
       }
@@ -78,7 +88,14 @@ export default function LoginPage() {
         router.push('/dashboard')
       }
     } catch (err) {
-      setError(getAuthErrorMessage(err))
+      // Log unexpected errors
+      console.error('❌ [LOGIN] Unexpected error:', err)
+      console.error('❌ [LOGIN] Error type:', typeof err)
+      console.error('❌ [LOGIN] Error stringified:', JSON.stringify(err, null, 2))
+      
+      const errorMessage = getAuthErrorMessage(err)
+      // Ensure we always set a string, never an object
+      setError(typeof errorMessage === 'string' ? errorMessage : 'Sign in failed. Please try again.')
       setLoading(false)
     }
   }
@@ -166,7 +183,7 @@ export default function LoginPage() {
             {/* Error Message */}
             {error && (
               <div className="bg-red-50 border-2 border-red-200 text-red-700 px-5 py-4 rounded-xl text-sm font-medium">
-                {error}
+                {typeof error === 'string' ? error : 'Sign in failed. Please try again.'}
               </div>
             )}
 

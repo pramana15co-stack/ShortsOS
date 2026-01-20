@@ -56,8 +56,18 @@ export default function SignUpPage() {
         },
       })
 
+      // Log full Supabase response for debugging
+      console.log('🔍 [SIGNUP] Full Supabase response:', {
+        hasUser: !!data?.user,
+        hasSession: !!data?.session,
+        error: signUpError,
+        errorStringified: signUpError ? JSON.stringify(signUpError, null, 2) : null,
+      })
+
       if (signUpError) {
-        setError(getAuthErrorMessage(signUpError))
+        const errorMessage = getAuthErrorMessage(signUpError)
+        // Ensure we always set a string, never an object
+        setError(typeof errorMessage === 'string' ? errorMessage : 'Signup failed. Please try again.')
         setLoading(false)
         return
       }
@@ -81,7 +91,14 @@ export default function SignUpPage() {
         router.push('/dashboard')
       }
     } catch (err) {
-      setError(getAuthErrorMessage(err))
+      // Log unexpected errors
+      console.error('❌ [SIGNUP] Unexpected error:', err)
+      console.error('❌ [SIGNUP] Error type:', typeof err)
+      console.error('❌ [SIGNUP] Error stringified:', JSON.stringify(err, null, 2))
+      
+      const errorMessage = getAuthErrorMessage(err)
+      // Ensure we always set a string, never an object
+      setError(typeof errorMessage === 'string' ? errorMessage : 'Signup failed. Please try again.')
       setLoading(false)
     }
   }
@@ -149,7 +166,7 @@ export default function SignUpPage() {
             {/* Error Message */}
             {error && (
               <div className="bg-red-50 border-2 border-red-200 text-red-700 px-5 py-4 rounded-xl text-sm font-medium">
-                {error}
+                {typeof error === 'string' ? error : 'Signup failed. Please try again.'}
               </div>
             )}
 
