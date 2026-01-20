@@ -123,12 +123,29 @@ export function getAuthErrorMessage(error: any): string {
   // Clean up the message
   errorMessage = errorMessage.trim()
 
+  // Check for specific error codes first
+  if (error?.code === 'SUPABASE_TIMEOUT' || error?.name === 'SignupTimeoutError') {
+    return 'Signup service temporarily unavailable. Please retry in 30 seconds.'
+  }
+
+  // 504 / AuthRetryableFetchError
+  if (
+    error?.status === 504 ||
+    error?.name?.includes('AuthRetryableFetchError') ||
+    errorMessage.toLowerCase().includes('504') ||
+    errorMessage.toLowerCase().includes('gateway timeout')
+  ) {
+    return 'Signup service temporarily unavailable. Please retry in 30 seconds.'
+  }
+
   // Network errors
-  if (errorMessage.toLowerCase().includes('network') || 
-      errorMessage.toLowerCase().includes('fetch') || 
-      errorMessage.toLowerCase().includes('failed to fetch') ||
-      errorMessage.toLowerCase().includes('networkerror')) {
-    return 'Network error. Please check your internet connection and try again.'
+  if (
+    errorMessage.toLowerCase().includes('network') ||
+    errorMessage.toLowerCase().includes('fetch') ||
+    errorMessage.toLowerCase().includes('failed to fetch') ||
+    errorMessage.toLowerCase().includes('networkerror')
+  ) {
+    return 'Network error. Please check your connection.'
   }
 
   // Rate limiting
@@ -170,10 +187,12 @@ export function getAuthErrorMessage(error: any): string {
   }
 
   // Weak password
-  if (errorMessage.includes('Password should be at least') ||
-      errorMessage.includes('password_too_short') ||
-      errorMessage.includes('Password is too short')) {
-    return 'Password must be at least 6 characters long.'
+  if (
+    errorMessage.includes('Password should be at least') ||
+    errorMessage.includes('password_too_short') ||
+    errorMessage.includes('Password is too short')
+  ) {
+    return 'Password must be at least 6 characters.'
   }
 
   // Expired token

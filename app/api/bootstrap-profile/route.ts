@@ -145,60 +145,75 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Profile doesn't exist - create it (idempotent insert)
-    console.log(`📝 [BOOTSTRAP ${requestId}] Profile does not exist, creating new profile:`, {
+    // Profile doesn't exist - upsert it (idempotent - prevents duplicates)
+    console.log(`📝 [BOOTSTRAP ${requestId}] Profile does not exist, upserting profile:`, {
       userId: user.id.substring(0, 8) + '...',
     })
     
-    const { data: newProfile, error: insertError } = await supabase
+    // Use upsert to handle race conditions gracefully
+    const { data: newProfile, error: upsertError } = await supabase
       .from('profiles')
-      .insert({
-        user_id: user.id,
-        subscription_tier: 'free',
-        subscription_status: 'inactive',
-        credits: 50, // Give new users 50 credits to start
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      })
+      .upsert(
+        {
+          user_id: user.id,
+          subscription_tier: 'free',
+          subscription_status: 'inactive',
+          credits: 50, // Give new users 50 credits to start
+          plan_expiry: null,
+          updated_at: new Date().toISOString(),
+        },
+        {
+          onConflict: 'user_id',
+          ignoreDuplicates: false, // Update if exists
+        }
+      )
       .select()
       .single()
 
-    if (insertError) {
-      // Handle duplicate key error (race condition) - idempotent
-      if (insertError.code === '23505') {
-        console.log(`✅ [BOOTSTRAP ${requestId}] Profile created by another request (race condition handled):`, {
-          userId: user.id.substring(0, 8) + '...',
+    if (upsertError) {
+      // Even if upsert fails, try to fetch existing profile (might have been created by another request)
+      console.warn(`⚠️ [BOOTSTRAP ${requestId}] Upsert failed, checking if profile exists:`, {
+        code: upsertError.code,
+        message: upsertError.message,
+        userId: user.id.substring(0, 8) + '...',
+      })
+
+      const { data: existingProfile } = await supabase
+        .from('profiles')
+        .select('id, user_id, subscription_tier, subscription_status')
+        .eq('user_id', user.id)
+        .single()
+
+      if (existingProfile) {
+        // Profile exists - success (race condition handled)
+        console.log(`✅ [BOOTSTRAP ${requestId}] Profile exists (race condition):`, {
+          profileId: existingProfile.id,
+          userId: existingProfile.user_id.substring(0, 8) + '...',
         })
-        // Fetch the existing profile
-        const { data: existingProfile } = await supabase
-          .from('profiles')
-          .select('id, user_id, subscription_tier, subscription_status')
-          .eq('user_id', user.id)
-          .single()
-        
         return NextResponse.json({
           success: true,
-          message: 'Profile created by another request',
+          message: 'Profile already exists',
           created: false,
-          profileId: existingProfile?.id,
+          profileId: existingProfile.id,
           requestId,
         })
       }
 
-      console.error(`❌ [BOOTSTRAP ${requestId}] Error creating profile:`, {
-        code: insertError.code,
-        message: insertError.message,
-        details: insertError.details,
-        hint: insertError.hint,
+      // Profile doesn't exist and upsert failed
+      console.error(`❌ [BOOTSTRAP ${requestId}] Error upserting profile:`, {
+        code: upsertError.code,
+        message: upsertError.message,
+        details: upsertError.details,
+        hint: upsertError.hint,
         userId: user.id.substring(0, 8) + '...',
         duration: Date.now() - startTime + 'ms',
       })
       return NextResponse.json(
-        { 
-          error: 'Failed to create profile', 
-          details: insertError.message,
-          code: insertError.code,
-          hint: insertError.hint,
+        {
+          error: 'Failed to create profile',
+          details: upsertError.message,
+          code: upsertError.code,
+          hint: upsertError.hint,
         },
         { status: 500 }
       )
