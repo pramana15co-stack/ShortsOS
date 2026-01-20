@@ -60,9 +60,19 @@ export default function LoginPage() {
       })
 
       if (signInError) {
+        console.log('❌ [LOGIN] SignInError detected:', signInError)
+        console.log('❌ [LOGIN] SignInError type:', typeof signInError)
+        
         const errorMessage = getAuthErrorMessage(signInError)
-        // Ensure we always set a string, never an object
-        setError(typeof errorMessage === 'string' ? errorMessage : 'Sign in failed. Please try again.')
+        
+        // Triple-check: ensure we always set a string, never an object
+        let finalMessage = 'Sign in failed. Please try again.'
+        if (typeof errorMessage === 'string' && errorMessage.trim().length > 0) {
+          finalMessage = errorMessage.trim()
+        }
+        
+        console.log('✅ [LOGIN] Final error message to display:', finalMessage)
+        setError(finalMessage)
         setLoading(false)
         return
       }
@@ -91,11 +101,22 @@ export default function LoginPage() {
       // Log unexpected errors
       console.error('❌ [LOGIN] Unexpected error:', err)
       console.error('❌ [LOGIN] Error type:', typeof err)
-      console.error('❌ [LOGIN] Error stringified:', JSON.stringify(err, null, 2))
+      try {
+        console.error('❌ [LOGIN] Error stringified:', JSON.stringify(err, null, 2))
+      } catch (e) {
+        console.error('❌ [LOGIN] Could not stringify error:', e)
+      }
       
       const errorMessage = getAuthErrorMessage(err)
-      // Ensure we always set a string, never an object
-      setError(typeof errorMessage === 'string' ? errorMessage : 'Sign in failed. Please try again.')
+      
+      // Triple-check: ensure we always set a string, never an object
+      let finalMessage = 'Sign in failed. Please try again.'
+      if (typeof errorMessage === 'string' && errorMessage.trim().length > 0) {
+        finalMessage = errorMessage.trim()
+      }
+      
+      console.log('✅ [LOGIN] Final error message to display:', finalMessage)
+      setError(finalMessage)
       setLoading(false)
     }
   }
@@ -183,7 +204,20 @@ export default function LoginPage() {
             {/* Error Message */}
             {error && (
               <div className="bg-red-50 border-2 border-red-200 text-red-700 px-5 py-4 rounded-xl text-sm font-medium">
-                {typeof error === 'string' ? error : 'Sign in failed. Please try again.'}
+                {(() => {
+                  // Defensive rendering: ensure we never render an object
+                  if (typeof error === 'string' && error.trim().length > 0) {
+                    return error.trim()
+                  }
+                  if (typeof error === 'object' && error !== null) {
+                    // Last resort: try to extract something readable
+                    const msg = error?.message || error?.error || String(error)
+                    return typeof msg === 'string' && msg.trim().length > 0 
+                      ? msg.trim() 
+                      : 'Sign in failed. Please try again.'
+                  }
+                  return 'Sign in failed. Please try again.'
+                })()}
               </div>
             )}
 

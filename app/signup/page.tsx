@@ -65,9 +65,19 @@ export default function SignUpPage() {
       })
 
       if (signUpError) {
+        console.log('❌ [SIGNUP] SignUpError detected:', signUpError)
+        console.log('❌ [SIGNUP] SignUpError type:', typeof signUpError)
+        
         const errorMessage = getAuthErrorMessage(signUpError)
-        // Ensure we always set a string, never an object
-        setError(typeof errorMessage === 'string' ? errorMessage : 'Signup failed. Please try again.')
+        
+        // Triple-check: ensure we always set a string, never an object
+        let finalMessage = 'Signup failed. Please try again.'
+        if (typeof errorMessage === 'string' && errorMessage.trim().length > 0) {
+          finalMessage = errorMessage.trim()
+        }
+        
+        console.log('✅ [SIGNUP] Final error message to display:', finalMessage)
+        setError(finalMessage)
         setLoading(false)
         return
       }
@@ -94,11 +104,22 @@ export default function SignUpPage() {
       // Log unexpected errors
       console.error('❌ [SIGNUP] Unexpected error:', err)
       console.error('❌ [SIGNUP] Error type:', typeof err)
-      console.error('❌ [SIGNUP] Error stringified:', JSON.stringify(err, null, 2))
+      try {
+        console.error('❌ [SIGNUP] Error stringified:', JSON.stringify(err, null, 2))
+      } catch (e) {
+        console.error('❌ [SIGNUP] Could not stringify error:', e)
+      }
       
       const errorMessage = getAuthErrorMessage(err)
-      // Ensure we always set a string, never an object
-      setError(typeof errorMessage === 'string' ? errorMessage : 'Signup failed. Please try again.')
+      
+      // Triple-check: ensure we always set a string, never an object
+      let finalMessage = 'Signup failed. Please try again.'
+      if (typeof errorMessage === 'string' && errorMessage.trim().length > 0) {
+        finalMessage = errorMessage.trim()
+      }
+      
+      console.log('✅ [SIGNUP] Final error message to display:', finalMessage)
+      setError(finalMessage)
       setLoading(false)
     }
   }
@@ -166,7 +187,20 @@ export default function SignUpPage() {
             {/* Error Message */}
             {error && (
               <div className="bg-red-50 border-2 border-red-200 text-red-700 px-5 py-4 rounded-xl text-sm font-medium">
-                {typeof error === 'string' ? error : 'Signup failed. Please try again.'}
+                {(() => {
+                  // Defensive rendering: ensure we never render an object
+                  if (typeof error === 'string' && error.trim().length > 0) {
+                    return error.trim()
+                  }
+                  if (typeof error === 'object' && error !== null) {
+                    // Last resort: try to extract something readable
+                    const msg = error?.message || error?.error || String(error)
+                    return typeof msg === 'string' && msg.trim().length > 0 
+                      ? msg.trim() 
+                      : 'Signup failed. Please try again.'
+                  }
+                  return 'Signup failed. Please try again.'
+                })()}
               </div>
             )}
 
