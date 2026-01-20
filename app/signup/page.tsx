@@ -187,20 +187,7 @@ export default function SignUpPage() {
             {/* Error Message */}
             {error && (
               <div className="bg-red-50 border-2 border-red-200 text-red-700 px-5 py-4 rounded-xl text-sm font-medium">
-                {(() => {
-                  // Defensive rendering: ensure we never render an object
-                  if (typeof error === 'string' && error.trim().length > 0) {
-                    return error.trim()
-                  }
-                  if (typeof error === 'object' && error !== null) {
-                    // Last resort: try to extract something readable
-                    const msg = error?.message || error?.error || String(error)
-                    return typeof msg === 'string' && msg.trim().length > 0 
-                      ? msg.trim() 
-                      : 'Signup failed. Please try again.'
-                  }
-                  return 'Signup failed. Please try again.'
-                })()}
+                {typeof error === 'string' ? error : 'Signup failed. Please try again.'}
               </div>
             )}
 
