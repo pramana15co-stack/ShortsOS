@@ -158,7 +158,7 @@ export async function POST(request: NextRequest) {
           user_id: user.id,
           subscription_tier: 'free',
           subscription_status: 'inactive',
-          credits: 50, // Give new users 50 credits to start
+          credits: 100, // Give new users 100 credits to try features
           plan_expiry: null,
           updated_at: new Date().toISOString(),
         },
