@@ -146,191 +146,165 @@ export default function Home() {
 
   return (
     <main className="min-h-screen">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 md:py-28 lg:py-32">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-white to-purple-50/30 pointer-events-none"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(99,102,241,0.08),transparent_50%)] pointer-events-none"></div>
+      {/* Hero Section - Clean & Professional */}
+      <section className="relative overflow-hidden py-16 md:py-24 lg:py-32">
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/30 via-white to-purple-50/20 pointer-events-none"></div>
         
-        {/* Animated Shorts/Reels Visual Elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {/* Floating video frames */}
-          <div className="absolute top-20 left-10 w-32 h-56 bg-gradient-to-br from-red-500/20 to-pink-500/20 rounded-2xl border-2 border-red-300/30 shadow-xl animate-float-slow"></div>
-          <div className="absolute top-40 right-20 w-28 h-48 bg-gradient-to-br from-blue-500/20 to-indigo-500/20 rounded-2xl border-2 border-blue-300/30 shadow-xl animate-float-delayed"></div>
-          <div className="absolute bottom-32 left-1/4 w-36 h-64 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-2xl border-2 border-purple-300/30 shadow-xl animate-float-slow-delayed"></div>
-          
-          {/* Play button indicators */}
-          <div className="absolute top-1/3 right-1/4 w-16 h-16 bg-white/80 rounded-full flex items-center justify-center shadow-lg animate-pulse-slow">
-            <div className="w-0 h-0 border-l-[12px] border-l-indigo-600 border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent ml-1"></div>
-          </div>
-          
-          {/* Stats indicators */}
-          <div className="absolute bottom-20 right-10 flex flex-col gap-2">
-            <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 animate-slide-in-right">
-              <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-              </svg>
-              <span className="text-sm font-bold text-gray-700">1.2M</span>
-            </div>
-            <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 animate-slide-in-right-delayed">
-              <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M8 5v14l11-7z"/>
-              </svg>
-              <span className="text-sm font-bold text-gray-700">45K</span>
-            </div>
-          </div>
+        {/* Subtle background elements - hidden on mobile */}
+        <div className="hidden lg:block absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 right-10 w-40 h-64 bg-gradient-to-br from-red-500/10 to-pink-500/10 rounded-3xl border border-red-200/20 shadow-xl"></div>
+          <div className="absolute bottom-20 left-10 w-36 h-56 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 rounded-3xl border border-blue-200/20 shadow-xl"></div>
         </div>
         
-        <div className="container mx-auto px-6 max-w-6xl relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 max-w-6xl relative z-10">
           <div className={`max-w-4xl mx-auto text-center ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'} transition-all duration-700`}>
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/90 backdrop-blur-md border border-indigo-200/50 rounded-full mb-8 shadow-lg">
-              <span className="w-2.5 h-2.5 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse"></span>
-              <span className="text-xs font-bold text-gray-700 uppercase tracking-wider">Built for YouTube Shorts & Reels</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-indigo-200/50 rounded-full mb-6 md:mb-8 shadow-sm">
+              <span className="w-2 h-2 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse"></span>
+              <span className="text-xs font-bold text-gray-700 uppercase tracking-wider">YouTube Shorts & Reels Platform</span>
             </div>
             
-            {/* Main Heading - Outcome-focused */}
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 text-gray-900 leading-[1.1]">
+            {/* Main Heading */}
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-4 md:mb-6 text-gray-900 leading-tight px-4">
               <span className="block mb-2">Create Viral Shorts & Reels</span>
               <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">That Actually Convert</span>
             </h1>
             
-            {/* Description - Outcome-focused */}
-            <p className="text-xl md:text-2xl text-gray-700 mb-4 max-w-2xl mx-auto leading-relaxed font-normal">
+            {/* Description */}
+            <p className="text-lg sm:text-xl md:text-2xl text-gray-700 mb-3 max-w-2xl mx-auto leading-relaxed px-4">
               Stop guessing what works. Get proven formats, AI-powered hooks, and step-by-step scripts 
-              designed specifically for <span className="font-bold text-indigo-600">60-second vertical videos</span>.
+              designed for <span className="font-bold text-indigo-600">60-second vertical videos</span>.
             </p>
             
-            <p className="text-base text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-sm sm:text-base text-gray-600 mb-8 md:mb-10 max-w-2xl mx-auto px-4">
               Free to start. Upgrade when you're ready. No credit card required.
             </p>
 
-            {/* CTA Buttons - Clear primary action */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-12 md:mb-16 px-4">
               <Link 
                 href="/signup" 
-                className="group relative inline-flex items-center justify-center px-10 py-5 text-lg font-bold text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 overflow-hidden"
+                className="group relative inline-flex items-center justify-center px-8 sm:px-10 py-4 sm:py-5 text-base sm:text-lg font-bold text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
               >
-                <span className="relative z-10">Start Free</span>
-                <span className="absolute inset-0 bg-gradient-to-r from-indigo-700 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                Start Free
               </Link>
               <Link 
                 href="/execution-paths" 
-                className="inline-flex items-center justify-center px-10 py-5 text-lg font-semibold text-gray-700 bg-white border-2 border-gray-300 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition-all duration-300 hover:scale-105"
+                className="inline-flex items-center justify-center px-8 sm:px-10 py-4 sm:py-5 text-base sm:text-lg font-semibold text-gray-700 bg-white border-2 border-gray-300 rounded-xl hover:border-indigo-400 hover:text-indigo-600 transition-all duration-300"
               >
                 See How It Works
               </Link>
             </div>
             
-            {/* Credibility Signal */}
-            <div className="flex items-center justify-center gap-6 text-sm text-gray-500 mb-8">
+            {/* Credibility Signals - Simplified */}
+            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs sm:text-sm text-gray-500 mb-12 px-4">
               <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <span>No credit card</span>
               </div>
               <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <span>Free forever</span>
               </div>
               <div className="flex items-center gap-2">
-                <svg className="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <span>Builder-first</span>
               </div>
             </div>
             
-            {/* Shorts/Reels Creation Workflow Visual */}
+            {/* Shorts/Reels Workflow - Cleaner Design */}
             <div 
-              className={`mt-24 max-w-6xl mx-auto transition-all duration-1000 ${
+              className={`mt-12 md:mt-16 max-w-5xl mx-auto transition-all duration-1000 ${
                 visibleSections.has('features-section')
                   ? 'opacity-100 translate-y-0'
                   : 'opacity-0 translate-y-10'
               }`}
             >
-              <div className="bg-gradient-to-br from-indigo-50/50 to-purple-50/30 rounded-3xl p-8 md:p-12 border-2 border-indigo-200/50 shadow-2xl">
-                <div className="text-center mb-10">
-                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-100 rounded-full mb-4">
-                    <svg className="w-5 h-5 text-indigo-600" fill="currentColor" viewBox="0 0 24 24">
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl md:rounded-3xl p-6 md:p-10 lg:p-12 border border-indigo-200/50 shadow-xl">
+                <div className="text-center mb-8 md:mb-10">
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-100 rounded-full mb-3 md:mb-4">
+                    <svg className="w-4 h-4 md:w-5 md:h-5 text-indigo-600" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M8 5v14l11-7z"/>
                     </svg>
-                    <span className="text-sm font-bold text-indigo-700">Shorts & Reels Creation Workflow</span>
+                    <span className="text-xs md:text-sm font-bold text-indigo-700">4-Step Creation Process</span>
                   </div>
-                  <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
-                    From Idea to Viral Video in Minutes
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 mb-3 md:mb-4">
+                    From Idea to Viral Video
                   </h2>
-                  <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                    Our complete workflow helps you create engaging 60-second vertical videos that perform
+                  <p className="text-sm sm:text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
+                    Complete workflow for creating engaging 60-second vertical videos
                   </p>
                 </div>
 
-                {/* Workflow Steps */}
-                <div className="grid md:grid-cols-4 gap-6 mb-8">
+                {/* Workflow Steps - Responsive Grid */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-6 md:mb-8">
                   {[
-                    { step: '1', title: 'Choose Format', desc: 'Pick from 20+ proven formats', icon: '📋', color: 'from-blue-500 to-cyan-500' },
-                    { step: '2', title: 'Generate Hook', desc: 'AI-powered hook suggestions', icon: '🎣', color: 'from-purple-500 to-pink-500' },
-                    { step: '3', title: 'Write Script', desc: 'Template-based script writing', icon: '📝', color: 'from-indigo-500 to-purple-500' },
-                    { step: '4', title: 'Export & Publish', desc: 'Platform-optimized exports', icon: '🚀', color: 'from-emerald-500 to-teal-500' },
+                    { step: '1', title: 'Choose Format', desc: '20+ proven formats', icon: '📋', color: 'from-blue-500 to-cyan-500' },
+                    { step: '2', title: 'Generate Hook', desc: 'AI-powered suggestions', icon: '🎣', color: 'from-purple-500 to-pink-500' },
+                    { step: '3', title: 'Write Script', desc: 'Template-based writing', icon: '📝', color: 'from-indigo-500 to-purple-500' },
+                    { step: '4', title: 'Export & Publish', desc: 'Platform-optimized', icon: '🚀', color: 'from-emerald-500 to-teal-500' },
                   ].map((item, idx) => (
                     <div key={idx} className="relative group">
-                      <div className={`absolute inset-0 bg-gradient-to-br ${item.color} rounded-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-300 blur-xl`}></div>
-                      <div className="relative bg-white/90 backdrop-blur-sm rounded-2xl p-6 border-2 border-gray-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                        <div className="flex items-center justify-between mb-4">
-                          <div className={`w-12 h-12 bg-gradient-to-br ${item.color} rounded-xl flex items-center justify-center text-2xl shadow-lg`}>
+                      <div className="relative bg-white rounded-xl md:rounded-2xl p-4 md:p-6 border border-gray-200/50 shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                        <div className="flex flex-col items-center text-center mb-3">
+                          <div className={`w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br ${item.color} rounded-lg md:rounded-xl flex items-center justify-center text-xl md:text-2xl shadow-md mb-3`}>
                             {item.icon}
                           </div>
-                          <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
-                            <span className="text-sm font-extrabold text-indigo-600">{item.step}</span>
+                          <div className="w-6 h-6 md:w-8 md:h-8 bg-indigo-100 rounded-full flex items-center justify-center mb-2">
+                            <span className="text-xs md:text-sm font-extrabold text-indigo-600">{item.step}</span>
                           </div>
                         </div>
-                        <h3 className="text-lg font-bold text-gray-900 mb-2">{item.title}</h3>
-                        <p className="text-sm text-gray-600">{item.desc}</p>
+                        <h3 className="text-sm md:text-base font-bold text-gray-900 mb-1 md:mb-2">{item.title}</h3>
+                        <p className="text-xs md:text-sm text-gray-600">{item.desc}</p>
                       </div>
                     </div>
                   ))}
                 </div>
 
-                {/* Stats Bar */}
-                <div className="grid grid-cols-3 gap-4 pt-8 border-t border-gray-200">
+                {/* Stats Bar - Responsive */}
+                <div className="grid grid-cols-3 gap-3 md:gap-4 pt-6 md:pt-8 border-t border-gray-200">
                   <div className="text-center">
-                    <div className="text-3xl font-extrabold text-indigo-600 mb-1">20+</div>
-                    <div className="text-sm text-gray-600 font-medium">Proven Formats</div>
+                    <div className="text-2xl md:text-3xl font-extrabold text-indigo-600 mb-1">20+</div>
+                    <div className="text-xs md:text-sm text-gray-600 font-medium">Formats</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-3xl font-extrabold text-purple-600 mb-1">60s</div>
-                    <div className="text-sm text-gray-600 font-medium">Video Length</div>
+                    <div className="text-2xl md:text-3xl font-extrabold text-purple-600 mb-1">60s</div>
+                    <div className="text-xs md:text-sm text-gray-600 font-medium">Length</div>
                   </div>
                   <div className="text-center">
-                    <div className="text-3xl font-extrabold text-emerald-600 mb-1">9:16</div>
-                    <div className="text-sm text-gray-600 font-medium">Aspect Ratio</div>
+                    <div className="text-2xl md:text-3xl font-extrabold text-emerald-600 mb-1">9:16</div>
+                    <div className="text-xs md:text-sm text-gray-600 font-medium">Aspect</div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* How We Help - Visual Feature Preview */}
+            {/* How We Help - Simplified */}
             <div 
               id="features-section"
               ref={(el) => { sectionRefs.current['features-section'] = el }}
-              className={`mt-16 max-w-5xl mx-auto transition-all duration-1000 ${
+              className={`mt-12 md:mt-16 max-w-5xl mx-auto transition-all duration-1000 ${
                 visibleSections.has('features-section')
                   ? 'opacity-100 translate-y-0'
                   : 'opacity-0 translate-y-10'
               }`}
             >
-              <div className="text-center mb-12">
-                <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
+              <div className="text-center mb-8 md:mb-12 px-4">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 mb-3 md:mb-4">
                   How We Help You Create Better Content
                 </h2>
-                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                <p className="text-sm sm:text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
                   Everything you need to go from idea to published video, without the confusion
                 </p>
               </div>
 
-              <div className="grid md:grid-cols-3 gap-6 mb-12">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mb-8 md:mb-12 px-4">
                 {/* Feature 1 */}
                 <div className="group relative">
                   <div className="absolute inset-0 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl"></div>
@@ -398,35 +372,11 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Quick Stats / Benefits */}
-              <div 
-                className={`grid md:grid-cols-4 gap-4 mt-12 transition-all duration-1000 delay-300 ${
-                  visibleSections.has('features-section')
-                    ? 'opacity-100 translate-y-0'
-                    : 'opacity-0 translate-y-10'
-                }`}
-              >
-                <div className="text-center p-6 bg-white/60 backdrop-blur-sm rounded-xl border border-gray-200/50">
-                  <div className="text-3xl font-extrabold text-indigo-600 mb-2">3 Steps</div>
-                  <div className="text-sm text-gray-600">From idea to published video</div>
-                </div>
-                <div className="text-center p-6 bg-white/60 backdrop-blur-sm rounded-xl border border-gray-200/50">
-                  <div className="text-3xl font-extrabold text-purple-600 mb-2">10+ Tools</div>
-                  <div className="text-sm text-gray-600">All in one platform</div>
-                </div>
-                <div className="text-center p-6 bg-white/60 backdrop-blur-sm rounded-xl border border-gray-200/50">
-                  <div className="text-3xl font-extrabold text-emerald-600 mb-2">100% Free</div>
-                  <div className="text-sm text-gray-600">To get started</div>
-                </div>
-                <div className="text-center p-6 bg-white/60 backdrop-blur-sm rounded-xl border border-gray-200/50">
-                  <div className="text-3xl font-extrabold text-teal-600 mb-2">Stage-Aware</div>
-                  <div className="text-sm text-gray-600">Guidance for your level</div>
-                </div>
-              </div>
+              {/* Quick Stats - Removed to reduce clutter */}
             </div>
 
-            {/* Trust Indicators */}
-            <div className="flex flex-wrap gap-6 items-center justify-center pt-16 border-t border-gray-200/50 mt-16">
+            {/* Trust Indicators - Simplified */}
+            <div className="flex flex-wrap gap-4 sm:gap-6 items-center justify-center pt-8 md:pt-12 border-t border-gray-200/50 mt-8 md:mt-12 px-4">
               <div className="flex items-center gap-2 text-gray-700">
                 <svg className="w-5 h-5 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
