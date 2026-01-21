@@ -565,13 +565,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Tools Grid */}
+      {/* Planning & Creation Section - Enhanced */}
       <section 
         id="tools-section"
         ref={(el) => { sectionRefs.current['tools-section'] = el }}
-        className="py-16 md:py-20 lg:py-24"
+        className="py-16 md:py-20 lg:py-24 bg-gradient-to-b from-white via-indigo-50/20 to-white"
       >
-        <div className="container mx-auto px-6 max-w-6xl">
+        <div className="container mx-auto px-6 max-w-7xl">
           <div 
             className={`text-center mb-16 transition-all duration-1000 ${
               visibleSections.has('tools-section')
@@ -579,44 +579,142 @@ export default function Home() {
                 : 'opacity-0 translate-y-10'
             }`}
           >
-            <div className="accent-line mx-auto mb-6"></div>
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-100 rounded-full mb-6">
+              <span className="w-2 h-2 bg-indigo-600 rounded-full animate-pulse"></span>
+              <span className="text-sm font-bold text-indigo-700 uppercase tracking-wider">Planning & Creation</span>
+            </div>
             <h2 className="text-4xl md:text-5xl font-extrabold mb-6 text-gray-900">
-              Essential Tools
+              Professional-Grade Content Tools
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Everything you need to plan, create, and optimize your Shorts content
+              Not just AI outputs—complete workflows with stage-aware recommendations, proven templates, and execution frameworks that adapt to your creator journey.
             </p>
           </div>
         
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { title: "Content Planner", description: "Get format recommendations based on your niche and goals.", icon: "🎯", href: "/planner" },
-              { title: "Format Library", description: "Proven formats with structured templates and execution guides.", icon: "📚", href: "/formats" },
-              { title: "Hook Templates", description: "Structured hook templates based on successful patterns.", icon: "🎣", href: "/hooks" },
-              { title: "Script Templates", description: "Format-based script templates for 30-60 second Shorts.", icon: "📝", href: "/scripts" },
-              { title: "AI Prompt Studio", description: "Generate high-quality prompts for AI video tools like Sora and Veo.", icon: "✨", href: "/prompt-studio" },
-              { title: "Hook & Caption Engine", description: "Create engaging hooks and captions with timing suggestions.", icon: "💬", href: "/hook-caption-engine" },
-              { title: "Post-Processing", description: "Get intelligent feedback on pacing, retention, and optimization.", icon: "🔧", href: "/post-processing" },
-              { title: "Export Instructions", description: "Step-by-step guides for CapCut, Premiere Pro, and VN Editor.", icon: "📤", href: "/export-instructions" },
-              { title: "SEO Optimizer", description: "Optimize titles, descriptions, and tags for better discoverability.", icon: "🔍", href: "/seo-optimizer" },
+              { 
+                title: "Content Planner", 
+                description: "Stage-aware format recommendations that evolve with your channel. Get personalized suggestions based on your niche, subscriber count, and content goals—not generic AI responses.",
+                icon: "🎯", 
+                href: "/planner",
+                features: ["Stage-specific recommendations", "Niche-aware suggestions", "Goal-based planning"],
+                badge: "Intelligent"
+              },
+              { 
+                title: "Format Library", 
+                description: "20+ battle-tested formats with complete execution playbooks. Each format includes hook structures, script templates, pacing guides, and what to avoid at your stage.",
+                icon: "📚", 
+                href: "/formats",
+                features: ["20+ proven formats", "Complete playbooks", "Stage constraints"],
+                badge: "Comprehensive"
+              },
+              { 
+                title: "Hook Templates", 
+                description: "Data-driven hook structures based on top-performing Shorts. Each template includes timing breakdowns, emotional triggers, and retention optimization strategies.",
+                icon: "🎣", 
+                href: "/hooks",
+                features: ["Data-backed patterns", "Timing breakdowns", "Retention optimization"],
+                badge: "Data-Driven"
+              },
+              { 
+                title: "Script Templates", 
+                description: "Format-specific scripts with pacing markers, transition cues, and retention hooks. Built for 30-60 second Shorts with precise timing guidance.",
+                icon: "📝", 
+                href: "/scripts",
+                features: ["Pacing markers", "Transition cues", "Timing guidance"],
+                badge: "Precision"
+              },
+              { 
+                title: "AI Prompt Studio", 
+                description: "Generate production-ready prompts for Sora, Veo, and Runway. Includes shot composition, camera movements, lighting, and style specifications—not just text-to-video.",
+                icon: "✨", 
+                href: "/prompt-studio",
+                features: ["Production-ready prompts", "Multi-tool support", "Technical specs"],
+                badge: "Professional"
+              },
+              { 
+                title: "Hook & Caption Engine", 
+                description: "Create hooks with precise timing suggestions, caption placement, and retention analysis. Includes A/B testing recommendations and performance predictions.",
+                icon: "💬", 
+                href: "/hook-caption-engine",
+                features: ["Timing suggestions", "A/B testing", "Performance predictions"],
+                badge: "Advanced"
+              },
+              { 
+                title: "Post-Processing Analysis", 
+                description: "Get intelligent feedback on pacing, retention curves, hook effectiveness, and optimization opportunities. Includes frame-by-frame analysis recommendations.",
+                icon: "🔧", 
+                href: "/post-processing",
+                features: ["Retention analysis", "Pacing feedback", "Frame-level insights"],
+                badge: "Analytical"
+              },
+              { 
+                title: "Export Instructions", 
+                description: "Platform-specific export guides for CapCut, Premiere Pro, and VN Editor. Includes resolution settings, aspect ratios, compression tips, and upload optimization.",
+                icon: "📤", 
+                href: "/export-instructions",
+                features: ["Platform-specific", "Compression tips", "Upload optimization"],
+                badge: "Practical"
+              },
+              { 
+                title: "SEO Optimizer", 
+                description: "Real-time SEO scoring with keyword density analysis, title optimization (30-60 chars), description templates, and tag suggestions based on trending searches.",
+                icon: "🔍", 
+                href: "/seo-optimizer",
+                features: ["Real-time scoring", "Keyword analysis", "Trending tags"],
+                badge: "Real-Time"
+              },
             ].map((tool, idx) => (
               <div
                 key={idx}
-                className={`transition-all duration-700 ${
+                className={`group transition-all duration-700 ${
                   visibleSections.has('tools-section')
                     ? 'opacity-100 translate-y-0'
                     : 'opacity-0 translate-y-8'
                 }`}
                 style={{ transitionDelay: `${idx * 50}ms` }}
               >
-                <FeatureCard
+                <EnhancedFeatureCard
                   title={tool.title}
                   description={tool.description}
                   icon={tool.icon}
                   href={tool.href}
+                  features={tool.features}
+                  badge={tool.badge}
                 />
               </div>
             ))}
+          </div>
+
+          {/* Value Proposition Footer */}
+          <div 
+            className={`mt-16 text-center transition-all duration-1000 delay-500 ${
+              visibleSections.has('tools-section')
+                ? 'opacity-100 translate-y-0'
+                : 'opacity-0 translate-y-10'
+            }`}
+          >
+            <div className="inline-flex items-center gap-6 px-8 py-6 bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-indigo-200/50 shadow-lg">
+              <div className="text-left">
+                <div className="text-2xl font-extrabold text-gray-900 mb-1">Not Just AI Outputs</div>
+                <div className="text-sm text-gray-600">Complete workflows with context, constraints, and execution frameworks</div>
+              </div>
+              <div className="hidden md:flex items-center gap-4 pl-6 border-l border-gray-200">
+                <div className="text-center">
+                  <div className="text-3xl font-extrabold text-indigo-600">20+</div>
+                  <div className="text-xs text-gray-600">Proven Formats</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-extrabold text-purple-600">Stage-Aware</div>
+                  <div className="text-xs text-gray-600">Recommendations</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-extrabold text-emerald-600">Complete</div>
+                  <div className="text-xs text-gray-600">Playbooks</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -854,6 +952,80 @@ function FeatureCard({ title, description, icon, href }: { title: string; descri
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
         </svg>
+      </div>
+    </Link>
+  )
+}
+
+function EnhancedFeatureCard({ 
+  title, 
+  description, 
+  icon, 
+  href, 
+  features, 
+  badge 
+}: { 
+  title: string
+  description: string
+  icon: string
+  href: string
+  features: string[]
+  badge: string
+}) {
+  return (
+    <Link
+      href={href}
+      className="group relative block h-full"
+    >
+      {/* Hover glow effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-100/50 to-purple-100/50 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl -z-10"></div>
+      
+      {/* Card */}
+      <div className="relative bg-white/90 backdrop-blur-sm rounded-2xl p-6 border-2 border-gray-200/50 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
+        {/* Header */}
+        <div className="flex items-start justify-between mb-4">
+          <div className="text-5xl group-hover:scale-110 transition-transform duration-300">{icon}</div>
+          <span className="px-3 py-1 bg-indigo-100 text-indigo-700 text-xs font-bold rounded-full">
+            {badge}
+          </span>
+        </div>
+        
+        {/* Title */}
+        <h3 className="text-xl font-extrabold mb-3 text-gray-900 group-hover:text-indigo-600 transition-colors">
+          {title}
+        </h3>
+        
+        {/* Description */}
+        <p className="text-gray-600 leading-relaxed mb-4 text-sm flex-grow">
+          {description}
+        </p>
+        
+        {/* Features List */}
+        <ul className="space-y-2 mb-4">
+          {features.map((feature, idx) => (
+            <li key={idx} className="flex items-center gap-2 text-xs text-gray-700">
+              <svg className="w-4 h-4 text-indigo-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <span>{feature}</span>
+            </li>
+          ))}
+        </ul>
+        
+        {/* CTA */}
+        <div className="flex items-center justify-between pt-4 border-t border-gray-200/50">
+          <span className="text-indigo-600 font-bold text-sm group-hover:text-indigo-700">
+            Explore Tool
+          </span>
+          <svg 
+            className="w-5 h-5 text-indigo-600 group-hover:translate-x-1 transition-transform duration-300" 
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
+        </div>
       </div>
     </Link>
   )
