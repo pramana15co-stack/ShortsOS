@@ -50,10 +50,11 @@ export default function HookCaptionEnginePage() {
       return
     }
 
-    // Check credits for free users
+    // Check credits for free users (admin bypass handled in API)
     if (!isPaid && user) {
       await checkCredits()
-      if (!hasEnoughCredits(credits || 0, 'hook-caption', isPaid)) {
+      const currentCredits = credits !== null ? credits : 0
+      if (!hasEnoughCredits(currentCredits, 'hook-caption', isPaid)) {
         setShowUpgradeModal(true)
         return
       }

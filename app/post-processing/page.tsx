@@ -1,14 +1,18 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAccess } from '@/lib/useAccess'
+import { useAuth } from '@/app/providers/AuthProvider'
+import { getCreditsInfo, hasEnoughCredits, getCreditCost } from '@/lib/credits'
 import Link from 'next/link'
+import CreditsDisplay from '@/components/CreditsDisplay'
 
 type ContentType = 'tutorial' | 'entertainment' | 'educational' | 'motivational'
 type Goal = 'retention' | 'engagement' | 'monetization'
 
 export default function PostProcessingPage() {
-  const { isFree } = useAccess()
+  const { isFree, isPaid } = useAccess()
+  const { user } = useAuth()
   const [formData, setFormData] = useState({
     duration: '',
     contentType: 'tutorial' as ContentType,
@@ -22,11 +26,77 @@ export default function PostProcessingPage() {
     improvements: string[]
   } | null>(null)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [credits, setCredits] = useState<number | null>(null)
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
 
-  const analyze = () => {
+  // Check credits on mount
+  useEffect(() => {
+    if (user) {
+      checkCredits()
+    }
+  }, [user, isPaid])
+
+  const checkCredits = async () => {
+    if (!user?.id) return
+
+    try {
+      const info = await getCreditsInfo(user.id, isPaid)
+      setCredits(info.credits)
+    } catch (error) {
+      console.error('Error checking credits:', error)
+    }
+  }
+
+  const analyze = async () => {
     if (!formData.duration) {
       alert('Please enter video duration')
       return
+    }
+
+    // Check credits for free users
+    if (!isPaid && user) {
+      await checkCredits()
+      const currentCredits = credits !== null ? credits : 0
+      if (!hasEnoughCredits(currentCredits, 'post-processing', isPaid)) {
+        setShowUpgradeModal(true)
+        return
+      }
+    }
+
+    setIsAnalyzing(true)
+
+    // Use credits for free users
+    if (!isPaid && user) {
+      try {
+        const response = await fetch('/api/credits/use', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: user.id,
+            feature: 'post-processing',
+          }),
+        })
+
+        const data = await response.json()
+        if (!data.success) {
+          setIsAnalyzing(false)
+          if (data.error === 'Insufficient credits') {
+            setShowUpgradeModal(true)
+          } else {
+            alert(data.error || 'Failed to use credits')
+          }
+          return
+        }
+
+        setCredits(data.creditsRemaining)
+      } catch (error) {
+        console.error('Error using credits:', error)
+        setIsAnalyzing(false)
+        alert('Failed to process request. Please try again.')
+        return
+      }
     }
 
     setIsAnalyzing(true)
@@ -90,13 +160,54 @@ export default function PostProcessingPage() {
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-white to-purple-50/30 pointer-events-none"></div>
       
       <div className="container mx-auto px-4 max-w-6xl relative z-10">
+        {/* Upgrade Modal */}
+        {showUpgradeModal && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="card max-w-md w-full">
+              <div className="w-16 h-16 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-3xl">💎</span>
+              </div>
+              <h3 className="text-2xl font-bold mb-2 text-gray-900 text-center">Insufficient Credits</h3>
+              <p className="text-gray-600 mb-4 text-center">
+                This feature costs <span className="font-bold text-indigo-600">{getCreditCost('post-processing')} credits</span>. 
+                You have <span className="font-bold">{credits || 0} credits</span> remaining.
+              </p>
+              <p className="text-sm text-gray-500 mb-6 text-center">
+                Upgrade to Starter or Pro for unlimited access to all features.
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowUpgradeModal(false)}
+                  className="btn-secondary flex-1 py-3"
+                >
+                  Maybe Later
+                </button>
+                <Link
+                  href="/pricing"
+                  className="btn-primary flex-1 py-3 text-center"
+                  onClick={() => setShowUpgradeModal(false)}
+                >
+                  Upgrade Now
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900">
-            Post-Processing Intelligence
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl leading-relaxed">
-            Get actionable feedback and recommendations to improve your videos after generation or recording. Rule-based guidance to enhance retention and engagement.
-          </p>
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+              <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900">
+                Post-Processing Intelligence
+              </h1>
+              <p className="text-xl text-gray-600 max-w-3xl leading-relaxed">
+                Get actionable feedback and recommendations to improve your videos after generation or recording. Rule-based guidance to enhance retention and engagement.
+              </p>
+            </div>
+            <div className="ml-4">
+              <CreditsDisplay feature="post-processing" />
+            </div>
+          </div>
           {isFree && (
             <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
               <p className="text-sm text-blue-900">

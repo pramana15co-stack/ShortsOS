@@ -56,7 +56,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const user = authUsers.users.find(u => u.email === email.toLowerCase().trim())
+    const normalizedEmail = email.toLowerCase().trim()
+    const user = authUsers.users.find(u => u.email === normalizedEmail)
 
     if (!user) {
       return NextResponse.json(
@@ -64,6 +65,9 @@ export async function POST(request: NextRequest) {
         { status: 404 }
       )
     }
+
+    // Auto-setup owner email
+    const isOwner = normalizedEmail === 'pramana15.co@gmail.com'
 
     const userId = user.id
 

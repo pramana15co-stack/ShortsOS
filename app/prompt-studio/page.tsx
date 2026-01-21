@@ -59,11 +59,12 @@ export default function PromptStudioPage() {
       return
     }
 
-    // Check credits for free users
+    // Check credits for free users (admin bypass handled in API)
     if (!isPaid && user) {
       await checkCredits()
       const creditCost = getCreditCost('prompt-studio')
-      if (!hasEnoughCredits(credits || 0, 'prompt-studio', isPaid)) {
+      const currentCredits = credits !== null ? credits : 0
+      if (!hasEnoughCredits(currentCredits, 'prompt-studio', isPaid)) {
         setShowUpgradeModal(true)
         return
       }

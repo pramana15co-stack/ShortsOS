@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useEffect, useState, useRef } from 'react'
 import { testimonials } from '@/data/testimonials'
+import VideoAnimation from '@/components/VideoAnimation'
 
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false)
@@ -146,30 +147,21 @@ export default function Home() {
 
   return (
     <main className="min-h-screen">
-      {/* Hero Section - Clean & Professional */}
+      {/* Hero Section with Three.js Animation */}
       <section className="relative overflow-hidden py-16 md:py-24 lg:py-32">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/30 via-white to-purple-50/20 pointer-events-none"></div>
         
-        {/* Subtle background elements - hidden on mobile */}
+        {/* Three.js Video Animation */}
         <div className="hidden lg:block absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-20 right-10 w-40 h-64 bg-gradient-to-br from-red-500/10 to-pink-500/10 rounded-3xl border border-red-200/20 shadow-xl"></div>
-          <div className="absolute bottom-20 left-10 w-36 h-56 bg-gradient-to-br from-blue-500/10 to-indigo-500/10 rounded-3xl border border-blue-200/20 shadow-xl"></div>
+          <VideoAnimation />
         </div>
         
         <div className="container mx-auto px-4 sm:px-6 max-w-6xl relative z-10">
           <div className={`max-w-4xl mx-auto text-center ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'} transition-all duration-700`}>
-            {/* Live Activity Badge - Unique Trust Element */}
-            <div className="inline-flex items-center gap-3 px-5 py-2.5 bg-gradient-to-r from-white/95 to-indigo-50/95 backdrop-blur-md border-2 border-indigo-200/60 rounded-full mb-6 md:mb-8 shadow-lg hover:shadow-xl transition-all duration-300">
-              <div className="relative">
-                <span className="w-3 h-3 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse absolute"></span>
-                <span className="w-3 h-3 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full opacity-75 animate-ping"></span>
-              </div>
-              <span className="text-xs font-bold text-gray-800 uppercase tracking-wider">Live: 247 creators active now</span>
-              <div className="flex -space-x-2">
-                {[1,2,3,4].map((i) => (
-                  <div key={i} className="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 border-2 border-white shadow-sm"></div>
-                ))}
-              </div>
+            {/* Simple Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm border border-indigo-200/50 rounded-full mb-6 md:mb-8 shadow-sm">
+              <span className="w-2 h-2 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse"></span>
+              <span className="text-xs font-bold text-gray-700 uppercase tracking-wider">YouTube Shorts & Reels Platform</span>
             </div>
             
             {/* Main Heading with Trust Indicators */}
@@ -179,25 +171,25 @@ export default function Home() {
                 <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">That Actually Convert</span>
               </h1>
               
-              {/* Trust Badge Row */}
+              {/* Trust Badge Row - Cleaner Colors */}
               <div className="flex flex-wrap items-center justify-center gap-3 mt-4 px-4">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-green-50 border border-green-200 rounded-full">
-                  <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-50 border border-indigo-200 rounded-full">
+                  <svg className="w-4 h-4 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-xs font-bold text-green-700">100 Free Credits</span>
+                  <span className="text-xs font-bold text-indigo-700">100 Free Credits</span>
                 </div>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 border border-blue-200 rounded-full">
-                  <svg className="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-50 border border-indigo-200 rounded-full">
+                  <svg className="w-4 h-4 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-xs font-bold text-blue-700">SSL Secured</span>
+                  <span className="text-xs font-bold text-indigo-700">SSL Secured</span>
                 </div>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-purple-50 border border-purple-200 rounded-full">
-                  <svg className="w-4 h-4 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-50 border border-indigo-200 rounded-full">
+                  <svg className="w-4 h-4 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
-                  <span className="text-xs font-bold text-purple-700">4.9/5 Rating</span>
+                  <span className="text-xs font-bold text-indigo-700">4.9/5 Rating</span>
                 </div>
               </div>
             </div>
@@ -209,22 +201,22 @@ export default function Home() {
                 designed for <span className="font-bold text-indigo-600">60-second vertical videos</span>.
               </p>
               
-              {/* Unique Value Proposition */}
+              {/* Value Proposition - Cleaner Design */}
               <div className="mt-6 max-w-3xl mx-auto">
-                <div className="bg-gradient-to-r from-indigo-50/50 via-purple-50/30 to-pink-50/50 rounded-2xl p-6 border border-indigo-100/50">
+                <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-indigo-100/50 shadow-sm">
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
                     <div className="text-center sm:text-left">
                       <div className="text-3xl font-extrabold text-indigo-600 mb-1">100 Credits</div>
                       <div className="text-sm text-gray-600">Free to try all features</div>
                     </div>
-                    <div className="hidden sm:block w-px h-12 bg-indigo-200"></div>
+                    <div className="hidden sm:block w-px h-12 bg-gray-200"></div>
                     <div className="text-center sm:text-left">
-                      <div className="text-3xl font-extrabold text-purple-600 mb-1">No Card</div>
+                      <div className="text-3xl font-extrabold text-indigo-600 mb-1">No Card</div>
                       <div className="text-sm text-gray-600">Required to start</div>
                     </div>
-                    <div className="hidden sm:block w-px h-12 bg-indigo-200"></div>
+                    <div className="hidden sm:block w-px h-12 bg-gray-200"></div>
                     <div className="text-center sm:text-left">
-                      <div className="text-3xl font-extrabold text-emerald-600 mb-1">Instant</div>
+                      <div className="text-3xl font-extrabold text-indigo-600 mb-1">Instant</div>
                       <div className="text-sm text-gray-600">Access after signup</div>
                     </div>
                   </div>
@@ -254,12 +246,12 @@ export default function Home() {
               </Link>
             </div>
             
-            {/* Money-Back Guarantee - Unique Trust Element */}
+            {/* Money-Back Guarantee - Cleaner Design */}
             <div className="mb-8 md:mb-10 px-4">
-              <div className="max-w-2xl mx-auto bg-white/80 backdrop-blur-sm rounded-xl p-4 border-2 border-emerald-200/60 shadow-md">
+              <div className="max-w-2xl mx-auto bg-white/60 backdrop-blur-sm rounded-xl p-4 border border-indigo-200/50 shadow-sm">
                 <div className="flex items-center justify-center gap-3">
                   <div className="flex-shrink-0">
-                    <svg className="w-8 h-8 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="w-6 h-6 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                     </svg>
                   </div>
@@ -267,26 +259,6 @@ export default function Home() {
                     <div className="font-bold text-gray-900 text-sm sm:text-base">30-Day Money-Back Guarantee</div>
                     <div className="text-xs sm:text-sm text-gray-600">Try risk-free. If you're not satisfied, get a full refund.</div>
                   </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Live Stats - Real-time Trust Indicators */}
-            <div className="mb-12 md:mb-16 px-4">
-              <div className="max-w-4xl mx-auto">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {[
-                    { label: 'Active Users', value: '12.4K', icon: '👥', color: 'indigo' },
-                    { label: 'Videos Created', value: '48.2K', icon: '🎬', color: 'purple' },
-                    { label: 'Avg. Views', value: '5.2K', icon: '📈', color: 'emerald' },
-                    { label: 'Success Rate', value: '94%', icon: '⭐', color: 'amber' },
-                  ].map((stat, idx) => (
-                    <div key={idx} className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-gray-200/50 shadow-sm hover:shadow-md transition-all duration-300 text-center">
-                      <div className="text-2xl mb-2">{stat.icon}</div>
-                      <div className={`text-2xl font-extrabold text-${stat.color}-600 mb-1`}>{stat.value}</div>
-                      <div className="text-xs text-gray-600 font-medium">{stat.label}</div>
-                    </div>
-                  ))}
                 </div>
               </div>
             </div>

@@ -150,16 +150,22 @@ export async function POST(request: NextRequest) {
       userId: user.id.substring(0, 8) + '...',
     })
     
+    // Check if this is the owner email for admin access
+    const isOwner = user.email?.toLowerCase() === 'pramana15.co@gmail.com'
+    const oneYearFromNow = new Date()
+    oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1)
+    
     // Use upsert to handle race conditions gracefully
     const { data: newProfile, error: upsertError } = await supabase
       .from('profiles')
       .upsert(
         {
           user_id: user.id,
-          subscription_tier: 'free',
-          subscription_status: 'inactive',
-          credits: 100, // Give new users 100 credits to try features
-          plan_expiry: null,
+          subscription_tier: isOwner ? 'agency' : 'free',
+          subscription_status: isOwner ? 'active' : 'inactive',
+          credits: isOwner ? 10000 : 100, // Owner gets 10K credits, others get 100
+          plan_expiry: isOwner ? oneYearFromNow.toISOString() : null,
+          is_admin: isOwner ? true : false, // Owner is admin
           updated_at: new Date().toISOString(),
         },
         {
