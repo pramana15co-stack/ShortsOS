@@ -38,18 +38,27 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Get user's profile with credits
+    // Get user's profile with credits - use maybeSingle to handle missing profiles
     const { data: profile, error } = await supabase
       .from('profiles')
       .select('credits, subscription_status, plan_expiry, is_admin')
       .eq('user_id', userId)
-      .single()
+      .maybeSingle()
 
     if (error) {
       console.error('❌ [CREDITS] Error fetching profile:', error)
       return NextResponse.json(
         { error: 'Failed to fetch credits', credits: 0 },
         { status: 500 }
+      )
+    }
+
+    // Handle missing profile gracefully
+    if (!profile) {
+      console.warn(`⚠️ [CREDITS] Profile missing for user ${userId.substring(0, 8)}...`)
+      return NextResponse.json(
+        { error: 'Profile missing', credits: 0 },
+        { status: 404 }
       )
     }
 

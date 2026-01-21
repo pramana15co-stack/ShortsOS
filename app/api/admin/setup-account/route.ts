@@ -71,18 +71,11 @@ export async function POST(request: NextRequest) {
 
     const userId = user.id
 
-    // Get or create profile
-    const { data: existingProfile } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('user_id', userId)
-      .single()
-
     // Set expiry to 1 year from now
     const oneYearFromNow = new Date()
     oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1)
 
-    // Upsert profile with admin/premium settings
+    // Upsert profile with admin/premium settings - fully idempotent
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .upsert(
@@ -101,7 +94,7 @@ export async function POST(request: NextRequest) {
         }
       )
       .select()
-      .single()
+      .maybeSingle()
 
     if (profileError) {
       console.error('Error updating profile:', profileError)

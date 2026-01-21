@@ -35,12 +35,12 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Get user profile to check if paid or admin
+    // Get user profile to check if paid or admin - use maybeSingle
     const { data: profile } = await supabase
       .from('profiles')
       .select('user_id, subscription_tier, subscription_status, plan_expiry, is_admin')
       .eq('user_id', userId)
-      .single()
+      .maybeSingle()
 
     // Admin always has unlimited access
     if (profile?.is_admin) {

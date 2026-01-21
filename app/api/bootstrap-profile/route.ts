@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
       .from('profiles')
       .select('id, user_id, subscription_tier, subscription_status, created_at')
       .eq('user_id', user.id)
-      .single()
+      .maybeSingle()
 
     // If profile exists, return success (idempotent) - no retry needed
     if (existingProfile) {
@@ -128,21 +128,12 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // Handle fetch errors (except "not found")
-    if (fetchError && fetchError.code !== 'PGRST116') {
-      console.error('❌ [BOOTSTRAP] Error checking profile existence:', {
+    // Handle fetch errors (log but don't block - will try upsert)
+    if (fetchError) {
+      console.warn('⚠️ [BOOTSTRAP] Error checking profile existence (will try upsert):', {
         code: fetchError.code,
         message: fetchError.message,
-        details: fetchError.details,
       })
-      return NextResponse.json(
-        { 
-          error: 'Failed to check profile existence', 
-          details: fetchError.message,
-          code: fetchError.code,
-        },
-        { status: 500 }
-      )
     }
 
     // Profile doesn't exist - upsert it (idempotent - prevents duplicates)
@@ -155,7 +146,7 @@ export async function POST(request: NextRequest) {
     const oneYearFromNow = new Date()
     oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1)
     
-    // Use upsert to handle race conditions gracefully
+    // Use upsert to handle race conditions gracefully - fully idempotent
     const { data: newProfile, error: upsertError } = await supabase
       .from('profiles')
       .upsert(
@@ -174,7 +165,7 @@ export async function POST(request: NextRequest) {
         }
       )
       .select()
-      .single()
+      .maybeSingle()
 
     if (upsertError) {
       // Even if upsert fails, try to fetch existing profile (might have been created by another request)
@@ -184,28 +175,28 @@ export async function POST(request: NextRequest) {
         userId: user.id.substring(0, 8) + '...',
       })
 
-      const { data: existingProfile } = await supabase
+      const { data: retryProfile } = await supabase
         .from('profiles')
         .select('id, user_id, subscription_tier, subscription_status')
         .eq('user_id', user.id)
-        .single()
+        .maybeSingle()
 
-      if (existingProfile) {
+      if (retryProfile) {
         // Profile exists - success (race condition handled)
         console.log(`✅ [BOOTSTRAP ${requestId}] Profile exists (race condition):`, {
-          profileId: existingProfile.id,
-          userId: existingProfile.user_id.substring(0, 8) + '...',
+          profileId: retryProfile.id,
+          userId: retryProfile.user_id.substring(0, 8) + '...',
         })
         return NextResponse.json({
           success: true,
           message: 'Profile already exists',
           created: false,
-          profileId: existingProfile.id,
+          profileId: retryProfile.id,
           requestId,
         })
       }
 
-      // Profile doesn't exist and upsert failed
+      // Profile doesn't exist and upsert failed - log but don't block auth
       console.error(`❌ [BOOTSTRAP ${requestId}] Error upserting profile:`, {
         code: upsertError.code,
         message: upsertError.message,
@@ -214,23 +205,40 @@ export async function POST(request: NextRequest) {
         userId: user.id.substring(0, 8) + '...',
         duration: Date.now() - startTime + 'ms',
       })
-      return NextResponse.json(
-        {
-          error: 'Failed to create profile',
-          details: upsertError.message,
-          code: upsertError.code,
-          hint: upsertError.hint,
-        },
-        { status: 500 }
-      )
+      // Return success anyway to not block auth - profile will be created on next request
+      return NextResponse.json({
+        success: true,
+        message: 'Profile creation attempted (may retry)',
+        created: false,
+        requestId,
+      })
     }
 
     if (!newProfile) {
-      console.error('❌ [BOOTSTRAP] Profile insert returned no data')
-      return NextResponse.json(
-        { error: 'Profile creation returned no data' },
-        { status: 500 }
-      )
+      // Profile might have been created by concurrent request - check one more time
+      const { data: finalCheck } = await supabase
+        .from('profiles')
+        .select('id, user_id')
+        .eq('user_id', user.id)
+        .maybeSingle()
+      
+      if (finalCheck) {
+        return NextResponse.json({
+          success: true,
+          message: 'Profile exists',
+          created: false,
+          profileId: finalCheck.id,
+          requestId,
+        })
+      }
+      
+      console.warn('⚠️ [BOOTSTRAP] Profile insert returned no data (will retry on next request)')
+      return NextResponse.json({
+        success: true,
+        message: 'Profile creation attempted',
+        created: false,
+        requestId,
+      })
     }
 
     console.log(`✅ [BOOTSTRAP ${requestId}] Profile created successfully:`, {

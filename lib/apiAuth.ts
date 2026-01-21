@@ -35,15 +35,20 @@ export async function getAuthenticatedUser(request: NextRequest): Promise<any | 
       return null
     }
 
-    // Fetch profile from database
+    // Fetch profile from database - use maybeSingle
     const { data: profile, error } = await supabase
       .from('profiles')
       .select('*')
       .eq('user_id', userId)
-      .single()
+      .maybeSingle()
 
-    if (error || !profile) {
+    if (error) {
       console.error('❌ Error fetching profile:', error?.message)
+      return null
+    }
+
+    if (!profile) {
+      console.warn('⚠️ Profile missing for user:', userId.substring(0, 8) + '...')
       return null
     }
 

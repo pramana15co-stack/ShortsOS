@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useEffect, useState, useRef } from 'react'
 import { testimonials } from '@/data/testimonials'
-import VideoAnimation from '@/components/VideoAnimation'
+import Hero3D from '@/components/Hero3D'
 
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false)
@@ -151,9 +151,9 @@ export default function Home() {
       <section className="relative overflow-hidden py-16 md:py-24 lg:py-32">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/30 via-white to-purple-50/20 pointer-events-none"></div>
         
-        {/* Three.js Video Animation */}
+        {/* React Three Fiber Hero 3D Animation */}
         <div className="hidden lg:block absolute inset-0 overflow-hidden pointer-events-none">
-          <VideoAnimation />
+          <Hero3D />
         </div>
         
         <div className="container mx-auto px-4 sm:px-6 max-w-6xl relative z-10">

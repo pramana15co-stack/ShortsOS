@@ -96,19 +96,24 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
               return null
             }),
 
-            // Fetch profile subscription data
+            // Fetch profile subscription data - use maybeSingle
             supabase
               ? Promise.resolve(
                   supabase
                     .from('profiles')
                     .select('*')
                     .eq('user_id', session.user.id)
-                    .single()
+                    .maybeSingle()
                 )
                   .then(({ data: profileData, error: profileError }) => {
                     if (!mounted) return null
                     if (profileError) {
                       console.warn('⚠️ [AUTH] Profile fetch failed (non-blocking):', profileError.message)
+                      return null
+                    }
+                    if (!profileData) {
+                      // Profile missing - trigger bootstrap
+                      console.warn('⚠️ [AUTH] Profile missing, will bootstrap')
                       return null
                     }
                     return profileData
@@ -135,22 +140,31 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
             }
           })
         } else {
-          // Session already bootstrapped, just fetch profile data
+          // Session already bootstrapped, just fetch profile data - use maybeSingle
           if (supabase) {
             Promise.resolve(
               supabase
                 .from('profiles')
                 .select('*')
                 .eq('user_id', session.user.id)
-                .single()
+                .maybeSingle()
             )
               .then(({ data: profileData, error: profileError }) => {
                 if (!mounted) return
-                if (!profileError && profileData) {
+                if (profileError) {
+                  console.warn('⚠️ [AUTH] Profile fetch error:', profileError.message)
+                  return
+                }
+                if (profileData) {
                   setUser({
                     ...session.user,
                     ...profileData,
                   })
+                } else {
+                  // Profile missing - trigger bootstrap
+                  console.warn('⚠️ [AUTH] Profile missing, triggering bootstrap')
+                  fetch('/api/bootstrap-profile', { method: 'POST', headers: { Authorization: `Bearer ${session.access_token}` } })
+                    .catch(err => console.warn('⚠️ [AUTH] Bootstrap failed:', err))
                 }
               })
               .catch(err => {
@@ -219,12 +233,12 @@ export default function AuthProvider({ children }: { children: ReactNode }) {
       const { data: { session: newSession } } = await supabase.auth.getSession()
       setSession(newSession)
       if (newSession?.user) {
-        // Fetch profile data
+        // Fetch profile data - use maybeSingle
         const { data: profileData } = await supabase
           .from('profiles')
           .select('*')
           .eq('user_id', newSession.user.id)
-          .single()
+          .maybeSingle()
         
         if (profileData) {
           setUser({
