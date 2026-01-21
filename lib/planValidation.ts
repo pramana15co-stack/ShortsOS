@@ -8,6 +8,7 @@ export interface User {
   subscription_tier?: string | null
   subscription_status?: string | null
   plan_expiry?: string | null
+  is_admin?: boolean | null
   [key: string]: any
 }
 
@@ -15,11 +16,16 @@ export interface User {
  * Check if user has an active paid subscription
  * 
  * @param user - User object from Supabase
- * @returns true if user has active subscription that hasn't expired
+ * @returns true if user has active subscription that hasn't expired, or is admin
  */
 export function isUserPaid(user: User | null | undefined): boolean {
   if (!user) {
     return false
+  }
+
+  // Admin always has full access
+  if (user.is_admin) {
+    return true
   }
 
   // Check subscription status
@@ -87,7 +93,7 @@ export function getUserTier(user: User | null | undefined): 'free' | 'starter' |
  * 
  * @param user - User object from Supabase
  * @param requiredTier - Minimum tier required
- * @returns true if user's tier meets or exceeds required tier
+ * @returns true if user's tier meets or exceeds required tier, or is admin
  */
 export function canAccessTier(
   user: User | null | undefined,
@@ -95,6 +101,11 @@ export function canAccessTier(
 ): boolean {
   if (requiredTier === 'free') {
     return true // Everyone can access free features
+  }
+
+  // Admin always has full access
+  if (user?.is_admin) {
+    return true
   }
 
   const userTier = getUserTier(user)

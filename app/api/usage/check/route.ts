@@ -35,12 +35,23 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Get user profile to check if paid
+    // Get user profile to check if paid or admin
     const { data: profile } = await supabase
       .from('profiles')
-      .select('user_id, subscription_tier, subscription_status, plan_expiry')
+      .select('user_id, subscription_tier, subscription_status, plan_expiry, is_admin')
       .eq('user_id', userId)
       .single()
+
+    // Admin always has unlimited access
+    if (profile?.is_admin) {
+      return NextResponse.json({
+        allowed: true,
+        remaining: -1,
+        limit: -1,
+        isPaid: true,
+        isAdmin: true,
+      })
+    }
 
     // Create user-like object for isUserPaid function
     const userForCheck = profile ? {
@@ -48,6 +59,7 @@ export async function POST(request: NextRequest) {
       subscription_tier: profile.subscription_tier,
       subscription_status: profile.subscription_status,
       plan_expiry: profile.plan_expiry,
+      is_admin: profile.is_admin,
     } : null
 
     const isPaid = isUserPaid(userForCheck)

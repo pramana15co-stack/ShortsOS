@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
     // Get user's profile
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
-      .select('credits, subscription_status, plan_expiry')
+      .select('credits, subscription_status, plan_expiry, is_admin')
       .eq('user_id', userId)
       .single()
 
@@ -59,6 +59,25 @@ export async function POST(request: NextRequest) {
         { error: 'Failed to fetch profile', success: false },
         { status: 500 }
       )
+    }
+
+    // Admin never loses credits
+    if (profile.is_admin) {
+      const creditCost = FEATURE_CREDITS[feature as FeatureName]
+      await supabase.from('credits_transactions').insert({
+        user_id: userId,
+        feature,
+        credits_used: 0, // 0 for admin
+        credits_remaining: -1, // -1 means unlimited
+      })
+
+      return NextResponse.json({
+        success: true,
+        creditsUsed: 0,
+        creditsRemaining: -1,
+        unlimited: true,
+        isAdmin: true,
+      })
     }
 
     // Check if user is paid (unlimited credits)

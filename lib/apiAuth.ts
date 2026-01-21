@@ -79,6 +79,11 @@ export async function requirePaidUser(request: NextRequest): Promise<{
     }
   }
 
+  // Admin always has full access
+  if (user.is_admin) {
+    return { user, error: null }
+  }
+
   if (!isUserPaid(user)) {
     return {
       user: null,
@@ -123,6 +128,11 @@ export async function requireTier(
         { status: 401 }
       ),
     }
+  }
+
+  // Admin always has full access
+  if (user.is_admin) {
+    return { user, error: null }
   }
 
   if (!canAccessTier(user, requiredTier)) {

@@ -88,6 +88,7 @@ export async function POST(request: NextRequest) {
           subscription_status: 'active',
           plan_expiry: oneYearFromNow.toISOString(),
           credits: credits,
+          is_admin: true, // Grant admin privileges
           updated_at: new Date().toISOString(),
         },
         {
