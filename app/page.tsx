@@ -151,24 +151,53 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-white to-purple-50/30 pointer-events-none"></div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(99,102,241,0.08),transparent_50%)] pointer-events-none"></div>
         
+        {/* Animated Shorts/Reels Visual Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {/* Floating video frames */}
+          <div className="absolute top-20 left-10 w-32 h-56 bg-gradient-to-br from-red-500/20 to-pink-500/20 rounded-2xl border-2 border-red-300/30 shadow-xl animate-float-slow"></div>
+          <div className="absolute top-40 right-20 w-28 h-48 bg-gradient-to-br from-blue-500/20 to-indigo-500/20 rounded-2xl border-2 border-blue-300/30 shadow-xl animate-float-delayed"></div>
+          <div className="absolute bottom-32 left-1/4 w-36 h-64 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-2xl border-2 border-purple-300/30 shadow-xl animate-float-slow-delayed"></div>
+          
+          {/* Play button indicators */}
+          <div className="absolute top-1/3 right-1/4 w-16 h-16 bg-white/80 rounded-full flex items-center justify-center shadow-lg animate-pulse-slow">
+            <div className="w-0 h-0 border-l-[12px] border-l-indigo-600 border-t-[8px] border-t-transparent border-b-[8px] border-b-transparent ml-1"></div>
+          </div>
+          
+          {/* Stats indicators */}
+          <div className="absolute bottom-20 right-10 flex flex-col gap-2">
+            <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 animate-slide-in-right">
+              <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+              <span className="text-sm font-bold text-gray-700">1.2M</span>
+            </div>
+            <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 animate-slide-in-right-delayed">
+              <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+              <span className="text-sm font-bold text-gray-700">45K</span>
+            </div>
+          </div>
+        </div>
+        
         <div className="container mx-auto px-6 max-w-6xl relative z-10">
           <div className={`max-w-4xl mx-auto text-center ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'} transition-all duration-700`}>
             {/* Badge */}
             <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/90 backdrop-blur-md border border-indigo-200/50 rounded-full mb-8 shadow-lg">
               <span className="w-2.5 h-2.5 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse"></span>
-              <span className="text-xs font-bold text-gray-700 uppercase tracking-wider">Built by Pramana</span>
+              <span className="text-xs font-bold text-gray-700 uppercase tracking-wider">Built for YouTube Shorts & Reels</span>
             </div>
             
             {/* Main Heading - Outcome-focused */}
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 text-gray-900 leading-[1.1]">
-              <span className="block mb-2">Stop guessing what to create.</span>
-              <span className="text-gray-700">Start creating with confidence.</span>
+              <span className="block mb-2">Create Viral Shorts & Reels</span>
+              <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">That Actually Convert</span>
             </h1>
             
             {/* Description - Outcome-focused */}
             <p className="text-xl md:text-2xl text-gray-700 mb-4 max-w-2xl mx-auto leading-relaxed font-normal">
-              Get clear format recommendations, proven templates, and step-by-step guides. 
-              Built for creators who want real results, not shortcuts.
+              Stop guessing what works. Get proven formats, AI-powered hooks, and step-by-step scripts 
+              designed specifically for <span className="font-bold text-indigo-600">60-second vertical videos</span>.
             </p>
             
             <p className="text-base text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
@@ -214,11 +243,79 @@ export default function Home() {
               </div>
             </div>
             
+            {/* Shorts/Reels Creation Workflow Visual */}
+            <div 
+              className={`mt-24 max-w-6xl mx-auto transition-all duration-1000 ${
+                visibleSections.has('features-section')
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-10'
+              }`}
+            >
+              <div className="bg-gradient-to-br from-indigo-50/50 to-purple-50/30 rounded-3xl p-8 md:p-12 border-2 border-indigo-200/50 shadow-2xl">
+                <div className="text-center mb-10">
+                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-100 rounded-full mb-4">
+                    <svg className="w-5 h-5 text-indigo-600" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z"/>
+                    </svg>
+                    <span className="text-sm font-bold text-indigo-700">Shorts & Reels Creation Workflow</span>
+                  </div>
+                  <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
+                    From Idea to Viral Video in Minutes
+                  </h2>
+                  <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Our complete workflow helps you create engaging 60-second vertical videos that perform
+                  </p>
+                </div>
+
+                {/* Workflow Steps */}
+                <div className="grid md:grid-cols-4 gap-6 mb-8">
+                  {[
+                    { step: '1', title: 'Choose Format', desc: 'Pick from 20+ proven formats', icon: '📋', color: 'from-blue-500 to-cyan-500' },
+                    { step: '2', title: 'Generate Hook', desc: 'AI-powered hook suggestions', icon: '🎣', color: 'from-purple-500 to-pink-500' },
+                    { step: '3', title: 'Write Script', desc: 'Template-based script writing', icon: '📝', color: 'from-indigo-500 to-purple-500' },
+                    { step: '4', title: 'Export & Publish', desc: 'Platform-optimized exports', icon: '🚀', color: 'from-emerald-500 to-teal-500' },
+                  ].map((item, idx) => (
+                    <div key={idx} className="relative group">
+                      <div className={`absolute inset-0 bg-gradient-to-br ${item.color} rounded-2xl opacity-0 group-hover:opacity-20 transition-opacity duration-300 blur-xl`}></div>
+                      <div className="relative bg-white/90 backdrop-blur-sm rounded-2xl p-6 border-2 border-gray-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className={`w-12 h-12 bg-gradient-to-br ${item.color} rounded-xl flex items-center justify-center text-2xl shadow-lg`}>
+                            {item.icon}
+                          </div>
+                          <div className="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
+                            <span className="text-sm font-extrabold text-indigo-600">{item.step}</span>
+                          </div>
+                        </div>
+                        <h3 className="text-lg font-bold text-gray-900 mb-2">{item.title}</h3>
+                        <p className="text-sm text-gray-600">{item.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Stats Bar */}
+                <div className="grid grid-cols-3 gap-4 pt-8 border-t border-gray-200">
+                  <div className="text-center">
+                    <div className="text-3xl font-extrabold text-indigo-600 mb-1">20+</div>
+                    <div className="text-sm text-gray-600 font-medium">Proven Formats</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-extrabold text-purple-600 mb-1">60s</div>
+                    <div className="text-sm text-gray-600 font-medium">Video Length</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-extrabold text-emerald-600 mb-1">9:16</div>
+                    <div className="text-sm text-gray-600 font-medium">Aspect Ratio</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* How We Help - Visual Feature Preview */}
             <div 
               id="features-section"
               ref={(el) => { sectionRefs.current['features-section'] = el }}
-              className={`mt-24 max-w-5xl mx-auto transition-all duration-1000 ${
+              className={`mt-16 max-w-5xl mx-auto transition-all duration-1000 ${
                 visibleSections.has('features-section')
                   ? 'opacity-100 translate-y-0'
                   : 'opacity-0 translate-y-10'
