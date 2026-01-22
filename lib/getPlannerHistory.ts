@@ -31,14 +31,17 @@ export async function getLastPlannerResult(
       .eq('user_id', userId)
       .order('created_at', { ascending: false })
       .limit(1)
-      .single()
+      .maybeSingle()
 
     if (error) {
-      // If no rows found, that's okay - return null data
-      if (error.code === 'PGRST116') {
-        return { success: true, data: null }
-      }
-      return { success: false, data: null, error: error.message }
+      // Log error but don't fail - table might not exist yet
+      console.warn('⚠️ [PLANNER] Error fetching planner results:', error.message)
+      return { success: true, data: null }
+    }
+
+    // If no data, that's okay - return null
+    if (!data) {
+      return { success: true, data: null }
     }
 
     return { success: true, data: data as PlannerHistoryItem }

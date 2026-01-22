@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useEffect, useState, useRef } from 'react'
 import { testimonials } from '@/data/testimonials'
 import Hero3D from '@/components/Hero3D'
+import LightPillar from '@/components/LightPillar'
 
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false)
@@ -147,13 +148,31 @@ export default function Home() {
 
   return (
     <main className="min-h-screen">
-      {/* Hero Section with Three.js Animation */}
+      {/* Hero Section with Beautiful Background */}
       <section className="relative overflow-hidden py-16 md:py-24 lg:py-32">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/30 via-white to-purple-50/20 pointer-events-none"></div>
         
-        {/* React Three Fiber Hero 3D Animation */}
+        {/* LightPillar Background Animation */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30">
+          <LightPillar
+            topColor="#5227FF"
+            bottomColor="#FF9FFC"
+            intensity={0.8}
+            rotationSpeed={0.3}
+            glowAmount={0.002}
+            pillarWidth={3}
+            pillarHeight={0.4}
+            noiseIntensity={0.3}
+            pillarRotation={25}
+            interactive={true}
+            mixBlendMode="screen"
+            quality="high"
+          />
+        </div>
+        
+        {/* React Three Fiber Hero 3D Model */}
         <div className="hidden lg:block absolute inset-0 overflow-hidden pointer-events-none">
-          <Hero3D />
+          <Hero3D modelPath="/models/hero-model.gltf" />
         </div>
         
         <div className="container mx-auto px-4 sm:px-6 max-w-6xl relative z-10">

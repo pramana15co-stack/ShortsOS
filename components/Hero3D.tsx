@@ -32,50 +32,59 @@ function FloatingModel({ modelPath }: { modelPath?: string }) {
     }
   })
 
-  // If no model path provided, create a simple geometric representation
-  if (!modelPath) {
-    return (
-      <group ref={meshRef}>
-        {/* Vertical video frame representation */}
-        <mesh position={[0, 0, 0]} castShadow receiveShadow>
-          <boxGeometry args={[0.6, 1.07, 0.05]} />
-          <meshStandardMaterial 
-            color="#6366f1" 
-            metalness={0.3}
-            roughness={0.4}
-            emissive="#4f46e5"
-            emissiveIntensity={0.2}
-          />
-        </mesh>
-        {/* Play button indicator */}
-        <mesh position={[0, 0, 0.1]}>
-          <ringGeometry args={[0.15, 0.2, 32]} />
-          <meshStandardMaterial 
-            color="#ffffff" 
-            emissive="#6366f1"
-            emissiveIntensity={0.5}
-            side={THREE.DoubleSide}
-          />
-        </mesh>
-      </group>
-    )
+  // Load GLTF model if path provided
+  if (modelPath) {
+    try {
+      const { scene } = useGLTF(modelPath)
+      // Clone the scene to avoid issues with multiple instances
+      const clonedScene = scene.clone()
+      
+      // Auto-scale model to fit view
+      const box = new THREE.Box3().setFromObject(clonedScene)
+      const size = box.getSize(new THREE.Vector3())
+      const maxDim = Math.max(size.x, size.y, size.z)
+      const scale = 2 / maxDim // Scale to fit in 2 unit space
+      
+      return (
+        <primitive 
+          ref={meshRef}
+          object={clonedScene} 
+          scale={scale} 
+          position={[0, 0, 0]}
+        />
+      )
+    } catch (error) {
+      console.warn('Failed to load GLTF model:', error)
+      // Fall through to geometric representation
+    }
   }
 
-  // Load model if path provided
-  if (modelPath) {
-    const { scene } = useGLTF(modelPath)
-    return (
-      <primitive 
-        ref={meshRef}
-        object={scene} 
-        scale={1} 
-        position={[0, 0, 0]}
-      />
-    )
-  }
-  
-  // Fallback geometric representation
-  return null
+  // Fallback geometric representation (shorts/reels theme)
+  return (
+    <group ref={meshRef}>
+      {/* Vertical video frame representation */}
+      <mesh position={[0, 0, 0]} castShadow receiveShadow>
+        <boxGeometry args={[0.6, 1.07, 0.05]} />
+        <meshStandardMaterial 
+          color="#6366f1" 
+          metalness={0.3}
+          roughness={0.4}
+          emissive="#4f46e5"
+          emissiveIntensity={0.2}
+        />
+      </mesh>
+      {/* Play button indicator */}
+      <mesh position={[0, 0, 0.1]}>
+        <ringGeometry args={[0.15, 0.2, 32]} />
+        <meshStandardMaterial 
+          color="#ffffff" 
+          emissive="#6366f1"
+          emissiveIntensity={0.5}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+    </group>
+  )
 }
 
 // Main 3D Scene Component
