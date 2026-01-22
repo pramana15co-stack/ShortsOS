@@ -96,18 +96,21 @@ export default function ScriptsPage() {
   }
 
   return (
-    <main className="container mx-auto px-4 py-8 max-w-4xl">
-      <div className="mb-8">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">
-          Script Templates
-        </h1>
-        <p className="text-xl text-gray-600">
-          Create structured scripts for your YouTube Shorts using proven format templates. Customize templates with your topic and format choice.
-        </p>
-      </div>
+    <main className="min-h-screen py-16 md:py-24 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-white to-purple-50/30 pointer-events-none"></div>
+      
+      <div className="container mx-auto px-4 max-w-6xl relative z-10">
+        <div className="mb-12">
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900">
+            Script Generator
+          </h1>
+          <p className="text-xl text-gray-600 max-w-3xl">
+            Generate production-ready scripts for your YouTube Shorts. Our templates are format-specific and topic-aware, giving you scripts that actually work—not generic fill-in-the-blank templates.
+          </p>
+        </div>
 
       {!isSubmitted ? (
-        <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-md p-8">
+        <form onSubmit={handleSubmit} className="card">
           <div className="space-y-6">
             {/* Topic Input */}
             <div>
@@ -119,12 +122,12 @@ export default function ScriptsPage() {
                 id="topic"
                 value={formData.topic}
                 onChange={(e) => setFormData({ ...formData, topic: e.target.value })}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                placeholder="e.g., productivity, fitness, cooking, coding..."
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900"
+                placeholder="e.g., morning productivity routine, beginner workout plan, quick pasta recipe..."
                 required
               />
-              <p className="mt-2 text-sm text-gray-500">
-                Enter the main topic or subject for your Shorts video
+              <p className="mt-2 text-sm text-gray-600">
+                Be specific! Instead of "productivity," use "5-minute morning routine" or "productivity apps for students." Specific topics generate better scripts.
               </p>
             </div>
 
@@ -154,23 +157,23 @@ export default function ScriptsPage() {
                   </option>
                 ))}
               </select>
-              <p className="mt-2 text-sm text-gray-500">
-                Choose the format structure that best fits your content
+              <p className="mt-2 text-sm text-gray-600">
+                Each format has a proven structure. Choose based on your content type: Problem-Solution for tutorials, Before-After for transformations, etc.
               </p>
             </div>
 
             <button
               type="submit"
-              className="w-full bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition text-lg"
+              className="btn-primary w-full py-4 text-lg"
             >
-              Create Script
+              Generate Script
             </button>
           </div>
         </form>
       ) : (
         <div className="space-y-6">
           {/* Results Header */}
-          <div className="bg-gradient-to-r from-primary-600 to-purple-600 rounded-xl p-6 text-white">
+          <div className="card bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-6">
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-2xl font-bold mb-1">Generated Script</h2>
@@ -213,7 +216,7 @@ export default function ScriptsPage() {
           {generatedScript && (
             <>
               {/* Hook Section */}
-              <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-yellow-500">
+              <div className="card border-l-4 border-yellow-500">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-xl font-semibold text-gray-900 flex items-center">
                     <span className="text-2xl mr-2">🎣</span>
@@ -234,7 +237,7 @@ export default function ScriptsPage() {
               </div>
 
               {/* Body Section */}
-              <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500">
+              <div className="card border-l-4 border-blue-500">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-xl font-semibold text-gray-900 flex items-center">
                     <span className="text-2xl mr-2">📝</span>
@@ -255,7 +258,7 @@ export default function ScriptsPage() {
               </div>
 
               {/* CTA Section */}
-              <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500">
+              <div className="card border-l-4 border-green-500">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-xl font-semibold text-gray-900 flex items-center">
                     <span className="text-2xl mr-2">📢</span>
@@ -276,7 +279,7 @@ export default function ScriptsPage() {
               </div>
 
               {/* Full Script */}
-              <div className="bg-white rounded-xl shadow-md p-6 border-l-4 border-primary-500">
+              <div className="card border-l-4 border-indigo-500">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-xl font-semibold text-gray-900 flex items-center">
                     <span className="text-2xl mr-2">📄</span>
@@ -308,7 +311,7 @@ export default function ScriptsPage() {
               </div>
 
               {/* Tips */}
-              <div className="bg-blue-50 rounded-xl p-6 border-l-4 border-blue-500">
+              <div className="card bg-blue-50 border-l-4 border-blue-500">
                 <h3 className="font-semibold text-blue-900 mb-3 flex items-center">
                   <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
@@ -325,7 +328,7 @@ export default function ScriptsPage() {
                 <div className="pt-4 border-t border-blue-200">
                   <p className="text-blue-900 text-sm font-medium mb-2">Related tools:</p>
                   <div className="flex flex-wrap gap-3 text-sm">
-                    <Link href="/hooks" className="text-blue-700 hover:text-blue-900 hover:underline">
+                    <Link href="/hook-caption-engine" className="text-indigo-600 hover:text-indigo-700 hover:underline font-medium">
                       Generate more hooks →
                     </Link>
                     {formData.formatSlug && formats.find(f => f.slug === formData.formatSlug) ? (
@@ -333,14 +336,14 @@ export default function ScriptsPage() {
                         <span className="text-gray-400">•</span>
                         <Link 
                           href={`/formats/${formData.formatSlug}`}
-                          className="text-gray-700 hover:text-gray-900 hover:underline font-medium"
+                          className="text-indigo-600 hover:text-indigo-700 hover:underline font-medium"
                         >
                           View format guide →
                         </Link>
                       </>
                     ) : null}
-                    <span className="text-blue-400">•</span>
-                    <Link href="/planner" className="text-blue-700 hover:text-blue-900 hover:underline">
+                    <span className="text-gray-400">•</span>
+                    <Link href="/planner" className="text-indigo-600 hover:text-indigo-700 hover:underline font-medium">
                       Get personalized recommendations →
                     </Link>
                   </div>
@@ -350,6 +353,7 @@ export default function ScriptsPage() {
           )}
         </div>
       )}
+      </div>
     </main>
   )
 }

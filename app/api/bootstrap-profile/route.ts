@@ -154,7 +154,7 @@ export async function POST(request: NextRequest) {
           user_id: user.id,
           subscription_tier: isOwner ? 'agency' : 'free',
           subscription_status: isOwner ? 'active' : 'inactive',
-          credits: isOwner ? 10000 : 100, // Owner gets 10K credits, others get 100
+          credits: isOwner ? 10000 : 50, // Owner gets 10K credits, others get 50
           plan_expiry: isOwner ? oneYearFromNow.toISOString() : null,
           is_admin: isOwner ? true : false, // Owner is admin
           updated_at: new Date().toISOString(),

@@ -102,24 +102,34 @@ export default function HookCaptionEnginePage() {
       const isTutorial = topic.includes('how to') || topic.includes('tutorial') || topic.includes('guide')
       const isTransformation = topic.includes('before') || topic.includes('after') || topic.includes('change') || topic.includes('transform')
       
-      // Generate sophisticated hooks based on topic type
+      // Generate more specific, creative hooks based on topic analysis
+      const topicWords = formData.topic.split(' ').filter(w => w.length > 3)
+      const mainWord = topicWords[0] || formData.topic
+      
       const hooks = isQuestion ? [
-        `The ${formData.topic} question everyone's asking (but getting wrong)`,
-        `I tested ${formData.topic} for 30 days. The results shocked me.`,
-        `Why ${formData.topic} doesn't work for most people (and what actually does)`,
+        `Everyone's asking about ${formData.topic}... but they're asking the wrong question.`,
+        `I spent 30 days testing ${formData.topic}. Here's what actually works (and what's a waste of time).`,
+        `The ${formData.topic} mistake 90% of people make (and how to fix it in 60 seconds)`,
+        `Why ${formData.topic} fails for most people (and the one thing that changes everything)`,
       ] : isTutorial ? [
-        `The ${formData.topic} method that changed everything for me`,
-        `I wish someone told me this about ${formData.topic} sooner`,
-        `Stop struggling with ${formData.topic}. Here's the simple way.`,
+        `The ${formData.topic} method I wish I knew 5 years ago`,
+        `I tried every ${formData.topic} technique. This is the only one that worked.`,
+        `Stop overcomplicating ${formData.topic}. Here's the simple 3-step method.`,
+        `The ${formData.topic} hack that saves me 2 hours every day`,
       ] : isTransformation ? [
-        `I tried ${formData.topic} for 30 days. Here's the transformation.`,
-        `Before vs After: ${formData.topic} changed my life`,
-        `The ${formData.topic} secret nobody talks about`,
+        `I tried ${formData.topic} for 30 days. The results will shock you.`,
+        `Before vs After: How ${formData.topic} completely changed my life in 1 month`,
+        `The ${formData.topic} transformation nobody talks about (but everyone needs)`,
+        `I almost gave up on ${formData.topic}. Then I discovered this.`,
       ] : [
-        `Did you know ${formData.topic} can change everything?`,
-        `I tried ${formData.topic} for 30 days. Here's what happened.`,
-        `Stop doing ${formData.topic} wrong. Here's the right way.`,
+        `The ${formData.topic} secret that changed everything for me`,
+        `I tested ${formData.topic} for 30 days. Here's the honest truth.`,
+        `Stop doing ${formData.topic} the hard way. Here's the smart approach.`,
+        `The ${formData.topic} mistake I made (and how you can avoid it)`,
       ]
+      
+      // Return top 3 most compelling hooks
+      const selectedHooks = hooks.slice(0, 3)
 
       // Generate platform-specific captions
       const caption = formData.platform === 'youtube-shorts' 
@@ -162,7 +172,7 @@ export default function HookCaptionEnginePage() {
         'Comment your thoughts below',
       ]
 
-      setOutput({ hooks, caption, emphasis, timing, cta })
+      setOutput({ hooks: selectedHooks, caption, emphasis, timing, cta })
       setIsGenerating(false)
     }, 1200)
   }

@@ -146,7 +146,11 @@ export default function Home() {
   ]
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen relative">
+      {/* Floating blur background elements */}
+      <div className="floating-blur floating-blur-1"></div>
+      <div className="floating-blur floating-blur-2"></div>
+      <div className="floating-blur floating-blur-3"></div>
       {/* Hero Section with Beautiful Background */}
       <section className="relative overflow-hidden py-16 md:py-24 lg:py-32">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/30 via-white to-purple-50/20 pointer-events-none"></div>

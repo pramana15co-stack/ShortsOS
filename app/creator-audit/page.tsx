@@ -75,11 +75,20 @@ export default function CreatorAuditPage() {
   const [showUpgradeModal, setShowUpgradeModal] = useState(false)
   
   const [step, setStep] = useState<'input' | 'questions' | 'result'>('input')
+  const [questionStep, setQuestionStep] = useState(1)
+  const [activeTab, setActiveTab] = useState('overview')
   const [formData, setFormData] = useState({
     link: '',
     platform: 'youtube' as Platform,
     frequency: '3-4-per-week' as Frequency,
     goal: 'growth' as Goal,
+    niche: '',
+    currentSubscribers: '',
+    avgViews: '',
+    bestPerformingFormat: '',
+    biggestChallenge: '',
+    contentStyle: '',
+    monetizationInterest: '',
   })
   const [result, setResult] = useState<AuditResult | null>(null)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
@@ -567,65 +576,238 @@ By the end of 30 days, you'll have clear data on what works for your audience an
 
         {step === 'questions' && (
           <div className="card max-w-2xl mx-auto">
-            <h2 className="text-2xl font-bold mb-6 text-gray-900">Step 2: Tell Us About Your Content</h2>
+            <div className="mb-6">
+              <div className="flex items-center justify-between mb-2">
+                <h2 className="text-2xl font-bold text-gray-900">Step 2: Detailed Analysis</h2>
+                <span className="text-sm text-gray-500">Question {questionStep} of 4</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div 
+                  className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${(questionStep / 4) * 100}%` }}
+                ></div>
+              </div>
+            </div>
+
             <form onSubmit={handleQuestionsSubmit} className="space-y-6">
-              <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">
-                  Platform
-                </label>
-                <select
-                  value={formData.platform}
-                  onChange={(e) => setFormData({ ...formData, platform: e.target.value as Platform })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
-                >
-                  <option value="youtube">YouTube / YouTube Shorts</option>
-                  <option value="instagram">Instagram / Instagram Reels</option>
-                </select>
-              </div>
+              {questionStep === 1 && (
+                <>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      Platform
+                    </label>
+                    <select
+                      value={formData.platform}
+                      onChange={(e) => setFormData({ ...formData, platform: e.target.value as Platform })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
+                    >
+                      <option value="youtube">YouTube / YouTube Shorts</option>
+                      <option value="instagram">Instagram / Instagram Reels</option>
+                    </select>
+                  </div>
 
-              <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">
-                  How often do you post?
-                </label>
-                <select
-                  value={formData.frequency}
-                  onChange={(e) => setFormData({ ...formData, frequency: e.target.value as Frequency })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
-                >
-                  <option value="daily">Daily</option>
-                  <option value="3-4-per-week">3-4 times per week</option>
-                  <option value="weekly">Weekly</option>
-                  <option value="occasional">Occasionally (less than weekly)</option>
-                </select>
-              </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      How often do you post?
+                    </label>
+                    <select
+                      value={formData.frequency}
+                      onChange={(e) => setFormData({ ...formData, frequency: e.target.value as Frequency })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
+                    >
+                      <option value="daily">Daily</option>
+                      <option value="3-4-per-week">3-4 times per week</option>
+                      <option value="weekly">Weekly</option>
+                      <option value="occasional">Occasionally (less than weekly)</option>
+                    </select>
+                  </div>
 
-              <div>
-                <label className="block text-sm font-semibold text-gray-900 mb-2">
-                  Primary Goal
-                </label>
-                <select
-                  value={formData.goal}
-                  onChange={(e) => setFormData({ ...formData, goal: e.target.value as Goal })}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
-                >
-                  <option value="growth">Growth (more views, subscribers, followers)</option>
-                  <option value="engagement">Engagement (comments, shares, community)</option>
-                  <option value="monetization">Monetization (build trust, demonstrate value)</option>
-                  <option value="consistency">Consistency (establish routine, build habit)</option>
-                </select>
-              </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      Primary Goal
+                    </label>
+                    <select
+                      value={formData.goal}
+                      onChange={(e) => setFormData({ ...formData, goal: e.target.value as Goal })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
+                    >
+                      <option value="growth">Growth (more views, subscribers, followers)</option>
+                      <option value="engagement">Engagement (comments, shares, community)</option>
+                      <option value="monetization">Monetization (build trust, demonstrate value)</option>
+                      <option value="consistency">Consistency (establish routine, build habit)</option>
+                    </select>
+                  </div>
+                </>
+              )}
 
-              <div className="flex gap-4">
-                <button
-                  type="button"
-                  onClick={() => setStep('input')}
-                  className="btn-secondary flex-1 py-4"
-                >
-                  Back
-                </button>
-                <button type="submit" className="btn-primary flex-1 py-4" disabled={isAnalyzing}>
-                  {isAnalyzing ? 'Analyzing...' : 'Get Guidance'}
-                </button>
+              {questionStep === 2 && (
+                <>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      Your Niche or Topic Focus
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.niche}
+                      onChange={(e) => setFormData({ ...formData, niche: e.target.value })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
+                      placeholder="e.g., Productivity, Fitness, Cooking, Tech Reviews"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      Current Subscribers/Followers
+                    </label>
+                    <select
+                      value={formData.currentSubscribers}
+                      onChange={(e) => setFormData({ ...formData, currentSubscribers: e.target.value })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
+                    >
+                      <option value="">Select range</option>
+                      <option value="0-100">0-100</option>
+                      <option value="100-1k">100-1,000</option>
+                      <option value="1k-10k">1,000-10,000</option>
+                      <option value="10k-100k">10,000-100,000</option>
+                      <option value="100k+">100,000+</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      Average Views Per Video
+                    </label>
+                    <select
+                      value={formData.avgViews}
+                      onChange={(e) => setFormData({ ...formData, avgViews: e.target.value })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
+                    >
+                      <option value="">Select range</option>
+                      <option value="0-100">0-100</option>
+                      <option value="100-1k">100-1,000</option>
+                      <option value="1k-10k">1,000-10,000</option>
+                      <option value="10k-100k">10,000-100,000</option>
+                      <option value="100k+">100,000+</option>
+                    </select>
+                  </div>
+                </>
+              )}
+
+              {questionStep === 3 && (
+                <>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      Your Best Performing Content Format
+                    </label>
+                    <select
+                      value={formData.bestPerformingFormat}
+                      onChange={(e) => setFormData({ ...formData, bestPerformingFormat: e.target.value })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
+                    >
+                      <option value="">Select format</option>
+                      <option value="problem-solution">Problem-Solution</option>
+                      <option value="before-after">Before/After</option>
+                      <option value="quick-tips">Quick Tips</option>
+                      <option value="tutorial">Tutorial/How-To</option>
+                      <option value="entertainment">Entertainment/Fun</option>
+                      <option value="storytelling">Storytelling</option>
+                      <option value="not-sure">Not sure yet</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      Your Biggest Challenge Right Now
+                    </label>
+                    <select
+                      value={formData.biggestChallenge}
+                      onChange={(e) => setFormData({ ...formData, biggestChallenge: e.target.value })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
+                    >
+                      <option value="">Select challenge</option>
+                      <option value="consistency">Staying consistent with posting</option>
+                      <option value="growth">Getting more views/subscribers</option>
+                      <option value="engagement">Low engagement (likes, comments)</option>
+                      <option value="ideas">Running out of content ideas</option>
+                      <option value="quality">Improving content quality</option>
+                      <option value="monetization">Monetizing my channel</option>
+                      <option value="retention">Low watch time/retention</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      Your Content Style
+                    </label>
+                    <select
+                      value={formData.contentStyle}
+                      onChange={(e) => setFormData({ ...formData, contentStyle: e.target.value })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
+                    >
+                      <option value="">Select style</option>
+                      <option value="educational">Educational/Informative</option>
+                      <option value="entertaining">Entertaining/Fun</option>
+                      <option value="inspirational">Inspirational/Motivational</option>
+                      <option value="personal">Personal/Story-driven</option>
+                      <option value="mixed">Mixed (combination)</option>
+                    </select>
+                  </div>
+                </>
+              )}
+
+              {questionStep === 4 && (
+                <>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      Interest in Monetization
+                    </label>
+                    <select
+                      value={formData.monetizationInterest}
+                      onChange={(e) => setFormData({ ...formData, monetizationInterest: e.target.value })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
+                    >
+                      <option value="">Select interest level</option>
+                      <option value="not-interested">Not interested right now</option>
+                      <option value="exploring">Exploring options</option>
+                      <option value="ready">Ready to start monetizing</option>
+                      <option value="already-monetizing">Already monetizing</option>
+                    </select>
+                  </div>
+                </>
+              )}
+
+              <div className="flex gap-4 pt-4">
+                {questionStep > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => setQuestionStep(questionStep - 1)}
+                    className="btn-secondary flex-1 py-4"
+                  >
+                    Previous
+                  </button>
+                )}
+                {questionStep < 4 ? (
+                  <button
+                    type="button"
+                    onClick={() => setQuestionStep(questionStep + 1)}
+                    className="btn-primary flex-1 py-4"
+                  >
+                    Next
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => setQuestionStep(questionStep - 1)}
+                      className="btn-secondary flex-1 py-4"
+                    >
+                      Previous
+                    </button>
+                    <button type="submit" className="btn-primary flex-1 py-4" disabled={isAnalyzing}>
+                      {isAnalyzing ? 'Analyzing...' : 'Get Complete Audit'}
+                    </button>
+                  </>
+                )}
               </div>
             </form>
           </div>
@@ -633,394 +815,443 @@ By the end of 30 days, you'll have clear data on what works for your audience an
 
         {step === 'result' && result && (
           <div className="space-y-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">Your Personalized Guidance</h2>
-              <button
-                onClick={() => {
-                  setStep('input')
-                  setResult(null)
-                  setFormData({ ...formData, link: '' })
-                }}
-                className="btn-secondary px-6 py-2"
-              >
-                Start New Audit
-              </button>
-            </div>
-
-            {/* Creator Stage */}
-            <div className="card">
-              <h3 className="text-xl font-bold mb-4 text-gray-900">Your Creator Stage</h3>
-              <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200">
-                <div className="text-2xl font-bold text-indigo-900 mb-2">{result.creatorStage}</div>
-                <p className="text-gray-700 text-sm mb-3">{result.stageAnalysis}</p>
+            {/* Dashboard Header */}
+            <div className="card bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-6">
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div>
+                  <h2 className="text-3xl font-bold mb-2">Creator Intelligence Dashboard</h2>
+                  <p className="text-indigo-100">Complete strategic analysis for your content journey</p>
+                </div>
+                <button
+                  onClick={() => {
+                    setStep('input')
+                    setResult(null)
+                    setQuestionStep(1)
+                    setActiveTab('overview')
+                    setFormData({ 
+                      link: '',
+                      platform: 'youtube',
+                      frequency: '3-4-per-week',
+                      goal: 'growth',
+                      niche: '',
+                      currentSubscribers: '',
+                      avgViews: '',
+                      bestPerformingFormat: '',
+                      biggestChallenge: '',
+                      contentStyle: '',
+                      monetizationInterest: '',
+                    })
+                  }}
+                  className="bg-white/20 hover:bg-white/30 text-white px-6 py-2 rounded-lg font-semibold transition-all whitespace-nowrap"
+                >
+                  New Audit
+                </button>
               </div>
             </div>
 
-            {/* What to Post Next */}
-            <div className="card">
-              <h3 className="text-xl font-bold mb-4 text-gray-900">What to Post Next</h3>
-              <div className="space-y-3">
-                {result.whatToPostNext.map((item, idx) => (
-                  <div key={idx} className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                    <span className="flex-shrink-0 w-6 h-6 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center text-xs font-bold">
-                      {idx + 1}
-                    </span>
-                    <span className="text-gray-900">{item}</span>
-                  </div>
+            {/* Tab Navigation */}
+            <div className="card p-0 overflow-hidden">
+              <div className="flex overflow-x-auto border-b border-gray-200 bg-gray-50 scrollbar-hide">
+                {[
+                  { id: 'overview', label: 'Overview', icon: '📊' },
+                  { id: 'growth', label: 'Growth', icon: '📈' },
+                  { id: 'content', label: 'Content', icon: '🎬' },
+                  { id: 'monetization', label: 'Monetization', icon: '💰' },
+                  { id: 'algorithm', label: 'Algorithm', icon: '⚡' },
+                  { id: 'audience', label: 'Audience', icon: '👥' },
+                  { id: 'calendar', label: 'Calendar', icon: '📅' },
+                  { id: 'performance', label: 'Performance', icon: '🎯' },
+                ].map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`px-6 py-4 font-semibold text-sm whitespace-nowrap border-b-2 transition-all ${
+                      activeTab === tab.id
+                        ? 'border-indigo-600 text-indigo-600 bg-white'
+                        : 'border-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                    }`}
+                  >
+                    <span className="mr-2">{tab.icon}</span>
+                    {tab.label}
+                  </button>
                 ))}
               </div>
-            </div>
 
-            {/* Best Formats */}
-            <div className="card">
-              <h3 className="text-xl font-bold mb-4 text-gray-900">Best Content Formats for You</h3>
-              <div className="space-y-2">
-                {result.bestFormats.map((format, idx) => (
-                  <div key={idx} className="flex items-center gap-3 p-3 bg-green-50 rounded-lg border border-green-200">
-                    <svg className="w-5 h-5 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                    </svg>
-                    <span className="text-gray-900">{format}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+              {/* Tab Content */}
+              <div className="p-6">
+                {/* Overview Tab */}
+                {activeTab === 'overview' && (
+                  <div className="space-y-6">
+                    {/* Creator Stage */}
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="p-6 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl border border-indigo-200">
+                        <h3 className="text-lg font-bold mb-3 text-gray-900">Your Creator Stage</h3>
+                        <div className="text-3xl font-bold text-indigo-900 mb-2">{result.creatorStage}</div>
+                        <p className="text-gray-700 text-sm">{result.stageAnalysis}</p>
+                      </div>
+                      <div className="p-6 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl border border-blue-200">
+                        <h3 className="text-lg font-bold mb-3 text-gray-900">Current Phase</h3>
+                        <div className="text-2xl font-bold text-blue-900 mb-2">{result.growthTrajectory.currentPhase}</div>
+                        <p className="text-gray-700 text-sm">Next: {result.growthTrajectory.nextMilestone}</p>
+                      </div>
+                    </div>
 
-            {/* Posting Rhythm */}
-            <div className="card">
-              <h3 className="text-xl font-bold mb-4 text-gray-900">Recommended Posting Rhythm</h3>
-              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <p className="text-gray-900 leading-relaxed">{result.postingRhythm}</p>
-              </div>
-            </div>
+                    {/* Strategic Overview */}
+                    <div className="p-6 bg-white rounded-xl border border-gray-200">
+                      <h3 className="text-xl font-bold mb-4 text-gray-900">Strategic Overview & 30-Day Action Plan</h3>
+                      <div className="prose prose-sm max-w-none text-gray-900 leading-relaxed whitespace-pre-line">
+                        {result.personalizedGuidance}
+                      </div>
+                      <button
+                        onClick={() => copyToClipboard(result.personalizedGuidance)}
+                        className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium"
+                      >
+                        Copy Full Guidance
+                      </button>
+                    </div>
 
-            {/* What Not to Do */}
-            <div className="card">
-              <h3 className="text-xl font-bold mb-4 text-gray-900">What NOT to Do</h3>
-              <div className="space-y-2">
-                {result.whatNotToDo.map((item, idx) => (
-                  <div key={idx} className="flex items-start gap-3 p-3 bg-red-50 rounded-lg border border-red-200">
-                    <span className="text-red-600 font-bold flex-shrink-0 mt-0.5">✗</span>
-                    <span className="text-gray-900 text-sm">{item}</span>
+                    {/* Quick Actions */}
+                    <div className="grid md:grid-cols-3 gap-4">
+                      <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                        <h4 className="font-bold text-green-900 mb-2">What to Post Next</h4>
+                        <ul className="space-y-1 text-sm text-gray-700">
+                          {result.whatToPostNext.slice(0, 3).map((item, idx) => (
+                            <li key={idx} className="flex items-start gap-2">
+                              <span className="text-green-600 mt-0.5">•</span>
+                              <span>{item.split(':')[0]}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
+                        <h4 className="font-bold text-purple-900 mb-2">Best Formats</h4>
+                        <ul className="space-y-1 text-sm text-gray-700">
+                          {result.bestFormats.slice(0, 3).map((format, idx) => (
+                            <li key={idx} className="flex items-start gap-2">
+                              <span className="text-purple-600 mt-0.5">✓</span>
+                              <span>{format.split('(')[0].trim()}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
+                        <h4 className="font-bold text-orange-900 mb-2">Key Actions</h4>
+                        <ul className="space-y-1 text-sm text-gray-700">
+                          {result.growthTrajectory.keyActions.slice(0, 3).map((action, idx) => (
+                            <li key={idx} className="flex items-start gap-2">
+                              <span className="text-orange-600 mt-0.5">→</span>
+                              <span className="line-clamp-2">{action}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
                   </div>
-                ))}
-              </div>
-            </div>
+                )}
 
-            {/* Personalized Guidance */}
-            <div className="card">
-              <h3 className="text-xl font-bold mb-4 text-gray-900">Strategic Overview & 30-Day Action Plan</h3>
-              <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <div className="prose prose-sm max-w-none text-gray-900 leading-relaxed whitespace-pre-line">
-                  {result.personalizedGuidance}
-                </div>
-              </div>
-              <button
-                onClick={() => copyToClipboard(result.personalizedGuidance)}
-                className="mt-4 text-sm text-indigo-600 hover:text-indigo-700 font-medium"
-              >
-                Copy Full Guidance
-              </button>
-            </div>
+                {/* Growth Tab */}
+                {activeTab === 'growth' && (
+                  <div className="space-y-6">
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="p-6 bg-blue-50 rounded-xl border border-blue-200">
+                        <h3 className="text-lg font-bold mb-3 text-gray-900">Current Phase</h3>
+                        <p className="text-2xl font-bold text-blue-900 mb-2">{result.growthTrajectory.currentPhase}</p>
+                      </div>
+                      <div className="p-6 bg-green-50 rounded-xl border border-green-200">
+                        <h3 className="text-lg font-bold mb-3 text-gray-900">Next Milestone</h3>
+                        <p className="text-xl font-bold text-green-900 mb-2">{result.growthTrajectory.nextMilestone}</p>
+                      </div>
+                    </div>
+                    <div className="p-6 bg-indigo-50 rounded-xl border border-indigo-200">
+                      <h3 className="text-lg font-bold mb-3 text-gray-900">Timeline & Expectations</h3>
+                      <p className="text-gray-900">{result.growthTrajectory.timeline}</p>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold mb-4 text-gray-900">Key Actions to Accelerate Growth</h3>
+                      <div className="space-y-3">
+                        {result.growthTrajectory.keyActions.map((action, idx) => (
+                          <div key={idx} className="flex items-start gap-4 p-4 bg-white rounded-lg border border-gray-200 hover:border-indigo-300 transition-colors">
+                            <div className="flex-shrink-0 w-8 h-8 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center font-bold">
+                              {idx + 1}
+                            </div>
+                            <p className="text-gray-900 flex-1">{action}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="p-6 bg-yellow-50 rounded-xl border border-yellow-200">
+                      <h3 className="text-lg font-bold mb-3 text-gray-900">Competitive Positioning</h3>
+                      <p className="text-gray-900 text-sm mb-4">{result.competitivePositioning.nicheSaturation}</p>
+                      <div className="space-y-2">
+                        {result.competitivePositioning.differentiation.slice(0, 3).map((item, idx) => (
+                          <div key={idx} className="flex items-start gap-2 text-sm text-gray-700">
+                            <span className="text-yellow-600 mt-0.5">•</span>
+                            <span>{item}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
 
-            {/* Competitive Positioning */}
-            <div className="card">
-              <h3 className="text-xl font-bold mb-4 text-gray-900">Competitive Positioning Analysis</h3>
-              <div className="space-y-4">
-                <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-                  <h4 className="font-bold text-purple-900 mb-2">Niche Saturation</h4>
-                  <p className="text-gray-900 text-sm">{result.competitivePositioning.nicheSaturation}</p>
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900 mb-2">Differentiation Strategies</h4>
-                  <div className="space-y-2">
-                    {result.competitivePositioning.differentiation.map((item, idx) => (
-                      <div key={idx} className="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-200">
-                        <span className="flex-shrink-0 w-5 h-5 bg-purple-100 text-purple-700 rounded-full flex items-center justify-center text-xs font-bold mt-0.5">
-                          {idx + 1}
-                        </span>
-                        <span className="text-gray-900 text-sm">{item}</span>
+                {/* Content Tab */}
+                {activeTab === 'content' && (
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className="text-lg font-bold mb-4 text-gray-900">What to Post Next</h3>
+                      <div className="space-y-3">
+                        {result.whatToPostNext.map((item, idx) => (
+                          <div key={idx} className="flex items-start gap-4 p-4 bg-white rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
+                            <div className="flex-shrink-0 w-8 h-8 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center font-bold">
+                              {idx + 1}
+                            </div>
+                            <p className="text-gray-900 flex-1">{item}</p>
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold mb-4 text-gray-900">Best Content Formats for You</h3>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        {result.bestFormats.map((format, idx) => (
+                          <div key={idx} className="flex items-start gap-3 p-4 bg-green-50 rounded-lg border border-green-200">
+                            <svg className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                            </svg>
+                            <p className="text-gray-900 text-sm">{format}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="p-6 bg-blue-50 rounded-xl border border-blue-200">
+                      <h3 className="text-lg font-bold mb-3 text-gray-900">Recommended Posting Rhythm</h3>
+                      <p className="text-gray-900">{result.postingRhythm}</p>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold mb-4 text-gray-900">Content Gaps & Opportunities</h3>
+                      <div className="grid md:grid-cols-3 gap-4">
+                        <div>
+                          <h4 className="font-semibold text-gray-900 mb-2 text-sm">Missing Formats</h4>
+                          <div className="space-y-2">
+                            {result.contentGaps.missingFormats.map((format, idx) => (
+                              <div key={idx} className="p-3 bg-orange-50 rounded-lg border border-orange-200 text-sm text-gray-900">
+                                {format}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-gray-900 mb-2 text-sm">Opportunities</h4>
+                          <div className="space-y-2">
+                            {result.contentGaps.underutilizedOpportunities.map((opp, idx) => (
+                              <div key={idx} className="p-3 bg-teal-50 rounded-lg border border-teal-200 text-sm text-gray-900">
+                                {opp}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-gray-900 mb-2 text-sm">Audience Needs</h4>
+                          <div className="space-y-2">
+                            {result.contentGaps.audienceNeeds.map((need, idx) => (
+                              <div key={idx} className="p-3 bg-pink-50 rounded-lg border border-pink-200 text-sm text-gray-900">
+                                {need}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold mb-4 text-gray-900">What NOT to Do</h3>
+                      <div className="space-y-2">
+                        {result.whatNotToDo.map((item, idx) => (
+                          <div key={idx} className="flex items-start gap-3 p-4 bg-red-50 rounded-lg border border-red-200">
+                            <span className="text-red-600 font-bold flex-shrink-0 mt-0.5">✗</span>
+                            <span className="text-gray-900 text-sm">{item}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-                  <h4 className="font-bold text-yellow-900 mb-2">Biggest Opportunity</h4>
-                  <p className="text-gray-900 text-sm">{result.competitivePositioning.opportunity}</p>
-                </div>
-              </div>
-            </div>
+                )}
 
-            {/* Growth Trajectory */}
-            <div className="card">
-              <h3 className="text-xl font-bold mb-4 text-gray-900">Growth Trajectory & Milestones</h3>
-              <div className="space-y-4">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <h4 className="font-bold text-blue-900 mb-1">Current Phase</h4>
-                    <p className="text-gray-900 font-semibold">{result.growthTrajectory.currentPhase}</p>
-                  </div>
-                  <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                    <h4 className="font-bold text-green-900 mb-1">Next Milestone</h4>
-                    <p className="text-gray-900 font-semibold">{result.growthTrajectory.nextMilestone}</p>
-                  </div>
-                </div>
-                <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200">
-                  <h4 className="font-bold text-indigo-900 mb-2">Timeline & Expectations</h4>
-                  <p className="text-gray-900 text-sm">{result.growthTrajectory.timeline}</p>
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900 mb-2">Key Actions to Accelerate Growth</h4>
-                  <div className="space-y-2">
-                    {result.growthTrajectory.keyActions.map((action, idx) => (
-                      <div key={idx} className="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-200">
-                        <svg className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                        <span className="text-gray-900 text-sm">{action}</span>
+                {/* Monetization Tab */}
+                {activeTab === 'monetization' && (
+                  <div className="space-y-6">
+                    <div className="p-6 bg-emerald-50 rounded-xl border border-emerald-200">
+                      <h3 className="text-lg font-bold mb-3 text-gray-900">Readiness Assessment</h3>
+                      <p className="text-gray-900">{result.monetizationRoadmap.readiness}</p>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold mb-4 text-gray-900">Monetization Opportunities</h3>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        {result.monetizationRoadmap.opportunities.map((opp, idx) => (
+                          <div key={idx} className="p-4 bg-white rounded-lg border border-gray-200 hover:border-emerald-300 transition-colors">
+                            <div className="flex items-start gap-3">
+                              <div className="flex-shrink-0 w-6 h-6 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center text-xs font-bold">
+                                {idx + 1}
+                              </div>
+                              <p className="text-gray-900 text-sm">{opp}</p>
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold mb-4 text-gray-900">Next Steps to Monetize</h3>
+                      <div className="space-y-3">
+                        {result.monetizationRoadmap.nextSteps.map((step, idx) => (
+                          <div key={idx} className="flex items-start gap-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                            <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
+                            </svg>
+                            <p className="text-gray-900 text-sm">{step}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </div>
+                )}
 
-            {/* Content Gaps */}
-            <div className="card">
-              <h3 className="text-xl font-bold mb-4 text-gray-900">Content Gaps & Opportunities</h3>
-              <div className="space-y-4">
-                <div>
-                  <h4 className="font-bold text-gray-900 mb-2">Missing Formats to Test</h4>
-                  <div className="space-y-2">
-                    {result.contentGaps.missingFormats.map((format, idx) => (
-                      <div key={idx} className="flex items-start gap-3 p-3 bg-orange-50 rounded-lg border border-orange-200">
-                        <span className="text-orange-600 font-bold flex-shrink-0 mt-0.5">+</span>
-                        <span className="text-gray-900 text-sm">{format}</span>
+                {/* Algorithm Tab */}
+                {activeTab === 'algorithm' && (
+                  <div className="space-y-6">
+                    <div className="p-6 bg-violet-50 rounded-xl border border-violet-200">
+                      <h3 className="text-lg font-bold mb-3 text-gray-900">Platform Strategy</h3>
+                      <p className="text-gray-900 text-sm">{result.algorithmOptimization.platformStrategy}</p>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold mb-4 text-gray-900">Timing Insights</h3>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        {result.algorithmOptimization.timingInsights.map((insight, idx) => (
+                          <div key={idx} className="flex items-start gap-3 p-4 bg-white rounded-lg border border-gray-200">
+                            <span className="text-violet-600 font-bold flex-shrink-0 mt-0.5">⏰</span>
+                            <p className="text-gray-900 text-sm">{insight}</p>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900 mb-2">Underutilized Opportunities</h4>
-                  <div className="space-y-2">
-                    {result.contentGaps.underutilizedOpportunities.map((opp, idx) => (
-                      <div key={idx} className="flex items-start gap-3 p-3 bg-teal-50 rounded-lg border border-teal-200">
-                        <span className="text-teal-600 font-bold flex-shrink-0 mt-0.5">💡</span>
-                        <span className="text-gray-900 text-sm">{opp}</span>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold mb-4 text-gray-900">Engagement Boosters</h3>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        {result.algorithmOptimization.engagementBoosters.map((booster, idx) => (
+                          <div key={idx} className="flex items-start gap-3 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                            <span className="text-yellow-600 font-bold flex-shrink-0 mt-0.5">⚡</span>
+                            <p className="text-gray-900 text-sm">{booster}</p>
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900 mb-2">What Your Audience Needs</h4>
-                  <div className="space-y-2">
-                    {result.contentGaps.audienceNeeds.map((need, idx) => (
-                      <div key={idx} className="flex items-start gap-3 p-3 bg-pink-50 rounded-lg border border-pink-200">
-                        <span className="text-pink-600 font-bold flex-shrink-0 mt-0.5">🎯</span>
-                        <span className="text-gray-900 text-sm">{need}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
+                )}
 
-            {/* Monetization Roadmap */}
-            <div className="card">
-              <h3 className="text-xl font-bold mb-4 text-gray-900">Monetization Roadmap</h3>
-              <div className="space-y-4">
-                <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
-                  <h4 className="font-bold text-emerald-900 mb-2">Readiness Assessment</h4>
-                  <p className="text-gray-900 text-sm">{result.monetizationRoadmap.readiness}</p>
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900 mb-2">Monetization Opportunities</h4>
-                  <div className="space-y-2">
-                    {result.monetizationRoadmap.opportunities.map((opp, idx) => (
-                      <div key={idx} className="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-200">
-                        <span className="flex-shrink-0 w-6 h-6 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center text-xs font-bold">
-                          {idx + 1}
-                        </span>
-                        <span className="text-gray-900 text-sm">{opp}</span>
+                {/* Audience Tab */}
+                {activeTab === 'audience' && (
+                  <div className="space-y-6">
+                    <div className="p-6 bg-rose-50 rounded-xl border border-rose-200">
+                      <h3 className="text-lg font-bold mb-3 text-gray-900">Viewer Motivation</h3>
+                      <p className="text-gray-900 text-sm">{result.audiencePsychology.viewerMotivation}</p>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold mb-4 text-gray-900">Content Triggers That Work</h3>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        {result.audiencePsychology.contentTriggers.map((trigger, idx) => (
+                          <div key={idx} className="flex items-start gap-3 p-4 bg-white rounded-lg border border-gray-200">
+                            <span className="text-rose-600 font-bold flex-shrink-0 mt-0.5">🧠</span>
+                            <p className="text-gray-900 text-sm">{trigger}</p>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900 mb-2">Next Steps to Monetize</h4>
-                  <div className="space-y-2">
-                    {result.monetizationRoadmap.nextSteps.map((step, idx) => (
-                      <div key={idx} className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                        <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
-                        </svg>
-                        <span className="text-gray-900 text-sm">{step}</span>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold mb-4 text-gray-900">Retention Factors</h3>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        {result.audiencePsychology.retentionFactors.map((factor, idx) => (
+                          <div key={idx} className="flex items-start gap-3 p-4 bg-indigo-50 rounded-lg border border-indigo-200">
+                            <span className="text-indigo-600 font-bold flex-shrink-0 mt-0.5">📊</span>
+                            <p className="text-gray-900 text-sm">{factor}</p>
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    </div>
                   </div>
-                </div>
-              </div>
-            </div>
+                )}
 
-            {/* Algorithm Optimization */}
-            <div className="card">
-              <h3 className="text-xl font-bold mb-4 text-gray-900">Algorithm Optimization Strategy</h3>
-              <div className="space-y-4">
-                <div className="p-4 bg-violet-50 rounded-lg border border-violet-200">
-                  <h4 className="font-bold text-violet-900 mb-2">Platform Strategy</h4>
-                  <p className="text-gray-900 text-sm">{result.algorithmOptimization.platformStrategy}</p>
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900 mb-2">Timing Insights</h4>
-                  <div className="space-y-2">
-                    {result.algorithmOptimization.timingInsights.map((insight, idx) => (
-                      <div key={idx} className="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-200">
-                        <span className="text-violet-600 font-bold flex-shrink-0 mt-0.5">⏰</span>
-                        <span className="text-gray-900 text-sm">{insight}</span>
+                {/* Calendar Tab */}
+                {activeTab === 'calendar' && (
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className="text-lg font-bold mb-4 text-gray-900">Recommended Weekly Structure</h3>
+                      <div className="space-y-2">
+                        {result.contentCalendar.weeklyStructure.map((day, idx) => (
+                          <div key={idx} className="flex items-start gap-4 p-4 bg-white rounded-lg border border-gray-200 hover:border-indigo-300 transition-colors">
+                            <div className="flex-shrink-0 w-8 h-8 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center font-bold">
+                              {idx + 1}
+                            </div>
+                            <p className="text-gray-900 flex-1">{day}</p>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900 mb-2">Engagement Boosters</h4>
-                  <div className="space-y-2">
-                    {result.algorithmOptimization.engagementBoosters.map((booster, idx) => (
-                      <div key={idx} className="flex items-start gap-3 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                        <span className="text-yellow-600 font-bold flex-shrink-0 mt-0.5">⚡</span>
-                        <span className="text-gray-900 text-sm">{booster}</span>
+                    </div>
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div className="p-6 bg-cyan-50 rounded-xl border border-cyan-200">
+                        <h3 className="text-lg font-bold mb-3 text-gray-900">Format Rotation Strategy</h3>
+                        <p className="text-gray-900 text-sm">{result.contentCalendar.formatRotation}</p>
                       </div>
-                    ))}
+                      <div className="p-6 bg-amber-50 rounded-xl border border-amber-200">
+                        <h3 className="text-lg font-bold mb-3 text-gray-900">Batch Creation Strategy</h3>
+                        <p className="text-gray-900 text-sm">{result.contentCalendar.batchStrategy}</p>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            </div>
+                )}
 
-            {/* Audience Psychology */}
-            <div className="card">
-              <h3 className="text-xl font-bold mb-4 text-gray-900">Audience Psychology & Triggers</h3>
-              <div className="space-y-4">
-                <div className="p-4 bg-rose-50 rounded-lg border border-rose-200">
-                  <h4 className="font-bold text-rose-900 mb-2">Viewer Motivation</h4>
-                  <p className="text-gray-900 text-sm">{result.audiencePsychology.viewerMotivation}</p>
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900 mb-2">Content Triggers That Work</h4>
-                  <div className="space-y-2">
-                    {result.audiencePsychology.contentTriggers.map((trigger, idx) => (
-                      <div key={idx} className="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-200">
-                        <span className="text-rose-600 font-bold flex-shrink-0 mt-0.5">🧠</span>
-                        <span className="text-gray-900 text-sm">{trigger}</span>
+                {/* Performance Tab */}
+                {activeTab === 'performance' && (
+                  <div className="space-y-6">
+                    <div className="p-6 bg-slate-50 rounded-xl border border-slate-200">
+                      <h3 className="text-lg font-bold mb-3 text-gray-900">Your Current Level</h3>
+                      <p className="text-gray-900 text-sm">{result.performanceBenchmarks.currentLevel}</p>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold mb-4 text-gray-900">Industry Standards</h3>
+                      <div className="grid md:grid-cols-2 gap-4">
+                        {result.performanceBenchmarks.industryStandards.map((standard, idx) => (
+                          <div key={idx} className="p-4 bg-white rounded-lg border border-gray-200">
+                            <p className="text-gray-900 text-sm">{standard}</p>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900 mb-2">Retention Factors</h4>
-                  <div className="space-y-2">
-                    {result.audiencePsychology.retentionFactors.map((factor, idx) => (
-                      <div key={idx} className="flex items-start gap-3 p-3 bg-indigo-50 rounded-lg border border-indigo-200">
-                        <span className="text-indigo-600 font-bold flex-shrink-0 mt-0.5">📊</span>
-                        <span className="text-gray-900 text-sm">{factor}</span>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold mb-4 text-gray-900">Improvement Targets (Next 30 Days)</h3>
+                      <div className="space-y-3">
+                        {result.performanceBenchmarks.improvementTargets.map((target, idx) => (
+                          <div key={idx} className="flex items-start gap-4 p-4 bg-green-50 rounded-lg border border-green-200">
+                            <svg className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />
+                            </svg>
+                            <p className="text-gray-900 text-sm">{target}</p>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Content Calendar */}
-            <div className="card">
-              <h3 className="text-xl font-bold mb-4 text-gray-900">Content Calendar & Batch Strategy</h3>
-              <div className="space-y-4">
-                <div>
-                  <h4 className="font-bold text-gray-900 mb-2">Recommended Weekly Structure</h4>
-                  <div className="space-y-2">
-                    {result.contentCalendar.weeklyStructure.map((day, idx) => (
-                      <div key={idx} className="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-200">
-                        <span className="flex-shrink-0 w-6 h-6 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center text-xs font-bold">
-                          {idx + 1}
-                        </span>
-                        <span className="text-gray-900 text-sm">{day}</span>
+                    </div>
+                    <div className="p-6 bg-red-50 rounded-xl border border-red-200">
+                      <h3 className="text-lg font-bold mb-3 text-gray-900">Strategic Pivots</h3>
+                      <p className="text-gray-900 text-sm mb-4">{result.strategicPivots.whenToPivot}</p>
+                      <div className="space-y-2">
+                        <h4 className="font-semibold text-gray-900 text-sm mb-2">Pivot Signals:</h4>
+                        {result.strategicPivots.pivotSignals.map((signal, idx) => (
+                          <div key={idx} className="flex items-start gap-2 text-sm text-gray-700">
+                            <span className="text-red-600 mt-0.5">⚠️</span>
+                            <span>{signal}</span>
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    </div>
                   </div>
-                </div>
-                <div className="p-4 bg-cyan-50 rounded-lg border border-cyan-200">
-                  <h4 className="font-bold text-cyan-900 mb-2">Format Rotation Strategy</h4>
-                  <p className="text-gray-900 text-sm">{result.contentCalendar.formatRotation}</p>
-                </div>
-                <div className="p-4 bg-amber-50 rounded-lg border border-amber-200">
-                  <h4 className="font-bold text-amber-900 mb-2">Batch Creation Strategy</h4>
-                  <p className="text-gray-900 text-sm">{result.contentCalendar.batchStrategy}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Performance Benchmarks */}
-            <div className="card">
-              <h3 className="text-xl font-bold mb-4 text-gray-900">Performance Benchmarks & Targets</h3>
-              <div className="space-y-4">
-                <div className="p-4 bg-slate-50 rounded-lg border border-slate-200">
-                  <h4 className="font-bold text-slate-900 mb-2">Your Current Level</h4>
-                  <p className="text-gray-900 text-sm">{result.performanceBenchmarks.currentLevel}</p>
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900 mb-2">Industry Standards</h4>
-                  <div className="space-y-2">
-                    {result.performanceBenchmarks.industryStandards.map((standard, idx) => (
-                      <div key={idx} className="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-200">
-                        <span className="text-slate-600 font-bold flex-shrink-0 mt-0.5">📈</span>
-                        <span className="text-gray-900 text-sm">{standard}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900 mb-2">Improvement Targets (Next 30 Days)</h4>
-                  <div className="space-y-2">
-                    {result.performanceBenchmarks.improvementTargets.map((target, idx) => (
-                      <div key={idx} className="flex items-start gap-3 p-3 bg-green-50 rounded-lg border border-green-200">
-                        <svg className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />
-                        </svg>
-                        <span className="text-gray-900 text-sm">{target}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Strategic Pivots */}
-            <div className="card">
-              <h3 className="text-xl font-bold mb-4 text-gray-900">Strategic Pivots & When to Change Direction</h3>
-              <div className="space-y-4">
-                <div className="p-4 bg-red-50 rounded-lg border border-red-200">
-                  <h4 className="font-bold text-red-900 mb-2">When to Pivot</h4>
-                  <p className="text-gray-900 text-sm">{result.strategicPivots.whenToPivot}</p>
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900 mb-2">Pivot Warning Signals</h4>
-                  <div className="space-y-2">
-                    {result.strategicPivots.pivotSignals.map((signal, idx) => (
-                      <div key={idx} className="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-200">
-                        <span className="text-red-600 font-bold flex-shrink-0 mt-0.5">⚠️</span>
-                        <span className="text-gray-900 text-sm">{signal}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900 mb-2">Pivot Options to Consider</h4>
-                  <div className="space-y-2">
-                    {result.strategicPivots.pivotOptions.map((option, idx) => (
-                      <div key={idx} className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                        <span className="text-blue-600 font-bold flex-shrink-0 mt-0.5">🔄</span>
-                        <span className="text-gray-900 text-sm">{option}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                )}
               </div>
             </div>
           </div>

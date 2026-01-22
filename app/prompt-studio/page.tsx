@@ -133,7 +133,27 @@ export default function PromptStudioPage() {
         'instagram-reels': 'vertical 9:16 format, Instagram-optimized',
       }
 
-      const mainPrompt = `Create a ${formData.style} style video about "${formData.topic}" in ${formData.tone} tone. ${styleMap[formData.style]}. ${toneMap[formData.tone]}. ${durationMap[formData.duration]}. ${platformMap[formData.platform]}. High quality, professional production.`
+      // Generate more specific, detailed prompts based on topic
+      const topicLower = formData.topic.toLowerCase()
+      const isHowTo = topicLower.includes('how to') || topicLower.includes('how') || topicLower.includes('tutorial')
+      const isTransformation = topicLower.includes('before') || topicLower.includes('after') || topicLower.includes('transformation') || topicLower.includes('change')
+      const isList = topicLower.includes('top') || topicLower.includes('best') || topicLower.includes('5') || topicLower.includes('10')
+      const isComparison = topicLower.includes('vs') || topicLower.includes('versus') || topicLower.includes('compare')
+      
+      let specificContext = ''
+      if (isHowTo) {
+        specificContext = `Show step-by-step process clearly. Each step should be visually distinct. Use close-ups for important actions. Include visual indicators (arrows, highlights) for key moments.`
+      } else if (isTransformation) {
+        specificContext = `Show clear before and after states. Use side-by-side comparison or sequential reveal. Emphasize the dramatic difference. Use consistent lighting and framing for comparison shots.`
+      } else if (isList) {
+        specificContext = `Display each item clearly with visual separation. Use numbered indicators or distinct visual breaks. Each item should have its own moment. Use consistent visual style for all items.`
+      } else if (isComparison) {
+        specificContext = `Show both options side-by-side or sequentially. Use visual contrast to highlight differences. Include clear labels for each option. Use split-screen or alternating shots.`
+      } else {
+        specificContext = `Focus on the key value or insight. Use visual metaphors or demonstrations. Show real-world application or examples. Make abstract concepts concrete and visual.`
+      }
+
+      const mainPrompt = `Create a ${formData.style} style video about "${formData.topic}" in ${formData.tone} tone. ${styleMap[formData.style]}. ${toneMap[formData.tone]}. ${durationMap[formData.duration]}. ${platformMap[formData.platform]}. ${specificContext} High quality, professional production. 4K resolution, cinematic color grading, smooth camera movements, professional lighting setup.`
 
       const scenes = generateScenes(formData)
       const hook = generateHook(formData)
@@ -147,9 +167,22 @@ export default function PromptStudioPage() {
   const generateScenes = (data: typeof formData): string[] => {
     const sceneCount = data.duration === '10s' ? 2 : data.duration === '20s' ? 3 : 4
     const topic = data.topic.toLowerCase()
+    const isHowTo = topic.includes('how to') || topic.includes('how') || topic.includes('tutorial')
+    const isTransformation = topic.includes('before') || topic.includes('after') || topic.includes('transformation')
+    const isList = topic.includes('top') || topic.includes('best') || topic.includes('5') || topic.includes('10')
     
     const sceneTemplates = {
-      cinematic: [
+      cinematic: isHowTo ? [
+        `Scene 1: Wide establishing shot showing the setup or starting point. ${data.tone === 'dramatic' ? 'Dramatic lighting highlighting the challenge' : data.tone === 'energetic' ? 'Energetic setup with vibrant colors' : 'Clean, professional setup with soft lighting'}. Show all tools, materials, or context needed for "${data.topic}". Camera slowly pushes in to create anticipation.`,
+        `Scene 2: Medium shot of the first key step in action. ${data.tone === 'dramatic' ? 'Intense focus on the critical action with shallow depth of field' : data.tone === 'energetic' ? 'Fast-paced action with dynamic camera movement' : 'Clear, steady shot showing the process'}. Hands or subject in frame performing the action. Use slow-motion for key moments if energetic.`,
+        `Scene 3: Close-up of the most important detail or result. ${data.tone === 'dramatic' ? 'Extreme close-up with dramatic shadows emphasizing the transformation' : data.tone === 'energetic' ? 'Dynamic close-up showing the result with motion blur effects' : 'Clean, well-lit close-up showing the outcome'}. This is the "aha" moment - make it visually striking.`,
+        `Scene 4: Final reveal showing the completed result or transformation. ${data.tone === 'dramatic' ? 'Powerful conclusion with strong visual impact, before/after comparison' : data.tone === 'energetic' ? 'Energetic finale with vibrant colors celebrating the result' : 'Peaceful resolution showing the final outcome'}. Pull back to show the full context.`,
+      ] : isTransformation ? [
+        `Scene 1: "Before" state - wide shot showing the initial situation. ${data.tone === 'dramatic' ? 'Dramatic lighting emphasizing the problem or starting point' : data.tone === 'energetic' ? 'Energetic but showing the challenge' : 'Clear, honest representation of the starting point'}. Use consistent framing that will be repeated in the "after" shot.`,
+        `Scene 2: Transition or process shot. ${data.tone === 'dramatic' ? 'Intense focus on the moment of change with shallow depth of field' : data.tone === 'energetic' ? 'Fast-paced transformation with dynamic movement' : 'Smooth transition showing the process'}. Show the work, effort, or method being applied.`,
+        `Scene 3: "After" state reveal - same framing as Scene 1. ${data.tone === 'dramatic' ? 'Powerful contrast with dramatic lighting showing the transformation' : data.tone === 'energetic' ? 'Energetic reveal with vibrant colors celebrating the result' : 'Clear, well-lit shot showing the outcome'}. The transformation should be immediately obvious.`,
+        `Scene 4: Side-by-side comparison or final celebration. ${data.tone === 'dramatic' ? 'Powerful conclusion with strong visual impact showing the full transformation' : data.tone === 'energetic' ? 'Energetic finale with vibrant colors' : 'Peaceful resolution showing the complete change'}.`,
+      ] : [
         `Scene 1: Wide establishing shot with ${data.tone === 'dramatic' ? 'dramatic lighting and high contrast' : data.tone === 'energetic' ? 'vibrant colors and dynamic composition' : 'soft, natural lighting'}. Show the main subject or environment related to "${data.topic}" with professional camera movement.`,
         `Scene 2: Medium shot focusing on key action or transformation. ${data.tone === 'dramatic' ? 'Intense focus with shallow depth of field' : data.tone === 'energetic' ? 'Fast-paced movement with multiple angles' : 'Smooth, steady composition'}.`,
         `Scene 3: Close-up detail shot highlighting the most important element. ${data.tone === 'dramatic' ? 'Extreme close-up with dramatic shadows' : data.tone === 'energetic' ? 'Dynamic close-up with motion blur effects' : 'Clean, well-lit close-up'}.`,

@@ -18,11 +18,23 @@ function getServiceRoleClient() {
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await request.json()
+    let body
+    try {
+      body = await request.json()
+    } catch (parseError) {
+      console.error('❌ [CREDITS] Failed to parse request body:', parseError)
+      return NextResponse.json(
+        { error: 'Invalid request body', credits: 0 },
+        { status: 400 }
+      )
+    }
+
+    const { userId } = body
 
     if (!userId) {
+      console.warn('⚠️ [CREDITS] Missing userId in request')
       return NextResponse.json(
-        { error: 'User ID is required' },
+        { error: 'User ID is required', credits: 0 },
         { status: 400 }
       )
     }

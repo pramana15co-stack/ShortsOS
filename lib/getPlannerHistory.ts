@@ -35,7 +35,10 @@ export async function getLastPlannerResult(
 
     if (error) {
       // Log error but don't fail - table might not exist yet
-      console.warn('⚠️ [PLANNER] Error fetching planner results:', error.message)
+      // Only log if it's not a "table doesn't exist" error (which is expected)
+      if (!error.message?.includes('does not exist') && !error.message?.includes('schema cache')) {
+        console.warn('⚠️ [PLANNER] Error fetching planner results:', error.message)
+      }
       return { success: true, data: null }
     }
 
