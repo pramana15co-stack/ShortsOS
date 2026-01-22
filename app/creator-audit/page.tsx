@@ -14,11 +14,58 @@ type Goal = 'growth' | 'engagement' | 'monetization' | 'consistency'
 
 interface AuditResult {
   creatorStage: string
+  stageAnalysis: string
   whatToPostNext: string[]
   bestFormats: string[]
   postingRhythm: string
   whatNotToDo: string[]
   personalizedGuidance: string
+  competitivePositioning: {
+    nicheSaturation: string
+    differentiation: string[]
+    opportunity: string
+  }
+  growthTrajectory: {
+    currentPhase: string
+    nextMilestone: string
+    timeline: string
+    keyActions: string[]
+  }
+  contentGaps: {
+    missingFormats: string[]
+    underutilizedOpportunities: string[]
+    audienceNeeds: string[]
+  }
+  monetizationRoadmap: {
+    readiness: string
+    opportunities: string[]
+    nextSteps: string[]
+  }
+  algorithmOptimization: {
+    platformStrategy: string
+    timingInsights: string[]
+    engagementBoosters: string[]
+  }
+  audiencePsychology: {
+    viewerMotivation: string
+    contentTriggers: string[]
+    retentionFactors: string[]
+  }
+  contentCalendar: {
+    weeklyStructure: string[]
+    formatRotation: string
+    batchStrategy: string
+  }
+  performanceBenchmarks: {
+    currentLevel: string
+    industryStandards: string[]
+    improvementTargets: string[]
+  }
+  strategicPivots: {
+    whenToPivot: string
+    pivotSignals: string[]
+    pivotOptions: string[]
+  }
 }
 
 export default function CreatorAuditPage() {
@@ -124,69 +171,308 @@ export default function CreatorAuditPage() {
   const generateAudit = (data: typeof formData): AuditResult => {
     const isYouTube = data.platform === 'youtube'
     const isFrequent = data.frequency === 'daily' || data.frequency === '3-4-per-week'
+    const isDaily = data.frequency === 'daily'
     
-    // Determine creator stage
-    let creatorStage = 'Early Stage'
+    // Determine creator stage with detailed analysis
+    let creatorStage = 'Early Stage (0-1K followers/subscribers)'
+    let stageAnalysis = 'You\'re building foundational habits and discovering what resonates. Focus on consistency over perfection.'
+    
     if (isFrequent && data.goal !== 'consistency') {
-      creatorStage = 'Growing'
+      creatorStage = 'Growing Stage (1K-10K followers/subscribers)'
+      stageAnalysis = 'You\'ve found your voice and audience. Now optimize for growth through format consistency and value delivery.'
     } else if (isFrequent && data.goal === 'monetization') {
-      creatorStage = 'Established'
+      creatorStage = 'Established Stage (10K+ followers/subscribers)'
+      stageAnalysis = 'You have a loyal audience. Focus on deepening engagement, building authority, and creating monetization pathways.'
     }
 
-    // What to post next
+    // Premium: Competitive Positioning
+    const competitivePositioning = {
+      nicheSaturation: isYouTube 
+        ? 'YouTube Shorts in your niche is moderately saturated, but there\'s still room for creators who differentiate through unique angles, personal stories, or deeper expertise. The key is finding your "unfair advantage"—what can you offer that others can\'t?'
+        : 'Instagram Reels in your niche has high competition, but the algorithm rewards consistency and authentic engagement over follower count. Focus on building a community, not just views.',
+      differentiation: [
+        isYouTube ? 'Lead with your unique perspective or methodology—what\'s your signature approach?' : 'Develop a recognizable visual style or editing pattern that makes your content instantly identifiable',
+        'Share personal failures and learnings—vulnerability builds deeper connection than polished perfection',
+        'Create content series that build on each other, encouraging viewers to return for the next installment',
+        'Engage directly with comments and create content based on audience questions—this builds community faster than broadcasting alone'
+      ],
+      opportunity: isYouTube
+        ? 'The biggest opportunity: Most creators in your niche focus on surface-level tips. You can stand out by diving deeper into the "why" behind strategies, showing real results over time, or teaching the meta-skills (like how to think about content creation itself).'
+        : 'The biggest opportunity: Most creators post sporadically. By maintaining consistent posting with a clear format rotation, you can capture audience attention and build anticipation for your next post.'
+    }
+
+    // Premium: Growth Trajectory
+    const growthTrajectory = {
+      currentPhase: isDaily 
+        ? 'Acceleration Phase' 
+        : isFrequent 
+        ? 'Momentum Building Phase' 
+        : 'Foundation Building Phase',
+      nextMilestone: isDaily
+        ? '10K-50K followers/subscribers (3-6 months with current frequency)'
+        : isFrequent
+        ? '1K-10K followers/subscribers (2-4 months with current frequency)'
+        : 'First 1K followers/subscribers (4-8 months with current frequency)',
+      timeline: isDaily
+        ? 'With daily posting and format optimization, you can expect 2-3x growth in the next 90 days if you maintain consistency and focus on retention metrics.'
+        : isFrequent
+        ? 'With 3-4 posts per week, you\'re building sustainable momentum. Expect steady growth of 20-30% month-over-month if you maintain quality and engagement.'
+        : 'With weekly posting, growth will be slower but more sustainable. Focus on making each piece of content count—high-quality weekly content often outperforms mediocre daily content.',
+      keyActions: [
+        isDaily ? 'Track retention rates on your last 10 videos—identify the 3-second, 15-second, and 30-second drop-off points' : 'Increase posting frequency gradually—add one extra post per week every month until you reach your optimal cadence',
+        'Double down on your top-performing format—if problem-solution works, create 5-7 variations before trying something new',
+        'Engage with 10 comments per video within the first hour—this signals to the algorithm that your content drives engagement',
+        'Create a content series (3-5 parts) to build anticipation and encourage subscriptions/follows'
+      ]
+    }
+
+    // Premium: Content Gaps
+    const contentGaps = {
+      missingFormats: isYouTube ? [
+        'Myth-Busting format: Address common misconceptions in your niche—this drives high engagement and shares',
+        'Case Study format: Deep dive into a real example with before/after data—builds authority and trust',
+        'Comparison format: "X vs Y" content helps viewers make decisions and drives comments'
+      ] : [
+        'Educational Thread format: Break down complex topics into digestible carousel posts',
+        'Transformation Timeline format: Show progress over time with multiple posts',
+        'Q&A format: Answer audience questions in video format—high engagement driver'
+      ],
+      underutilizedOpportunities: [
+        'Collaboration content: Partner with creators in adjacent niches to cross-pollinate audiences',
+        'Trend-jacking with your angle: Take trending formats and apply your unique perspective',
+        'Behind-the-scenes of your process: Show how you create content, not just the final result',
+        'Community highlights: Feature your audience\'s content or questions—builds loyalty'
+      ],
+      audienceNeeds: [
+        'Your audience needs more "how-to" content with step-by-step breakdowns',
+        'They want to see real results and transformations, not just theory',
+        'They\'re asking for deeper dives into topics you\'ve only covered at surface level',
+        'They want to understand the "why" behind strategies, not just the "what"'
+      ]
+    }
+
+    // Premium: Monetization Roadmap
+    const monetizationRoadmap = {
+      readiness: data.goal === 'monetization' && isFrequent
+        ? 'Ready to monetize: You have consistent content and clear value proposition. Focus on building trust before introducing offers.'
+        : data.goal === 'monetization' && !isFrequent
+        ? 'Building foundation: Increase posting frequency to 3-4x per week to build audience trust before monetizing.'
+        : 'Not yet ready: Focus on growth and engagement first. Monetization works best with 5K+ engaged followers.',
+      opportunities: [
+        'Affiliate partnerships: Recommend tools/products you actually use—start with 1-2 partnerships to maintain authenticity',
+        'Digital products: Create a simple guide or template based on your most-requested content',
+        'Coaching/Consulting: Offer 1-on-1 sessions for your most engaged audience members',
+        'Sponsored content: Once you hit 10K, brands will reach out—be selective and only work with brands that align with your values'
+      ],
+      nextSteps: [
+        'Create 10-15 pieces of educational content before introducing any offers—this builds authority',
+        'Start tracking which content drives the most engagement—these topics are your monetization opportunities',
+        'Build an email list or community (Discord/Telegram) to nurture relationships outside the platform',
+        'Test a low-cost offer ($5-20) to gauge audience willingness to pay before creating premium products'
+      ]
+    }
+
+    // Premium: Algorithm Optimization
+    const algorithmOptimization = {
+      platformStrategy: isYouTube
+        ? 'YouTube Shorts algorithm prioritizes: (1) Watch time and completion rate, (2) Engagement velocity (likes/comments in first hour), (3) Session duration (keeping viewers on platform). Focus on hook quality (first 3 seconds) and retention (first 15 seconds) above all else.'
+        : 'Instagram Reels algorithm prioritizes: (1) Engagement rate (likes, comments, shares), (2) Completion rate, (3) Saves and shares. Use trending audio, post at peak times (6-9 PM), and engage with comments immediately after posting.',
+      timingInsights: [
+        isYouTube ? 'Post between 2-4 PM or 8-10 PM in your audience\'s timezone for maximum initial engagement' : 'Post between 6-9 PM for highest reach, or 11 AM-1 PM for consistent engagement',
+        'Avoid posting on weekends if your audience is primarily working professionals',
+        'Post consistently at the same times to train your audience to expect your content',
+        'Use analytics to identify your top-performing days and double down on those'
+      ],
+      engagementBoosters: [
+        'Ask a question in the first 5 seconds—this primes viewers to comment',
+        'Use captions/text overlays—many viewers watch without sound',
+        'End with a clear CTA: "Save this for later" or "Follow for more [topic]"',
+        'Reply to every comment in the first hour—this signals high engagement to the algorithm',
+        'Create content that encourages shares: "Tag someone who needs this" or "Share if you agree"'
+      ]
+    }
+
+    // Premium: Audience Psychology
+    const audiencePsychology = {
+      viewerMotivation: data.goal === 'growth'
+        ? 'Your viewers are seeking quick wins and actionable insights. They\'re in "learning mode" and want to consume content efficiently. Structure your content to deliver value immediately.'
+        : data.goal === 'engagement'
+        ? 'Your viewers want to feel part of a community. They\'re seeking connection and validation. Create content that makes them feel seen and understood.'
+        : data.goal === 'monetization'
+        ? 'Your viewers are evaluating your expertise and trustworthiness. They want proof that you can deliver results. Showcase case studies, transformations, and real outcomes.'
+        : 'Your viewers are building habits and routines. They appreciate consistency and reliability. Focus on being dependable rather than flashy.',
+      contentTriggers: [
+        'Curiosity gap: "The one mistake 90% of creators make..." creates intrigue',
+        'Social proof: "How I got 10K followers in 30 days" triggers aspiration',
+        'Problem identification: "If you\'re struggling with X, this is for you" creates relevance',
+        'Transformation promise: "From X to Y in Z time" shows clear value',
+        'Urgency: "Before you post your next video, watch this" creates action'
+      ],
+      retentionFactors: [
+        'Visual variety: Change shots every 2-3 seconds to maintain attention',
+        'Pacing: Match energy to content—high-energy hooks, calmer explanations, energetic CTAs',
+        'Value density: Pack multiple insights into each video, not just one main point',
+        'Emotional connection: Share personal stories or failures—vulnerability builds retention',
+        'Progressive disclosure: Reveal information in layers, not all at once'
+      ]
+    }
+
+    // Premium: Content Calendar
+    const contentCalendar = {
+      weeklyStructure: isDaily ? [
+        'Monday: Problem-Solution format (educational, high retention)',
+        'Tuesday: Quick Tip format (fast value, shareable)',
+        'Wednesday: Behind-the-Scenes (builds connection)',
+        'Thursday: Case Study or Transformation (builds authority)',
+        'Friday: Trend-jack or Fun format (maintains engagement)',
+        'Saturday: Community highlight or Q&A (builds loyalty)',
+        'Sunday: Rest or batch-create for next week'
+      ] : isFrequent ? [
+        'Monday: Educational format (problem-solution or tutorial)',
+        'Wednesday: Engagement format (Q&A, behind-the-scenes, or community highlight)',
+        'Friday: Value format (transformation, case study, or quick tip)',
+        'Weekend: Batch create and plan for next week'
+      ] : [
+        'Choose one day per week (e.g., Tuesday) and make it your "content day"',
+        'Create 2-3 pieces of content in one session to build a library',
+        'Schedule posts for optimal times based on your audience analytics'
+      ],
+      formatRotation: 'Stick with 2-3 formats for 4-6 weeks to establish patterns. Once you see consistent performance, introduce one new format per month. Never abandon a format that\'s working—double down instead.',
+      batchStrategy: 'Batch create content in 2-3 hour sessions. Plan 5-7 videos at once, film them in one session, then edit and schedule. This reduces decision fatigue and improves consistency.'
+    }
+
+    // Premium: Performance Benchmarks
+    const performanceBenchmarks = {
+      currentLevel: isDaily
+        ? 'High-frequency creator: You\'re posting daily, which gives you more data points to optimize. Focus on retention rates (aim for 60%+ at 15 seconds) and engagement rates (aim for 5%+ likes-to-views).'
+        : isFrequent
+        ? 'Moderate-frequency creator: You\'re building sustainable momentum. Focus on quality over quantity—aim for 70%+ retention at 15 seconds and 6%+ engagement rates.'
+        : 'Low-frequency creator: Each piece of content must count. Aim for 75%+ retention at 15 seconds and 8%+ engagement rates. Quality trumps quantity at this stage.',
+      industryStandards: [
+        'Retention: Top creators maintain 60-70% retention at 15 seconds, 40-50% at 30 seconds',
+        'Engagement: 5-8% engagement rate (likes + comments / views) is strong for most niches',
+        'Completion: 30-40% completion rate is excellent for 60-second content',
+        'Growth: 10-20% month-over-month follower growth is healthy for growing creators'
+      ],
+      improvementTargets: [
+        'Increase retention at 3 seconds by 10%—this is your hook quality metric',
+        'Improve engagement rate by 2%—focus on asking questions and creating shareable moments',
+        'Reduce drop-off between 15-30 seconds—this is where most creators lose viewers',
+        'Increase average watch time by 5 seconds—small improvements compound over time'
+      ]
+    }
+
+    // Premium: Strategic Pivots
+    const strategicPivots = {
+      whenToPivot: 'Pivot when: (1) You\'ve posted 20+ videos in a format with consistently low performance (<40% retention at 15 seconds), (2) Your audience explicitly asks for different content, (3) A new trend emerges that aligns with your niche and you can add unique value, (4) You\'ve hit a growth plateau for 60+ days despite consistent posting.',
+      pivotSignals: [
+        'Declining retention rates across multiple videos (not just one-off)',
+        'Decreasing engagement rates despite maintaining quality',
+        'Audience comments requesting different content types',
+        'New competitors entering your niche with better angles',
+        'Platform algorithm changes that favor different formats'
+      ],
+      pivotOptions: [
+        'Format pivot: Switch from educational to entertainment, or vice versa',
+        'Angle pivot: Change from "how-to" to "why-to" or from "tips" to "case studies"',
+        'Niche pivot: Narrow focus (e.g., from "productivity" to "productivity for students") or expand slightly (e.g., from "fitness" to "health and wellness")',
+        'Platform pivot: If one platform isn\'t working, test the same content on another platform',
+        'Style pivot: Change editing pace, visual style, or presentation format'
+      ]
+    }
+
+    // Enhanced basic sections
     const whatToPostNext = isYouTube ? [
-      'Problem-solution format: Address a common question in your niche',
-      'Before/after transformation: Show progress or results',
-      'Quick tip or hack: Share actionable value in 30-60 seconds',
+      'Problem-solution format with data: Address a common question and include real numbers/results (e.g., "How I got 10K views in 30 days—here\'s the exact strategy")',
+      'Before/after transformation with timeline: Show progress over 30/60/90 days with specific metrics',
+      'Quick tip with deeper context: Share a hack, then explain why it works and when to use it',
+      'Myth-busting format: Address a common misconception in your niche with evidence',
+      'Case study deep-dive: Analyze a real example with step-by-step breakdown'
     ] : [
-      'Behind-the-scenes: Show your process or daily routine',
-      'Educational carousel: Break down a concept in multiple slides',
-      'Story-driven content: Share a personal experience or lesson',
+      'Behind-the-scenes series: Show your process over 3-5 posts to build anticipation',
+      'Educational carousel with actionable steps: Break down complex topics into digestible slides',
+      'Story-driven content with lesson: Share personal experience, then extract the insight',
+      'Transformation timeline: Show progress over time with multiple posts',
+      'Q&A format: Answer audience questions in video or carousel format'
     ]
 
-    // Best formats
     const bestFormats = isYouTube ? [
-      'Problem-Solution (high retention, clear value)',
-      'Before/After (visual impact, transformation story)',
-      'Quick Tips (fast value delivery, shareable)',
+      'Problem-Solution (60-70% retention, high shares, clear value proposition)',
+      'Before/After (high visual impact, transformation story, strong emotional connection)',
+      'Quick Tips (fast value delivery, shareable, algorithm-friendly)',
+      'Myth-Busting (high engagement, drives comments and debates)',
+      'Case Studies (builds authority, demonstrates expertise, high trust-building)'
     ] : [
-      'Carousel Posts (high engagement, educational)',
-      'Reels (algorithm-friendly, discoverable)',
-      'Story Highlights (evergreen, reference-worthy)',
+      'Carousel Posts (high engagement, educational, saves well)',
+      'Reels (algorithm-friendly, discoverable, trend-responsive)',
+      'Story Highlights (evergreen, reference-worthy, builds authority)',
+      'IGTV/Video Posts (deeper content, higher engagement from existing followers)',
+      'Live Sessions (real-time engagement, builds community, high algorithm boost)'
     ]
 
-    // Posting rhythm
     const postingRhythm = data.frequency === 'daily' 
-      ? 'Post daily at consistent times. Focus on one format for 2-3 weeks to establish patterns. Quality over quantity—ensure each post delivers clear value.'
+      ? 'Post daily at consistent times (within 1-hour window). Focus on one primary format for 2-3 weeks to establish patterns, then introduce variations. Quality over quantity—each post should deliver clear value. Track which times drive highest engagement and double down.'
       : data.frequency === '3-4-per-week'
-      ? 'Post 3-4 times per week on consistent days. This frequency allows for quality while maintaining momentum. Batch create content to stay ahead.'
+      ? 'Post 3-4 times per week on consistent days (e.g., Monday, Wednesday, Friday). This frequency allows for quality while maintaining momentum. Batch create content to stay 2-3 weeks ahead. Use analytics to identify your best-performing days and times.'
       : data.frequency === 'weekly'
-      ? 'Post weekly with high-quality, well-planned content. Use the week to plan, create, and optimize. Focus on formats that have the highest impact.'
-      : 'Post when you have valuable content ready. Focus on quality and consistency over frequency. Build a small library before increasing posting frequency.'
+      ? 'Post weekly with high-quality, well-planned content. Use the week to plan, create, and optimize. Focus on formats that have the highest impact. Each piece should be your best work—weekly creators often outperform daily creators in engagement rates.'
+      : 'Post when you have valuable content ready. Focus on quality and consistency over frequency. Build a small library (10-15 pieces) before increasing posting frequency. Each piece should be polished and deliver clear value.'
 
-    // What not to do
     const whatNotToDo = [
-      `Don't jump between formats too quickly—stick with 2-3 formats for at least 4-6 weeks`,
-      `Don't post without a clear value proposition—every piece of content should answer "why should someone watch this?"`,
-      `Don't ignore your audience's questions—use them as content ideas`,
-      `Don't compare your early results to established creators—focus on your own progress`,
-      `Don't skip the planning phase—structure reduces stress and improves results`,
+      `Don't jump between formats too quickly—stick with 2-3 formats for at least 4-6 weeks to gather meaningful data`,
+      `Don't post without a clear value proposition—every piece of content should answer "why should someone watch this right now?"`,
+      `Don't ignore your audience's questions—these are your best content ideas and show you're listening`,
+      `Don't compare your early results to established creators—focus on your own progress and improvement`,
+      `Don't skip the planning phase—structure reduces stress, improves quality, and increases consistency`,
+      `Don't chase trends without adding your unique angle—trend-jacking works when you add value, not when you copy`,
+      `Don't neglect engagement—reply to comments, ask questions, build community beyond just posting content`
     ]
 
-    // Personalized guidance
-    const personalizedGuidance = `Based on your ${data.platform === 'youtube' ? 'YouTube channel' : 'Instagram page'}, you're in the ${creatorStage} stage. Your primary goal is ${data.goal}, and you're posting ${data.frequency === 'daily' ? 'daily' : data.frequency === '3-4-per-week' ? '3-4 times per week' : data.frequency === 'weekly' ? 'weekly' : 'occasionally'}. 
+    const personalizedGuidance = `## Strategic Overview
 
-${data.goal === 'growth' ? 'Focus on formats that maximize reach and discoverability. Problem-solution and educational content work well for growth.' : data.goal === 'engagement' ? 'Prioritize formats that encourage interaction. Ask questions, share relatable experiences, and create conversation starters.' : data.goal === 'monetization' ? 'Focus on formats that demonstrate value and build trust. Educational content and behind-the-scenes work well for monetization.' : 'Consistency is key. Focus on establishing a routine and building a content library before optimizing for specific goals.'}
+Based on your ${data.platform === 'youtube' ? 'YouTube channel' : 'Instagram page'}, you're in the **${creatorStage}** stage. Your primary goal is **${data.goal}**, and you're posting **${data.frequency === 'daily' ? 'daily' : data.frequency === '3-4-per-week' ? '3-4 times per week' : data.frequency === 'weekly' ? 'weekly' : 'occasionally'}**.
 
-Your next step: Choose one format from the recommendations above and create 3-4 pieces of content in that format. This will help you understand what resonates with your audience before expanding.`
+## Your Current Position
+
+${stageAnalysis}
+
+## Immediate Next Steps
+
+${data.goal === 'growth' 
+  ? '**Focus on formats that maximize reach and discoverability.** Problem-solution and educational content work exceptionally well for growth. The algorithm favors content that keeps viewers on the platform, so prioritize retention over views. Your hook (first 3 seconds) is critical—test different hook styles and double down on what works.' 
+  : data.goal === 'engagement' 
+  ? '**Prioritize formats that encourage interaction.** Ask questions, share relatable experiences, and create conversation starters. Engagement rate matters more than views for building a community. Reply to every comment in the first hour to signal high engagement to the algorithm.' 
+  : data.goal === 'monetization' 
+  ? '**Focus on formats that demonstrate value and build trust.** Educational content, case studies, and behind-the-scenes work well for monetization. Show real results and transformations. Build authority before introducing offers—aim for 10-15 pieces of educational content before monetizing.' 
+  : '**Consistency is key.** Focus on establishing a routine and building a content library before optimizing for specific goals. Create 10-15 pieces of content first, then analyze what resonates before doubling down.'}
+
+## Your 30-Day Action Plan
+
+1. **Week 1-2**: Choose one format from the recommendations above and create 5-7 pieces of content in that format. Track retention and engagement metrics.
+
+2. **Week 3**: Analyze your top 3 performing videos—what do they have in common? Double down on those elements.
+
+3. **Week 4**: Introduce one variation of your top format. Test and compare performance.
+
+By the end of 30 days, you'll have clear data on what works for your audience and can make informed decisions about format expansion.`
 
     return {
       creatorStage,
+      stageAnalysis,
       whatToPostNext,
       bestFormats,
       postingRhythm,
       whatNotToDo,
       personalizedGuidance,
+      competitivePositioning,
+      growthTrajectory,
+      contentGaps,
+      monetizationRoadmap,
+      algorithmOptimization,
+      audiencePsychology,
+      contentCalendar,
+      performanceBenchmarks,
+      strategicPivots,
     }
   }
 
@@ -366,9 +652,7 @@ Your next step: Choose one format from the recommendations above and create 3-4 
               <h3 className="text-xl font-bold mb-4 text-gray-900">Your Creator Stage</h3>
               <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200">
                 <div className="text-2xl font-bold text-indigo-900 mb-2">{result.creatorStage}</div>
-                <p className="text-gray-700 text-sm">
-                  Based on your posting frequency and goals, this is where you are in your creator journey.
-                </p>
+                <p className="text-gray-700 text-sm mb-3">{result.stageAnalysis}</p>
               </div>
             </div>
 
@@ -425,16 +709,319 @@ Your next step: Choose one format from the recommendations above and create 3-4 
 
             {/* Personalized Guidance */}
             <div className="card">
-              <h3 className="text-xl font-bold mb-4 text-gray-900">Personalized Guidance</h3>
+              <h3 className="text-xl font-bold mb-4 text-gray-900">Strategic Overview & 30-Day Action Plan</h3>
               <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <p className="text-gray-900 leading-relaxed whitespace-pre-line">{result.personalizedGuidance}</p>
+                <div className="prose prose-sm max-w-none text-gray-900 leading-relaxed whitespace-pre-line">
+                  {result.personalizedGuidance}
+                </div>
               </div>
               <button
                 onClick={() => copyToClipboard(result.personalizedGuidance)}
                 className="mt-4 text-sm text-indigo-600 hover:text-indigo-700 font-medium"
               >
-                Copy Guidance
+                Copy Full Guidance
               </button>
+            </div>
+
+            {/* Competitive Positioning */}
+            <div className="card">
+              <h3 className="text-xl font-bold mb-4 text-gray-900">Competitive Positioning Analysis</h3>
+              <div className="space-y-4">
+                <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
+                  <h4 className="font-bold text-purple-900 mb-2">Niche Saturation</h4>
+                  <p className="text-gray-900 text-sm">{result.competitivePositioning.nicheSaturation}</p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-2">Differentiation Strategies</h4>
+                  <div className="space-y-2">
+                    {result.competitivePositioning.differentiation.map((item, idx) => (
+                      <div key={idx} className="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-200">
+                        <span className="flex-shrink-0 w-5 h-5 bg-purple-100 text-purple-700 rounded-full flex items-center justify-center text-xs font-bold mt-0.5">
+                          {idx + 1}
+                        </span>
+                        <span className="text-gray-900 text-sm">{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                  <h4 className="font-bold text-yellow-900 mb-2">Biggest Opportunity</h4>
+                  <p className="text-gray-900 text-sm">{result.competitivePositioning.opportunity}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Growth Trajectory */}
+            <div className="card">
+              <h3 className="text-xl font-bold mb-4 text-gray-900">Growth Trajectory & Milestones</h3>
+              <div className="space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <h4 className="font-bold text-blue-900 mb-1">Current Phase</h4>
+                    <p className="text-gray-900 font-semibold">{result.growthTrajectory.currentPhase}</p>
+                  </div>
+                  <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                    <h4 className="font-bold text-green-900 mb-1">Next Milestone</h4>
+                    <p className="text-gray-900 font-semibold">{result.growthTrajectory.nextMilestone}</p>
+                  </div>
+                </div>
+                <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200">
+                  <h4 className="font-bold text-indigo-900 mb-2">Timeline & Expectations</h4>
+                  <p className="text-gray-900 text-sm">{result.growthTrajectory.timeline}</p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-2">Key Actions to Accelerate Growth</h4>
+                  <div className="space-y-2">
+                    {result.growthTrajectory.keyActions.map((action, idx) => (
+                      <div key={idx} className="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-200">
+                        <svg className="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                        <span className="text-gray-900 text-sm">{action}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Content Gaps */}
+            <div className="card">
+              <h3 className="text-xl font-bold mb-4 text-gray-900">Content Gaps & Opportunities</h3>
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-2">Missing Formats to Test</h4>
+                  <div className="space-y-2">
+                    {result.contentGaps.missingFormats.map((format, idx) => (
+                      <div key={idx} className="flex items-start gap-3 p-3 bg-orange-50 rounded-lg border border-orange-200">
+                        <span className="text-orange-600 font-bold flex-shrink-0 mt-0.5">+</span>
+                        <span className="text-gray-900 text-sm">{format}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-2">Underutilized Opportunities</h4>
+                  <div className="space-y-2">
+                    {result.contentGaps.underutilizedOpportunities.map((opp, idx) => (
+                      <div key={idx} className="flex items-start gap-3 p-3 bg-teal-50 rounded-lg border border-teal-200">
+                        <span className="text-teal-600 font-bold flex-shrink-0 mt-0.5">💡</span>
+                        <span className="text-gray-900 text-sm">{opp}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-2">What Your Audience Needs</h4>
+                  <div className="space-y-2">
+                    {result.contentGaps.audienceNeeds.map((need, idx) => (
+                      <div key={idx} className="flex items-start gap-3 p-3 bg-pink-50 rounded-lg border border-pink-200">
+                        <span className="text-pink-600 font-bold flex-shrink-0 mt-0.5">🎯</span>
+                        <span className="text-gray-900 text-sm">{need}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Monetization Roadmap */}
+            <div className="card">
+              <h3 className="text-xl font-bold mb-4 text-gray-900">Monetization Roadmap</h3>
+              <div className="space-y-4">
+                <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
+                  <h4 className="font-bold text-emerald-900 mb-2">Readiness Assessment</h4>
+                  <p className="text-gray-900 text-sm">{result.monetizationRoadmap.readiness}</p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-2">Monetization Opportunities</h4>
+                  <div className="space-y-2">
+                    {result.monetizationRoadmap.opportunities.map((opp, idx) => (
+                      <div key={idx} className="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-200">
+                        <span className="flex-shrink-0 w-6 h-6 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center text-xs font-bold">
+                          {idx + 1}
+                        </span>
+                        <span className="text-gray-900 text-sm">{opp}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-2">Next Steps to Monetize</h4>
+                  <div className="space-y-2">
+                    {result.monetizationRoadmap.nextSteps.map((step, idx) => (
+                      <div key={idx} className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                        <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
+                        </svg>
+                        <span className="text-gray-900 text-sm">{step}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Algorithm Optimization */}
+            <div className="card">
+              <h3 className="text-xl font-bold mb-4 text-gray-900">Algorithm Optimization Strategy</h3>
+              <div className="space-y-4">
+                <div className="p-4 bg-violet-50 rounded-lg border border-violet-200">
+                  <h4 className="font-bold text-violet-900 mb-2">Platform Strategy</h4>
+                  <p className="text-gray-900 text-sm">{result.algorithmOptimization.platformStrategy}</p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-2">Timing Insights</h4>
+                  <div className="space-y-2">
+                    {result.algorithmOptimization.timingInsights.map((insight, idx) => (
+                      <div key={idx} className="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-200">
+                        <span className="text-violet-600 font-bold flex-shrink-0 mt-0.5">⏰</span>
+                        <span className="text-gray-900 text-sm">{insight}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-2">Engagement Boosters</h4>
+                  <div className="space-y-2">
+                    {result.algorithmOptimization.engagementBoosters.map((booster, idx) => (
+                      <div key={idx} className="flex items-start gap-3 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                        <span className="text-yellow-600 font-bold flex-shrink-0 mt-0.5">⚡</span>
+                        <span className="text-gray-900 text-sm">{booster}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Audience Psychology */}
+            <div className="card">
+              <h3 className="text-xl font-bold mb-4 text-gray-900">Audience Psychology & Triggers</h3>
+              <div className="space-y-4">
+                <div className="p-4 bg-rose-50 rounded-lg border border-rose-200">
+                  <h4 className="font-bold text-rose-900 mb-2">Viewer Motivation</h4>
+                  <p className="text-gray-900 text-sm">{result.audiencePsychology.viewerMotivation}</p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-2">Content Triggers That Work</h4>
+                  <div className="space-y-2">
+                    {result.audiencePsychology.contentTriggers.map((trigger, idx) => (
+                      <div key={idx} className="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-200">
+                        <span className="text-rose-600 font-bold flex-shrink-0 mt-0.5">🧠</span>
+                        <span className="text-gray-900 text-sm">{trigger}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-2">Retention Factors</h4>
+                  <div className="space-y-2">
+                    {result.audiencePsychology.retentionFactors.map((factor, idx) => (
+                      <div key={idx} className="flex items-start gap-3 p-3 bg-indigo-50 rounded-lg border border-indigo-200">
+                        <span className="text-indigo-600 font-bold flex-shrink-0 mt-0.5">📊</span>
+                        <span className="text-gray-900 text-sm">{factor}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Content Calendar */}
+            <div className="card">
+              <h3 className="text-xl font-bold mb-4 text-gray-900">Content Calendar & Batch Strategy</h3>
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-2">Recommended Weekly Structure</h4>
+                  <div className="space-y-2">
+                    {result.contentCalendar.weeklyStructure.map((day, idx) => (
+                      <div key={idx} className="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-200">
+                        <span className="flex-shrink-0 w-6 h-6 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center text-xs font-bold">
+                          {idx + 1}
+                        </span>
+                        <span className="text-gray-900 text-sm">{day}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div className="p-4 bg-cyan-50 rounded-lg border border-cyan-200">
+                  <h4 className="font-bold text-cyan-900 mb-2">Format Rotation Strategy</h4>
+                  <p className="text-gray-900 text-sm">{result.contentCalendar.formatRotation}</p>
+                </div>
+                <div className="p-4 bg-amber-50 rounded-lg border border-amber-200">
+                  <h4 className="font-bold text-amber-900 mb-2">Batch Creation Strategy</h4>
+                  <p className="text-gray-900 text-sm">{result.contentCalendar.batchStrategy}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Performance Benchmarks */}
+            <div className="card">
+              <h3 className="text-xl font-bold mb-4 text-gray-900">Performance Benchmarks & Targets</h3>
+              <div className="space-y-4">
+                <div className="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                  <h4 className="font-bold text-slate-900 mb-2">Your Current Level</h4>
+                  <p className="text-gray-900 text-sm">{result.performanceBenchmarks.currentLevel}</p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-2">Industry Standards</h4>
+                  <div className="space-y-2">
+                    {result.performanceBenchmarks.industryStandards.map((standard, idx) => (
+                      <div key={idx} className="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-200">
+                        <span className="text-slate-600 font-bold flex-shrink-0 mt-0.5">📈</span>
+                        <span className="text-gray-900 text-sm">{standard}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-2">Improvement Targets (Next 30 Days)</h4>
+                  <div className="space-y-2">
+                    {result.performanceBenchmarks.improvementTargets.map((target, idx) => (
+                      <div key={idx} className="flex items-start gap-3 p-3 bg-green-50 rounded-lg border border-green-200">
+                        <svg className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />
+                        </svg>
+                        <span className="text-gray-900 text-sm">{target}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Strategic Pivots */}
+            <div className="card">
+              <h3 className="text-xl font-bold mb-4 text-gray-900">Strategic Pivots & When to Change Direction</h3>
+              <div className="space-y-4">
+                <div className="p-4 bg-red-50 rounded-lg border border-red-200">
+                  <h4 className="font-bold text-red-900 mb-2">When to Pivot</h4>
+                  <p className="text-gray-900 text-sm">{result.strategicPivots.whenToPivot}</p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-2">Pivot Warning Signals</h4>
+                  <div className="space-y-2">
+                    {result.strategicPivots.pivotSignals.map((signal, idx) => (
+                      <div key={idx} className="flex items-start gap-3 p-3 bg-white rounded-lg border border-gray-200">
+                        <span className="text-red-600 font-bold flex-shrink-0 mt-0.5">⚠️</span>
+                        <span className="text-gray-900 text-sm">{signal}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-2">Pivot Options to Consider</h4>
+                  <div className="space-y-2">
+                    {result.strategicPivots.pivotOptions.map((option, idx) => (
+                      <div key={idx} className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                        <span className="text-blue-600 font-bold flex-shrink-0 mt-0.5">🔄</span>
+                        <span className="text-gray-900 text-sm">{option}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )}

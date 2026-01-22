@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { useEffect, useState, useRef } from 'react'
 import { testimonials } from '@/data/testimonials'
 import Hero3D from '@/components/Hero3D'
-import LightPillar from '@/components/LightPillar'
 
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false)
@@ -152,22 +151,11 @@ export default function Home() {
       <section className="relative overflow-hidden py-16 md:py-24 lg:py-32">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/30 via-white to-purple-50/20 pointer-events-none"></div>
         
-        {/* LightPillar Background Animation */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30">
-          <LightPillar
-            topColor="#5227FF"
-            bottomColor="#FF9FFC"
-            intensity={0.8}
-            rotationSpeed={0.3}
-            glowAmount={0.002}
-            pillarWidth={3}
-            pillarHeight={0.4}
-            noiseIntensity={0.3}
-            pillarRotation={25}
-            interactive={true}
-            mixBlendMode="screen"
-            quality="high"
-          />
+        {/* Subtle Animated Gradient Background */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute inset-0 bg-gradient-to-br from-indigo-100/40 via-purple-50/20 to-pink-50/30 animate-gradient-shift"></div>
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-200/20 rounded-full blur-3xl animate-float-slow"></div>
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-200/20 rounded-full blur-3xl animate-float-delayed"></div>
         </div>
         
         {/* React Three Fiber Hero 3D Model */}

@@ -89,6 +89,15 @@
   }
 }
 
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -182,6 +191,11 @@
   animation: slide-in-right 0.8s ease-out;
   animation-delay: 0.3s;
   animation-fill-mode: both;
+}
+
+.animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: gradient-shift 15s ease infinite;
 }
 
 /* Custom Scrollbar */
