@@ -188,7 +188,7 @@ export default function Home() {
                   <svg className="w-4 h-4 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-xs font-bold text-indigo-700">100 Free Credits</span>
+                  <span className="text-xs font-bold text-indigo-700">500 Free Credits</span>
                 </div>
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-50 border border-indigo-200 rounded-full">
                   <svg className="w-4 h-4 text-indigo-600" fill="currentColor" viewBox="0 0 20 20">
@@ -217,7 +217,7 @@ export default function Home() {
                 <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-indigo-100/50 shadow-sm">
                   <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
                     <div className="text-center sm:text-left">
-                      <div className="text-3xl font-extrabold text-indigo-600 mb-1">100 Credits</div>
+                      <div className="text-3xl font-extrabold text-indigo-600 mb-1">500 Credits</div>
                       <div className="text-sm text-gray-600">Free to try all features</div>
                     </div>
                     <div className="hidden sm:block w-px h-12 bg-gray-200"></div>
@@ -242,7 +242,7 @@ export default function Home() {
                 className="group relative inline-flex items-center justify-center px-8 sm:px-10 py-4 sm:py-5 text-base sm:text-lg font-bold text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 overflow-hidden"
               >
                 <span className="relative z-10 flex items-center gap-2">
-                  <span>Start Free with 100 Credits</span>
+                  <span>Start Free with 500 Credits</span>
                   <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>

@@ -46,8 +46,18 @@ export default function CreditsDisplay({ feature, className = '' }: CreditsDispl
 
     fetchCredits()
 
+    // Listen for credit updates from other components
+    const handleCreditsUpdate = (event: CustomEvent) => {
+      if (!cancelled && event.detail?.credits !== undefined) {
+        setCredits(event.detail.credits)
+      }
+    }
+
+    window.addEventListener('credits-updated', handleCreditsUpdate as EventListener)
+
     return () => {
       cancelled = true
+      window.removeEventListener('credits-updated', handleCreditsUpdate as EventListener)
     }
   }, [user?.id, isUserPaid])
 

@@ -88,6 +88,8 @@ export default function HookCaptionEnginePage() {
         }
 
         setCredits(data.creditsRemaining)
+        // Trigger a refresh of CreditsDisplay component
+        window.dispatchEvent(new CustomEvent('credits-updated', { detail: { credits: data.creditsRemaining } }))
       } catch (error) {
         console.error('Error using credits:', error)
         setIsGenerating(false)
@@ -228,10 +230,18 @@ export default function HookCaptionEnginePage() {
               <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900">
                 Hook & Caption Engine
               </h1>
-              <p className="text-xl text-gray-600 max-w-3xl leading-relaxed">
+              <p className="text-xl text-gray-600 max-w-3xl leading-relaxed mb-4">
                 Generate high-converting hooks and optimized captions that improve retention and engagement. 
                 Built specifically for Shorts creators, not generic AI tools.
               </p>
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 rounded-lg p-4 max-w-3xl">
+                <p className="text-sm font-semibold text-green-900 mb-1">💰 How This Helps You Profit:</p>
+                <p className="text-sm text-green-800">
+                  Hooks that stop the scroll in the first 3 seconds can increase retention by 40-60%, directly boosting your 
+                  video's performance in the algorithm. Better retention = more views, higher subscriber conversion, and 
+                  increased ad revenue. Our hooks are tested for Shorts/Reels, not generic social media.
+                </p>
+              </div>
             </div>
             <div className="ml-4">
               <CreditsDisplay feature="hook-caption" />

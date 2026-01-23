@@ -97,8 +97,10 @@ export default function PromptStudioPage() {
           return
         }
 
-        // Update credits display
+        // Update credits display and refresh
         setCredits(data.creditsRemaining)
+        // Trigger a refresh of CreditsDisplay component
+        window.dispatchEvent(new CustomEvent('credits-updated', { detail: { credits: data.creditsRemaining } }))
       } catch (error) {
         console.error('Error using credits:', error)
         setIsGenerating(false)
@@ -284,10 +286,18 @@ export default function PromptStudioPage() {
               <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900">
                 AI Video Prompt Studio
               </h1>
-              <p className="text-xl text-gray-600 max-w-3xl leading-relaxed">
+              <p className="text-xl text-gray-600 max-w-3xl leading-relaxed mb-4">
                 Generate professional-grade prompts for AI video tools like Sora, Veo, and Runway. 
                 Our structured approach ensures better results than generic AI tools.
               </p>
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 rounded-lg p-4 max-w-3xl">
+                <p className="text-sm font-semibold text-green-900 mb-1">💰 How This Helps You Profit:</p>
+                <p className="text-sm text-green-800">
+                  Create production-ready AI video prompts that generate higher-quality content, leading to better engagement rates, 
+                  more views, and increased monetization potential. Save hours of trial-and-error with structured, topic-aware prompts 
+                  that actually work for Shorts and Reels.
+                </p>
+              </div>
             </div>
             <div className="ml-4">
               <CreditsDisplay feature="prompt-studio" />

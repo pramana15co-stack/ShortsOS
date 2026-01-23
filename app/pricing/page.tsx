@@ -145,7 +145,7 @@ export default function PricingPage() {
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   <div>
-                    <div className="font-semibold text-gray-900">50 Credits to Start</div>
+                    <div className="font-semibold text-gray-900">500 Credits to Start</div>
                     <div className="text-sm text-gray-600">Try all features with credits (5 credits per prompt, 3 per hook, etc.)</div>
                   </div>
                 </div>
@@ -218,26 +218,27 @@ export default function PricingPage() {
               <div className="text-right">
                 {pricingRegion === 'india' ? (
                   <div>
-                    {!loadingPaymentCheck && !hasPreviousPayments ? (
-                      <>
-                        <div className="flex items-baseline justify-end gap-2 mb-1">
-                          <span className="text-3xl font-bold text-gray-400 line-through">₹799</span>
-                          <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">
-                            Early Creator Discount
-                          </span>
-                        </div>
-                        <div className="text-5xl font-extrabold text-gray-900">₹499</div>
-                        <div className="text-sm text-green-600 font-semibold mt-1">Save ₹300</div>
-                      </>
-                    ) : (
-                      <div className="text-5xl font-extrabold text-gray-900">₹799</div>
-                    )}
+                    <div className="flex items-baseline justify-end gap-2 mb-1">
+                      <span className="text-3xl font-bold text-gray-400 line-through">₹799</span>
+                      <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">
+                        Early Creator Discount
+                      </span>
+                    </div>
+                    <div className="text-5xl font-extrabold text-gray-900">₹499</div>
+                    <div className="text-sm text-green-600 font-semibold mt-1">Save ₹300</div>
                     <div className="text-sm text-gray-500 mt-1">per month</div>
                     <div className="text-xs text-gray-400 mt-1">≈ $9 USD</div>
                   </div>
                 ) : (
                   <div>
+                    <div className="flex items-baseline justify-end gap-2 mb-1">
+                      <span className="text-3xl font-bold text-gray-400 line-through">$12</span>
+                      <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">
+                        Early Creator Discount
+                      </span>
+                    </div>
                     <div className="text-5xl font-extrabold text-gray-900">$9</div>
+                    <div className="text-sm text-green-600 font-semibold mt-1">Save $3</div>
                     <div className="text-sm text-gray-500 mt-1">per month</div>
                   </div>
                 )}
@@ -278,8 +279,8 @@ export default function PricingPage() {
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   <div>
-                    <div className="font-semibold text-gray-900">Unlimited Credits & All Features</div>
-                    <div className="text-sm text-gray-600">No credit limits - use all features freely</div>
+                    <div className="font-semibold text-gray-900">500 Credits Monthly & All Features</div>
+                    <div className="text-sm text-gray-600">500 credits per month - use all features freely</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -325,13 +326,13 @@ export default function PricingPage() {
               <p className="text-sm text-gray-600 mb-4">
                 <strong>Outcome:</strong> You'll know exactly what to create, when to create it, and how to execute it correctly.
               </p>
-              {!loadingPaymentCheck && !hasPreviousPayments && pricingRegion === 'india' && (
-                <div className="mb-3 p-3 bg-green-50 border border-green-200 rounded-lg">
-                  <p className="text-sm text-green-800 font-semibold text-center">
-                    🎉 Early Creator Discount: Pay only ₹499 for your first month (Save ₹300)
-                  </p>
-                </div>
-              )}
+              <div className="mb-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                <p className="text-sm text-green-800 font-semibold text-center">
+                  {pricingRegion === 'india' 
+                    ? '🎉 Early Creator Discount: Pay only ₹499/month (Save ₹300)'
+                    : '🎉 Early Creator Discount: Pay only $9/month (Save $3)'}
+                </p>
+              </div>
               <div className="mb-3 text-xs text-gray-500 text-center">
                 Early access pricing • No long-term commitment
               </div>
@@ -398,8 +399,8 @@ export default function PricingPage() {
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                   <div>
-                    <div className="font-semibold text-gray-900">Everything in Starter</div>
-                    <div className="text-sm text-gray-600">All Starter features included</div>
+                    <div className="font-semibold text-gray-900">Unlimited Credits & All Features</div>
+                    <div className="text-sm text-gray-600">No credit limits - use all features unlimited</div>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">

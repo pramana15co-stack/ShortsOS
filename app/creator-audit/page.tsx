@@ -536,11 +536,20 @@ By the end of 30 days, you'll have clear data on what works for your audience an
               <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900">
                 Creator Intelligence Audit
               </h1>
-              <p className="text-xl text-gray-600 max-w-3xl leading-relaxed">
+              <p className="text-xl text-gray-600 max-w-3xl leading-relaxed mb-4">
                 Get personalized, actionable guidance based on your channel and goals. 
                 Understand your creator stage, what to post next, and what to avoid. 
                 This is a strategic decision system, not a basic analytics tool.
               </p>
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 rounded-lg p-4 max-w-3xl">
+                <p className="text-sm font-semibold text-green-900 mb-1">💰 How This Helps You Profit:</p>
+                <p className="text-sm text-green-800">
+                  Strategic content planning based on your stage can accelerate growth by 3-5x. This audit identifies 
+                  content gaps, monetization opportunities, and algorithm optimization strategies that directly impact 
+                  your revenue potential. Know exactly what to post, when to post, and how to optimize for maximum 
+                  views and subscriber conversion.
+                </p>
+              </div>
             </div>
             <div className="ml-4">
               <CreditsDisplay feature="creator-audit" />

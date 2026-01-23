@@ -181,9 +181,17 @@ export default function ContentIdeas() {
       <div className="container mx-auto px-4 max-w-7xl relative z-10">
         <div className="mb-12">
           <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900">Content Ideas Generator</h1>
-          <p className="text-xl text-gray-600 max-w-3xl">
+          <p className="text-xl text-gray-600 max-w-3xl mb-4">
             Generate specific, actionable content ideas tailored to your niche. Get beyond generic templates with ideas that actually work for Shorts creators.
           </p>
+          <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 rounded-lg p-4 max-w-3xl">
+            <p className="text-sm font-semibold text-green-900 mb-1">💰 How This Helps You Profit:</p>
+            <p className="text-sm text-green-800">
+              Never run out of content ideas again. A consistent content pipeline is the #1 factor in channel growth. 
+              Our niche-specific ideas are designed to drive engagement and views, helping you build a sustainable content 
+              calendar that keeps your audience engaged and your channel growing. More consistent content = more views = more revenue.
+            </p>
+          </div>
         </div>
 
       <div className="grid lg:grid-cols-2 gap-8">
