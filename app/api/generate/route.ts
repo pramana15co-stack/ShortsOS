@@ -5,7 +5,7 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { FEATURE_CREDITS, FeatureName } from '@/lib/credits';
 import { generateScript } from '@/lib/scriptTemplates';
-import { generatePromptStudioData, generateHookCaptionData, generateContentIdeasData } from '@/lib/generators';
+import { generatePromptStudioData, generateHookCaptionData, generateContentIdeasData, generatePostProcessingData } from '@/lib/generators';
 
 // Service role client for credit deduction and profile management
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -172,6 +172,11 @@ export async function POST(request: NextRequest) {
         userPrompt = `Niche/Topic: ${data.topic}. Category: ${data.category}. Generate 5 fresh ideas that stand out. Ref: ${randomSeed}`;
         break;
 
+      case 'post-processing':
+        systemPrompt = `You are an expert video editor and retention specialist. Analyze this video concept and provide detailed post-processing advice. Output JSON format with keys: "hookSpeed" (string), "pacing" (array of strings), "captionDensity" (string), "mistakes" (array of strings), "improvements" (array of strings).`;
+        userPrompt = `Duration: ${data.duration}s. Type: ${data.contentType}. Goal: ${data.goal}. Niche: ${data.niche}. Audience: ${data.audience}. Key Hook: ${data.hook}. Ref: ${randomSeed}`;
+        break;
+
       default:
         return NextResponse.json({ error: 'Invalid feature' }, { status: 400 });
     }
@@ -214,6 +219,9 @@ export async function POST(request: NextRequest) {
           break;
         case 'content-ideas':
           finalData = generateContentIdeasData(data);
+          break;
+        case 'post-processing':
+          finalData = generatePostProcessingData(data);
           break;
       }
     }

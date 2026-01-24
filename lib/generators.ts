@@ -68,3 +68,38 @@ export function generatePromptStudioData(data: any) {
     }));
     return { ideas };
   }
+
+  export function generatePostProcessingData(data: any) {
+    const { duration, contentType, goal } = data;
+    const durationNum = parseInt(duration) || 30;
+
+    const hookSpeed = durationNum <= 15 
+        ? `Fast hook (0-1.5s): For ${durationNum}s videos, start mid-action.`
+        : `Standard hook (0-3s): Establish context quickly then deliver value.`;
+
+    const pacing = [
+        `0-${Math.floor(durationNum * 0.1)}s: Hook Phase`,
+        `${Math.floor(durationNum * 0.1)}-${Math.floor(durationNum * 0.85)}s: Main Content`,
+        `${Math.floor(durationNum * 0.85)}-${durationNum}s: CTA Phase`
+    ];
+
+    const mistakes = [
+        "Hook too long",
+        "Slow transitions",
+        "CTA too late"
+    ];
+
+    const improvements = [
+        "Speed up the first 3 seconds",
+        "Add captions to the hook",
+        "Use crossfade transitions"
+    ];
+
+    return {
+        hookSpeed,
+        pacing,
+        captionDensity: "High density for retention",
+        mistakes,
+        improvements
+    };
+  }
