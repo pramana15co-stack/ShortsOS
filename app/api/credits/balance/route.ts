@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get user's profile with credits - use maybeSingle to handle missing profiles
-    const { data: profile, error } = await supabase
+    let { data: profile, error } = await supabase
       .from('profiles')
       .select('credits, subscription_status, plan_expiry, is_admin')
       .eq('user_id', userId)
@@ -65,13 +65,31 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Handle missing profile gracefully
+    // Handle missing profile by auto-creating it
     if (!profile) {
-      console.warn(`⚠️ [CREDITS] Profile missing for user ${userId.substring(0, 8)}...`)
-      return NextResponse.json(
-        { error: 'Profile missing', credits: 0 },
-        { status: 404 }
-      )
+      console.warn(`⚠️ [CREDITS] Profile missing for user ${userId.substring(0, 8)}... creating default.`)
+      
+      const { data: newProfile, error: createError } = await supabase
+        .from('profiles')
+        .insert({
+          user_id: userId,
+          credits: 500,
+          subscription_tier: 'free',
+          subscription_status: 'inactive',
+          updated_at: new Date().toISOString()
+        })
+        .select('credits, subscription_status, plan_expiry, is_admin')
+        .single()
+        
+      if (createError || !newProfile) {
+        console.error('❌ [CREDITS] Failed to auto-create profile:', createError)
+        return NextResponse.json(
+          { error: 'Profile missing and creation failed', credits: 0 },
+          { status: 500 }
+        )
+      }
+      
+      profile = newProfile
     }
 
     // Admin always has unlimited credits

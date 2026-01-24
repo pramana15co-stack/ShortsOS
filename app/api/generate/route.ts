@@ -34,14 +34,33 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
     }
 
-    const { data: profile } = await supabase
+    let { data: profile } = await supabase
       .from('profiles')
       .select('credits, subscription_status, plan_expiry, is_admin')
       .eq('user_id', userId)
       .maybeSingle();
 
     if (!profile) {
-      return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
+      console.log(`⚠️ [GENERATE] Profile missing for user ${userId}, creating default profile...`);
+      // Auto-create profile if missing (Lazy Provisioning)
+      const { data: newProfile, error: createError } = await supabase
+        .from('profiles')
+        .insert({
+          user_id: userId,
+          credits: 500, // Default for new/recovered profiles
+          subscription_tier: 'free',
+          subscription_status: 'inactive',
+          updated_at: new Date().toISOString()
+        })
+        .select('credits, subscription_status, plan_expiry, is_admin')
+        .single();
+      
+      if (createError || !newProfile) {
+        console.error('❌ [GENERATE] Failed to auto-create profile:', createError);
+        return NextResponse.json({ error: 'Profile not found and creation failed' }, { status: 404 });
+      }
+      
+      profile = newProfile;
     }
 
     const isPaid = profile.subscription_status === 'active' && 
