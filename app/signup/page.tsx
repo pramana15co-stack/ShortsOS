@@ -148,8 +148,9 @@ export default function SignUpPage() {
             // Don't throw - continue with signup success flow
           }
         } else {
-          console.warn('[PROFILE] Failed - No access token available for profile creation')
-          // Don't block - profile can be created later
+          console.log('[PROFILE] Info - Profile will be created after email verification or on first login (Lazy Provisioning)')
+          // Profile creation is skipped here because we don't have a token yet (email verification required)
+          // It will be handled by /api/profiles/ensure on login or /api/generate on first use
         }
 
         // Step 5: Handle email confirmation scenarios
