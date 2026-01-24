@@ -309,9 +309,9 @@ export default function CreatorAuditPage() {
                         </div>
                       </div>
                     </>
-                  ) : (
+                  ) : typeof audit.creator_stage === 'string' ? (
                     <p className="text-lg text-gray-700">{audit.creator_stage}</p>
-                  )}
+                  ) : null}
                 </div>
               </div>
             </div>

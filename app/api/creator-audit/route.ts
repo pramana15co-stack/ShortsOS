@@ -135,14 +135,16 @@ export async function POST(request: NextRequest) {
       }, { status: 403 });
     }
 
-    // Fetch channel if linked
+    // Fetch channel and analytics if linked
     const { data: channel } = await supabaseAdmin
       .from('youtube_channels')
-      .select('channel_id, access_token, refresh_token, subscribers, title')
+      .select('channel_id, access_token, refresh_token, subscribers, views, video_count, title')
       .eq('user_id', user.id)
       .maybeSingle();
 
     let channelData: any = null;
+    let analyticsData: any = null;
+    
     if (channel) {
       let accessToken = channel.access_token;
       if (channel.refresh_token) {
@@ -159,9 +161,35 @@ export async function POST(request: NextRequest) {
 
       if (accessToken) {
         try {
-          // Fetch last 10 videos
+          // Fetch latest channel statistics
+          const statsResponse = await fetch(
+            `https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet&id=${channel.channel_id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+
+          if (statsResponse.ok) {
+            const statsData = await statsResponse.json();
+            const stats = statsData.items?.[0]?.statistics;
+            const snippet = statsData.items?.[0]?.snippet;
+            
+            if (stats) {
+              analyticsData = {
+                subscribers: parseInt(stats.subscriberCount || '0'),
+                totalViews: parseInt(stats.viewCount || '0'),
+                videoCount: parseInt(stats.videoCount || '0'),
+                avgViewsPerVideo: Math.round(parseInt(stats.viewCount || '0') / Math.max(parseInt(stats.videoCount || '1'), 1)),
+                channelCreated: snippet?.publishedAt || null,
+              };
+            }
+          }
+
+          // Fetch last 15 videos for content analysis
           const videosResponse = await fetch(
-            `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channel.channel_id}&maxResults=10&order=date&type=video`,
+            `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channel.channel_id}&maxResults=15&order=date&type=video`,
             {
               headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -172,16 +200,28 @@ export async function POST(request: NextRequest) {
           if (videosResponse.ok) {
             const videosData = await videosResponse.json();
             channelData = {
-              channelTitle: channel.title,
-              subscribers: channel.subscribers,
+              channelTitle: channel.title || snippet?.title || 'Unknown Channel',
+              subscribers: analyticsData?.subscribers || channel.subscribers || 0,
+              totalViews: analyticsData?.totalViews || channel.views || 0,
+              videoCount: analyticsData?.videoCount || channel.video_count || 0,
+              avgViewsPerVideo: analyticsData?.avgViewsPerVideo || 0,
               recentVideos: videosData.items?.map((item: any) => ({
                 title: item.snippet?.title,
                 publishedAt: item.snippet?.publishedAt,
+                description: item.snippet?.description?.substring(0, 200) || '',
               })) || [],
             };
           }
         } catch (error) {
           console.error('YouTube API error:', error);
+          // Use stored data as fallback
+          channelData = {
+            channelTitle: channel.title,
+            subscribers: channel.subscribers || 0,
+            totalViews: channel.views || 0,
+            videoCount: channel.video_count || 0,
+            recentVideos: [],
+          };
         }
       }
     }
@@ -234,10 +274,18 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Generate comprehensive AI audit for paid users
+    // Generate comprehensive AI audit for paid users ONLY
     let aiAudit = null;
     try {
-      const systemPrompt = `You are an elite YouTube Creator Intelligence Analyst with 10+ years of experience analyzing successful channels. Your audits are used by top creators and agencies. 
+      // Add randomness seed to ensure unique suggestions every time
+      const randomSeed = Math.random().toString(36).substring(7);
+      const timestamp = new Date().toISOString();
+      
+      const systemPrompt = `You are an elite YouTube Creator Intelligence Analyst with 10+ years of experience analyzing successful channels. Your audits are used by top creators and agencies.
+
+CRITICAL: Generate UNIQUE, FRESH recommendations every time. Avoid generic templates. Base ALL suggestions on the ACTUAL data provided. Never repeat the same suggestions. Think creatively and provide novel insights specific to THIS creator's situation.
+
+Use the analytics data provided to make DATA-DRIVEN recommendations. Calculate metrics, identify patterns, and provide specific actionable advice. 
 
 Generate a COMPREHENSIVE, PROFESSIONAL audit that provides:
 1. Detailed creator stage analysis with specific metrics and benchmarks
@@ -327,30 +375,57 @@ Output MUST be valid JSON with this exact structure:
 Be SPECIFIC, ACTIONABLE, and DATA-DRIVEN. Use their actual metrics to inform recommendations.`;
 
       const userPrompt = channelData
-        ? `Analyze this YouTube channel in detail:
+        ? `Analyze this YouTube channel in DETAIL using the ACTUAL analytics data provided:
 
-CHANNEL DATA:
-- Channel Name: ${channelData.channelTitle}
-- Subscribers: ${channelData.subscribers.toLocaleString()}
-${videoStats ? `- Total Views: ${videoStats.totalViews.toLocaleString()}\n- Total Videos: ${videoStats.videoCount}\n- Avg Views/Video: ${videoStats.avgViewsPerVideo.toLocaleString()}` : ''}
-- Recent Video Titles:
-${channelData.recentVideos.slice(0, 10).map((v: any, i: number) => `${i + 1}. ${v.title}`).join('\n')}
+═══════════════════════════════════════════════════════════
+CHANNEL ANALYTICS DATA (USE THIS FOR ALL CALCULATIONS):
+═══════════════════════════════════════════════════════════
+Channel Name: ${channelData.channelTitle}
+Current Subscribers: ${channelData.subscribers.toLocaleString()}
+Total Channel Views: ${channelData.totalViews.toLocaleString()}
+Total Videos Published: ${channelData.videoCount}
+Average Views Per Video: ${channelData.avgViewsPerVideo.toLocaleString()}
+${channelData.avgViewsPerVideo > 0 ? `Engagement Rate Estimate: ${((channelData.subscribers / channelData.totalViews) * 100).toFixed(2)}%` : ''}
 
-Provide a COMPREHENSIVE, PROFESSIONAL audit with:
-- Specific, actionable recommendations based on their actual content
-- Realistic growth projections based on their current metrics
-- Monetization strategy tailored to their subscriber count
-- Content gaps specific to their recent uploads
-- Algorithm tactics for their niche and audience size
+RECENT CONTENT ANALYSIS (Last ${channelData.recentVideos.length} videos):
+${channelData.recentVideos.map((v: any, i: number) => {
+  const daysAgo = v.publishedAt ? Math.floor((Date.now() - new Date(v.publishedAt).getTime()) / (1000 * 60 * 60 * 24)) : 'Unknown';
+  return `${i + 1}. "${v.title}" (${daysAgo} days ago)${v.description ? `\n   Description: ${v.description.substring(0, 100)}...` : ''}`;
+}).join('\n')}
 
-Be DETAILED and PROFESSIONAL. This is for a paying customer who expects premium insights.`
-        : `Provide a comprehensive creator audit for a growing YouTube channel. The creator is serious about growth and monetization. Give detailed, professional recommendations that feel premium and actionable. Include specific strategies, timelines, and next steps.`;
+CONTENT PATTERNS TO ANALYZE:
+- Identify recurring themes in video titles
+- Analyze posting frequency (${channelData.recentVideos.length} videos analyzed)
+- Calculate content gaps based on title patterns
+- Assess niche consistency
+- Evaluate title optimization opportunities
+
+═══════════════════════════════════════════════════════════
+REQUIREMENTS FOR THIS AUDIT:
+═══════════════════════════════════════════════════════════
+1. Use ACTUAL metrics to calculate growth rates and projections
+2. Base content recommendations on their REAL video titles and patterns
+3. Provide UNIQUE suggestions - avoid generic advice
+4. Calculate realistic timelines based on their current subscriber count and growth trajectory
+5. Identify specific content gaps by analyzing their recent uploads
+6. Provide monetization estimates based on their actual subscriber/view counts
+7. Give platform-specific strategies tailored to their current performance
+8. Create an actionable plan with specific, measurable goals
+
+Generate a COMPREHENSIVE, PROFESSIONAL audit that feels personalized and data-driven. This is for a paying customer who expects premium, unique insights every time.
+
+Reference ID: ${randomSeed} | ${timestamp}`
+        : `Provide a comprehensive creator audit for a growing YouTube channel. The creator is serious about growth and monetization. 
+
+IMPORTANT: Generate UNIQUE, FRESH recommendations. Avoid generic templates. Think creatively about growth strategies, content ideas, and monetization paths. Make each audit feel personalized and valuable.
+
+Reference ID: ${randomSeed} | ${timestamp}`;
 
       aiAudit = await generateAIContent({
         systemPrompt,
         userPrompt,
         model: 'gpt-4o-mini',
-        temperature: 0.7, // Lower for more consistent, professional output
+        temperature: 0.9, // Higher temperature for more creative, unique suggestions
       });
 
       if (aiAudit) {
