@@ -62,121 +62,42 @@ export default function HookCaptionEnginePage() {
 
     setIsGenerating(true)
 
-    // Use credits for free users
-    if (!isPaid && user) {
-      try {
-        const response = await fetch('/api/credits/use', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            userId: user.id,
-            feature: 'hook-caption',
-          }),
-        })
+    try {
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user?.id,
+          feature: 'hook-caption',
+          data: formData
+        }),
+      })
 
-        const data = await response.json()
-        if (!data.success) {
-          setIsGenerating(false)
-          if (data.error === 'Insufficient credits') {
-            setShowUpgradeModal(true)
-          } else {
-            alert(data.error || 'Failed to use credits')
-          }
-          return
-        }
+      const result = await response.json()
 
-        setCredits(data.creditsRemaining)
-        // Trigger a refresh of CreditsDisplay component
-        window.dispatchEvent(new CustomEvent('credits-updated', { detail: { credits: data.creditsRemaining } }))
-      } catch (error) {
-        console.error('Error using credits:', error)
+      if (!response.ok) {
         setIsGenerating(false)
-        alert('Failed to process request. Please try again.')
+        if (result.error === 'Insufficient credits') {
+          setShowUpgradeModal(true)
+        } else {
+          alert(result.error || 'Failed to generate content')
+        }
         return
       }
-    }
 
-    setTimeout(() => {
-      const topic = formData.topic.toLowerCase()
-      const isQuestion = topic.includes('?') || topic.includes('how') || topic.includes('what') || topic.includes('why')
-      const isTutorial = topic.includes('how to') || topic.includes('tutorial') || topic.includes('guide')
-      const isTransformation = topic.includes('before') || topic.includes('after') || topic.includes('change') || topic.includes('transform')
-      
-      // Generate more specific, creative hooks based on topic analysis
-      const topicWords = formData.topic.split(' ').filter(w => w.length > 3)
-      const mainWord = topicWords[0] || formData.topic
-      
-      const hooks = isQuestion ? [
-        `Everyone's asking about ${formData.topic}... but they're asking the wrong question.`,
-        `I spent 30 days testing ${formData.topic}. Here's what actually works (and what's a waste of time).`,
-        `The ${formData.topic} mistake 90% of people make (and how to fix it in 60 seconds)`,
-        `Why ${formData.topic} fails for most people (and the one thing that changes everything)`,
-      ] : isTutorial ? [
-        `The ${formData.topic} method I wish I knew 5 years ago`,
-        `I tried every ${formData.topic} technique. This is the only one that worked.`,
-        `Stop overcomplicating ${formData.topic}. Here's the simple 3-step method.`,
-        `The ${formData.topic} hack that saves me 2 hours every day`,
-      ] : isTransformation ? [
-        `I tried ${formData.topic} for 30 days. The results will shock you.`,
-        `Before vs After: How ${formData.topic} completely changed my life in 1 month`,
-        `The ${formData.topic} transformation nobody talks about (but everyone needs)`,
-        `I almost gave up on ${formData.topic}. Then I discovered this.`,
-      ] : [
-        `The ${formData.topic} secret that changed everything for me`,
-        `I tested ${formData.topic} for 30 days. Here's the honest truth.`,
-        `Stop doing ${formData.topic} the hard way. Here's the smart approach.`,
-        `The ${formData.topic} mistake I made (and how you can avoid it)`,
-      ]
-      
-      // Return top 3 most compelling hooks
-      const selectedHooks = hooks.slice(0, 3)
-
-      // Generate platform-specific captions
-      const caption = formData.platform === 'youtube-shorts' 
-        ? `${formData.topic} is one of those topics that seems simple, but most people are doing it wrong. In this video, I'll break down exactly what works, what doesn't, and why. This is based on my experience and research, so save this for later if you want to come back to it. Let me know in the comments if you've tried this before! 💡\n\n#Shorts #${formData.topic.replace(/\s+/g, '')} #Tips`
-        : `${formData.topic} — this changed everything for me. Swipe to see the full breakdown. Save this post if you want to try it later! 💡\n\nWhat's your experience with ${formData.topic}? Drop a comment below! 👇\n\n#Reels #${formData.topic.replace(/\s+/g, '')} #Tips #LifeHacks`
-
-      // Extract emphasis words from hooks and caption
-      const emphasis = [
-        ...hooks[0].split(' ').filter(w => w.length > 4 && !['this', 'that', 'with', 'what', 'here', 'does', 'doesn'].includes(w.toLowerCase())).slice(0, 2),
-        ...caption.split(' ').filter(w => w.length > 5 && ['change', 'everything', 'wrong', 'right', 'exactly', 'simple', 'secret', 'method'].includes(w.toLowerCase())),
-      ].slice(0, 5)
-
-      // Generate detailed timing based on platform
-      const timing = formData.platform === 'youtube-shorts' ? [
-        '0-2s: Hook appears - bold, large text, top 1/3 of screen. This is your retention moment.',
-        '2-4s: First key phrase appears - emphasize the main value proposition. Use contrasting colors.',
-        '4-8s: Supporting captions appear - break down the main point. Keep text readable and concise.',
-        '8-12s: Key insight or "aha" moment - highlight the most valuable piece of information.',
-        '12-16s: Additional context or example - reinforce the main message with visual text.',
-        '16-20s: CTA appears - "Save this" or "Follow for more". Make it clear and actionable.',
-      ] : [
-        '0-1.5s: Hook appears immediately - bold, eye-catching text. Instagram users scroll fast.',
-        '1.5-3s: First value statement - what they will learn or gain. Use emojis strategically.',
-        '3-6s: Main content captions - break down the key points. Keep it scannable.',
-        '6-9s: Supporting details - add context or examples. Use bullet points if helpful.',
-        '9-12s: Key takeaway - the most important point. Make it stand out visually.',
-        '12-15s: CTA - "Save this post" or "Follow for more tips". Clear and friendly.',
-      ]
-
-      // Platform-specific CTAs
-      const cta = formData.platform === 'youtube-shorts' ? [
-        'Save this video for later',
-        'Follow for more practical tips',
-        'Comment your experience below',
-        'Subscribe for weekly Shorts',
-      ] : [
-        'Save this post for later',
-        'Follow for daily tips',
-        'Share with someone who needs this',
-        'Comment your thoughts below',
-      ]
-
-      setOutput({ hooks: selectedHooks, caption, emphasis, timing, cta })
+      if (result.success && result.data) {
+        setOutput(result.data)
+        if (typeof result.creditsRemaining === 'number') {
+          setCredits(result.creditsRemaining)
+          window.dispatchEvent(new CustomEvent('credits-updated', { detail: { credits: result.creditsRemaining } }))
+        }
+      }
+    } catch (error) {
+      console.error('Error generating:', error)
+      alert('Failed to process request. Please try again.')
+    } finally {
       setIsGenerating(false)
-    }, 1200)
+    }
   }
 
   const copyToClipboard = (text: string, id: string) => {

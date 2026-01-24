@@ -68,72 +68,70 @@ export default function ScriptsPage() {
 
     setIsGenerating(true)
 
-    // Use credits for free users
-    if (!isPaid && user) {
-      try {
-        const response = await fetch('/api/credits/use', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            userId: user.id,
-            feature: 'scripts',
-          }),
-        })
+    try {
+      // Call the AI generation endpoint
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user?.id,
+          feature: 'scripts',
+          data: formData
+        }),
+      })
 
-        const data = await response.json()
-        if (!data.success) {
-          setIsGenerating(false)
-          if (data.error === 'Insufficient credits') {
-            setShowUpgradeModal(true)
-          } else {
-            alert(data.error || 'Failed to use credits')
-          }
-          return
-        }
+      const result = await response.json()
 
-        setCredits(data.creditsRemaining)
-        window.dispatchEvent(new CustomEvent('credits-updated', { detail: { credits: data.creditsRemaining } }))
-      } catch (error) {
-        console.error('Error using credits:', error)
+      if (!response.ok) {
         setIsGenerating(false)
-        alert('Failed to process request. Please try again.')
+        if (result.error === 'Insufficient credits') {
+          setShowUpgradeModal(true)
+        } else {
+          alert(result.error || 'Failed to generate script')
+        }
         return
       }
-    }
 
-    const script = generateScript(formData)
-    setIsGenerating(false)
-    
-    if (script) {
-      setGeneratedScript(script)
-      setIsSubmitted(true)
-      setSaveSuccess(false)
+      // Handle successful generation
+      if (result.success && result.data) {
+        const script = result.data
+        setGeneratedScript(script)
+        setIsSubmitted(true)
+        setSaveSuccess(false)
+        
+        // Update credits
+        if (typeof result.creditsRemaining === 'number') {
+          setCredits(result.creditsRemaining)
+          window.dispatchEvent(new CustomEvent('credits-updated', { detail: { credits: result.creditsRemaining } }))
+        }
 
-      // Save to database if user is logged in
-      if (user) {
-        setSaving(true)
-        const format = formats.find(f => f.slug === formData.formatSlug)
-        const saveResult = await saveScript({
-          topic: formData.topic,
-          format_slug: formData.formatSlug,
-          format_name: format?.name || 'Unknown',
-          hook: script.hook,
-          body: script.body,
-          cta: script.cta,
-          full_script: script.fullScript,
-          estimated_seconds: script.estimatedSeconds,
-          user_id: user.id,
-        })
-        setSaving(false)
-        if (saveResult.success) {
-          setSaveSuccess(true)
-          setTimeout(() => setSaveSuccess(false), 3000)
+        // Save to database
+        if (user) {
+          setSaving(true)
+          const format = formats.find(f => f.slug === formData.formatSlug)
+          const saveResult = await saveScript({
+            topic: formData.topic,
+            format_slug: formData.formatSlug,
+            format_name: format?.name || 'Unknown',
+            hook: script.hook,
+            body: script.body,
+            cta: script.cta,
+            full_script: script.fullScript,
+            estimated_seconds: script.estimatedSeconds,
+            user_id: user.id,
+          })
+          setSaving(false)
+          if (saveResult.success) {
+            setSaveSuccess(true)
+            setTimeout(() => setSaveSuccess(false), 3000)
+          }
         }
       }
-    } else {
-      alert('Error generating script. Please try again.')
+    } catch (error) {
+      console.error('Error generating script:', error)
+      alert('Failed to process request. Please try again.')
+    } finally {
+      setIsGenerating(false)
     }
   }
 

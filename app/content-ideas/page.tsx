@@ -154,92 +154,58 @@ export default function ContentIdeas() {
 
     setIsGenerating(true)
 
-    // Use credits for free users
-    if (!isPaid && user) {
-      try {
-        const response = await fetch('/api/credits/use', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            userId: user.id,
-            feature: 'content-ideas',
-          }),
-        })
-
-        const data = await response.json()
-        if (!data.success) {
-          setIsGenerating(false)
-          if (data.error === 'Insufficient credits') {
-            setShowUpgradeModal(true)
-          } else {
-            alert(data.error || 'Failed to use credits')
+    try {
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user?.id,
+          feature: 'content-ideas',
+          data: {
+            topic: topic,
+            category: selectedCategory
           }
-          return
-        }
+        }),
+      })
 
-        setCredits(data.creditsRemaining)
-        window.dispatchEvent(new CustomEvent('credits-updated', { detail: { credits: data.creditsRemaining } }))
-      } catch (error) {
-        console.error('Error using credits:', error)
+      const result = await response.json()
+
+      if (!response.ok) {
         setIsGenerating(false)
-        alert('Failed to process request. Please try again.')
+        if (result.error === 'Insufficient credits') {
+          setShowUpgradeModal(true)
+        } else {
+          alert(result.error || 'Failed to generate ideas')
+        }
         return
       }
-    }
 
-    const templates = ideaTemplates[selectedCategory as keyof typeof ideaTemplates] || ideaTemplates['Tech Tips']
-    
-    // Generate more specific descriptions based on category and topic
-    const generateDescription = (category: string, topic: string, title: string): string => {
-      const topicLower = topic.toLowerCase()
-      if (category === 'Tech Tips') {
-        return `A practical tech tip video showing how to use ${topic} more effectively. Includes step-by-step instructions and time-saving techniques.`
-      } else if (category === 'Life Hacks') {
-        return `A life hack video demonstrating a simple way to improve your daily routine with ${topic}. Easy to implement and saves time or money.`
-      } else if (category === 'Motivation') {
-        return `An inspiring video sharing personal experience with ${topic}. Real story with actionable takeaways for viewers.`
-      } else if (category === 'Education') {
-        return `An educational video breaking down ${topic} in simple terms. Makes complex concepts easy to understand in 60 seconds.`
-      } else if (category === 'Fitness') {
-        return `A fitness video showing effective ${topic} techniques. Includes proper form, common mistakes, and results you can expect.`
-      } else if (category === 'Cooking') {
-        return `A cooking video demonstrating ${topic} techniques or recipes. Quick, easy, and delicious results.`
-      } else {
-        return `A ${category.toLowerCase()} video about ${topic} with practical tips and insights.`
+      if (result.success && result.data) {
+        const ideas = result.data.ideas || []
+        // Ensure IDs are unique
+        const ideasWithIds = ideas.map((idea: any, idx: number) => ({
+          ...idea,
+          id: Date.now().toString() + idx
+        }))
+        setGeneratedIdeas(ideasWithIds)
+        
+        if (typeof result.creditsRemaining === 'number') {
+          setCredits(result.creditsRemaining)
+          window.dispatchEvent(new CustomEvent('credits-updated', { detail: { credits: result.creditsRemaining } }))
+        }
       }
+    } catch (error) {
+      console.error('Error generating ideas:', error)
+      alert('Failed to process request. Please try again.')
+    } finally {
+      setIsGenerating(false)
     }
-    
-    const newIdeas: ContentIdea[] = templates.slice(0, 5).map((template, idx) => {
-      // More intelligent replacements based on topic
-      const topicWords = topic.split(' ').filter(w => w.length > 2)
-      const actionWord = topicWords.find(w => ['learn', 'master', 'improve', 'build', 'create'].includes(w.toLowerCase())) || 'master'
-      const achievementWord = topicWords.find(w => ['success', 'results', 'progress', 'growth'].includes(w.toLowerCase())) || 'results'
-      
-      const title = template
-        .replace('{topic}', topic)
-        .replace('{Topic}', topic.charAt(0).toUpperCase() + topic.slice(1))
-        .replace('{action}', actionWord)
-        .replace('{achievement}', achievementWord)
-        .replace('{timeframe}', '30 days')
-        .replace('{situation}', `${topic} situation`)
-        .replace('{scenario}', `doing ${topic}`)
-        .replace('{better_action}', `the right way to do ${topic}`)
-        .replace('{idea}', topic)
-      
-      return {
-        id: Date.now().toString() + idx,
-        title,
-        description: generateDescription(selectedCategory, topic, title),
-        category: selectedCategory,
-        tags: [selectedCategory.toLowerCase(), ...topicWords.slice(0, 2), 'shorts', 'viral', 'tips'],
-      }
-    })
-
-    setGeneratedIdeas(newIdeas)
-    setIsGenerating(false)
   }
+
+  // Deprecated client-side templates logic
+  // const templates = ideaTemplates...
+  // const generateDescription...
+  // const newIdeas = ...
 
   const saveIdea = (idea: ContentIdea) => {
     setSavedIdeas([...savedIdeas, idea])

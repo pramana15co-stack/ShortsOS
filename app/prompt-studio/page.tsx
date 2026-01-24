@@ -72,167 +72,54 @@ export default function PromptStudioPage() {
 
     setIsGenerating(true)
 
-    // Use credits for free users
-    if (!isPaid && user) {
-      try {
-        const response = await fetch('/api/credits/use', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            userId: user.id,
-            feature: 'prompt-studio',
-          }),
-        })
+    try {
+      // Call the AI generation endpoint (handles credits + generation)
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user?.id,
+          feature: 'prompt-studio',
+          data: formData
+        }),
+      })
 
-        const data = await response.json()
-        if (!data.success) {
-          setIsGenerating(false)
-          if (data.error === 'Insufficient credits') {
-            setShowUpgradeModal(true)
-          } else {
-            alert(data.error || 'Failed to use credits')
-          }
-          return
-        }
+      const result = await response.json()
 
-        // Update credits display and refresh
-        setCredits(data.creditsRemaining)
-        // Trigger a refresh of CreditsDisplay component
-        window.dispatchEvent(new CustomEvent('credits-updated', { detail: { credits: data.creditsRemaining } }))
-      } catch (error) {
-        console.error('Error using credits:', error)
+      if (!response.ok) {
         setIsGenerating(false)
-        alert('Failed to process request. Please try again.')
+        if (result.error === 'Insufficient credits') {
+          setShowUpgradeModal(true)
+        } else {
+          alert(result.error || 'Failed to generate prompt')
+        }
         return
       }
-    }
 
-    // Simulate generation delay
-    setTimeout(() => {
-      const styleMap = {
-        cinematic: 'cinematic, high production value, professional lighting',
-        storytelling: 'narrative-driven, character-focused, emotional depth',
-        motivation: 'energetic, inspiring, dynamic movement',
-        explainer: 'clear, educational, well-lit, professional',
+      // Handle successful generation
+      if (result.success && result.data) {
+        setOutput(result.data)
+        
+        // Update credits if returned
+        if (typeof result.creditsRemaining === 'number') {
+          setCredits(result.creditsRemaining)
+          window.dispatchEvent(new CustomEvent('credits-updated', { detail: { credits: result.creditsRemaining } }))
+        }
       }
-
-      const toneMap = {
-        dramatic: 'dramatic lighting, intense atmosphere, high contrast',
-        calm: 'soft lighting, peaceful atmosphere, smooth transitions',
-        energetic: 'fast-paced, vibrant colors, dynamic camera movement',
-      }
-
-      const durationMap = {
-        '10s': '10 seconds, fast-paced, quick cuts',
-        '20s': '20 seconds, balanced pacing, 3-4 key moments',
-        '30s': '30 seconds, detailed storytelling, 4-5 scenes',
-      }
-
-      const platformMap = {
-        'youtube-shorts': 'vertical 9:16 format, optimized for mobile viewing',
-        'instagram-reels': 'vertical 9:16 format, Instagram-optimized',
-      }
-
-      // Generate more specific, detailed prompts based on topic
-      const topicLower = formData.topic.toLowerCase()
-      const isHowTo = topicLower.includes('how to') || topicLower.includes('how') || topicLower.includes('tutorial')
-      const isTransformation = topicLower.includes('before') || topicLower.includes('after') || topicLower.includes('transformation') || topicLower.includes('change')
-      const isList = topicLower.includes('top') || topicLower.includes('best') || topicLower.includes('5') || topicLower.includes('10')
-      const isComparison = topicLower.includes('vs') || topicLower.includes('versus') || topicLower.includes('compare')
-      
-      let specificContext = ''
-      if (isHowTo) {
-        specificContext = `Show step-by-step process clearly. Each step should be visually distinct. Use close-ups for important actions. Include visual indicators (arrows, highlights) for key moments.`
-      } else if (isTransformation) {
-        specificContext = `Show clear before and after states. Use side-by-side comparison or sequential reveal. Emphasize the dramatic difference. Use consistent lighting and framing for comparison shots.`
-      } else if (isList) {
-        specificContext = `Display each item clearly with visual separation. Use numbered indicators or distinct visual breaks. Each item should have its own moment. Use consistent visual style for all items.`
-      } else if (isComparison) {
-        specificContext = `Show both options side-by-side or sequentially. Use visual contrast to highlight differences. Include clear labels for each option. Use split-screen or alternating shots.`
-      } else {
-        specificContext = `Focus on the key value or insight. Use visual metaphors or demonstrations. Show real-world application or examples. Make abstract concepts concrete and visual.`
-      }
-
-      const mainPrompt = `Create a ${formData.style} style video about "${formData.topic}" in ${formData.tone} tone. ${styleMap[formData.style]}. ${toneMap[formData.tone]}. ${durationMap[formData.duration]}. ${platformMap[formData.platform]}. ${specificContext} High quality, professional production. 4K resolution, cinematic color grading, smooth camera movements, professional lighting setup.`
-
-      const scenes = generateScenes(formData)
-      const hook = generateHook(formData)
-      const pacing = generatePacing(formData)
-
-      setOutput({ mainPrompt, scenes, hook, pacing })
+    } catch (error) {
+      console.error('Error generating prompt:', error)
+      alert('Failed to process request. Please try again.')
+    } finally {
       setIsGenerating(false)
-    }, 1500)
-  }
-
-  const generateScenes = (data: typeof formData): string[] => {
-    const sceneCount = data.duration === '10s' ? 2 : data.duration === '20s' ? 3 : 4
-    const topic = data.topic.toLowerCase()
-    const isHowTo = topic.includes('how to') || topic.includes('how') || topic.includes('tutorial')
-    const isTransformation = topic.includes('before') || topic.includes('after') || topic.includes('transformation')
-    const isList = topic.includes('top') || topic.includes('best') || topic.includes('5') || topic.includes('10')
-    
-    const sceneTemplates = {
-      cinematic: isHowTo ? [
-        `Scene 1: Wide establishing shot showing the setup or starting point. ${data.tone === 'dramatic' ? 'Dramatic lighting highlighting the challenge' : data.tone === 'energetic' ? 'Energetic setup with vibrant colors' : 'Clean, professional setup with soft lighting'}. Show all tools, materials, or context needed for "${data.topic}". Camera slowly pushes in to create anticipation.`,
-        `Scene 2: Medium shot of the first key step in action. ${data.tone === 'dramatic' ? 'Intense focus on the critical action with shallow depth of field' : data.tone === 'energetic' ? 'Fast-paced action with dynamic camera movement' : 'Clear, steady shot showing the process'}. Hands or subject in frame performing the action. Use slow-motion for key moments if energetic.`,
-        `Scene 3: Close-up of the most important detail or result. ${data.tone === 'dramatic' ? 'Extreme close-up with dramatic shadows emphasizing the transformation' : data.tone === 'energetic' ? 'Dynamic close-up showing the result with motion blur effects' : 'Clean, well-lit close-up showing the outcome'}. This is the "aha" moment - make it visually striking.`,
-        `Scene 4: Final reveal showing the completed result or transformation. ${data.tone === 'dramatic' ? 'Powerful conclusion with strong visual impact, before/after comparison' : data.tone === 'energetic' ? 'Energetic finale with vibrant colors celebrating the result' : 'Peaceful resolution showing the final outcome'}. Pull back to show the full context.`,
-      ] : isTransformation ? [
-        `Scene 1: "Before" state - wide shot showing the initial situation. ${data.tone === 'dramatic' ? 'Dramatic lighting emphasizing the problem or starting point' : data.tone === 'energetic' ? 'Energetic but showing the challenge' : 'Clear, honest representation of the starting point'}. Use consistent framing that will be repeated in the "after" shot.`,
-        `Scene 2: Transition or process shot. ${data.tone === 'dramatic' ? 'Intense focus on the moment of change with shallow depth of field' : data.tone === 'energetic' ? 'Fast-paced transformation with dynamic movement' : 'Smooth transition showing the process'}. Show the work, effort, or method being applied.`,
-        `Scene 3: "After" state reveal - same framing as Scene 1. ${data.tone === 'dramatic' ? 'Powerful contrast with dramatic lighting showing the transformation' : data.tone === 'energetic' ? 'Energetic reveal with vibrant colors celebrating the result' : 'Clear, well-lit shot showing the outcome'}. The transformation should be immediately obvious.`,
-        `Scene 4: Side-by-side comparison or final celebration. ${data.tone === 'dramatic' ? 'Powerful conclusion with strong visual impact showing the full transformation' : data.tone === 'energetic' ? 'Energetic finale with vibrant colors' : 'Peaceful resolution showing the complete change'}.`,
-      ] : [
-        `Scene 1: Wide establishing shot with ${data.tone === 'dramatic' ? 'dramatic lighting and high contrast' : data.tone === 'energetic' ? 'vibrant colors and dynamic composition' : 'soft, natural lighting'}. Show the main subject or environment related to "${data.topic}" with professional camera movement.`,
-        `Scene 2: Medium shot focusing on key action or transformation. ${data.tone === 'dramatic' ? 'Intense focus with shallow depth of field' : data.tone === 'energetic' ? 'Fast-paced movement with multiple angles' : 'Smooth, steady composition'}.`,
-        `Scene 3: Close-up detail shot highlighting the most important element. ${data.tone === 'dramatic' ? 'Extreme close-up with dramatic shadows' : data.tone === 'energetic' ? 'Dynamic close-up with motion blur effects' : 'Clean, well-lit close-up'}.`,
-        `Scene 4: Final reveal or outcome shot. ${data.tone === 'dramatic' ? 'Powerful conclusion with strong visual impact' : data.tone === 'energetic' ? 'Energetic finale with vibrant colors' : 'Peaceful resolution with balanced composition'}.`,
-      ],
-      storytelling: [
-        `Scene 1: Opening moment that establishes the narrative context. Show the beginning state or problem related to "${data.topic}". ${data.tone === 'dramatic' ? 'Create tension through visual storytelling' : data.tone === 'energetic' ? 'Start with action or movement' : 'Begin with a calm, relatable moment'}.`,
-        `Scene 2: Development of the story. Show the journey, process, or transformation. ${data.tone === 'dramatic' ? 'Build emotional intensity' : data.tone === 'energetic' ? 'Show progress with dynamic visuals' : 'Present the process clearly and smoothly'}.`,
-        `Scene 3: Key moment or turning point in the narrative. This is where the main value or insight is revealed. ${data.tone === 'dramatic' ? 'Emphasize the significance of this moment' : data.tone === 'energetic' ? 'Make this moment visually exciting' : 'Present this moment clearly and understandably'}.`,
-        `Scene 4: Resolution or outcome. Show the result, lesson learned, or transformation complete. ${data.tone === 'dramatic' ? 'End with a powerful visual conclusion' : data.tone === 'energetic' ? 'Conclude with energy and positivity' : 'End on a peaceful, satisfying note'}.`,
-      ],
-      motivation: [
-        `Scene 1: High-energy opening that immediately grabs attention. Show someone taking action or a powerful visual related to "${data.topic}". ${data.tone === 'dramatic' ? 'Intense, powerful imagery' : data.tone === 'energetic' ? 'Fast-paced, vibrant visuals' : 'Inspiring but calm visual'}.`,
-        `Scene 2: Show the process, effort, or journey. Demonstrate the work or steps involved. ${data.tone === 'dramatic' ? 'Emphasize the challenge and determination' : data.tone === 'energetic' ? 'Show dynamic movement and progress' : 'Present the process in an inspiring, clear way'}.`,
-        `Scene 3: Highlight the transformation, achievement, or result. Show what's possible. ${data.tone === 'dramatic' ? 'Powerful before/after or result shot' : data.tone === 'energetic' ? 'Celebratory, energetic result visualization' : 'Peaceful, satisfying outcome'}.`,
-        `Scene 4: Call to action or inspiring conclusion. Motivate viewers to take action. ${data.tone === 'dramatic' ? 'End with a powerful, memorable visual' : data.tone === 'energetic' ? 'Conclude with high energy and excitement' : 'End with calm inspiration'}.`,
-      ],
-      explainer: [
-        `Scene 1: Clear introduction to the topic. Show what "${data.topic}" is or the problem it solves. ${data.tone === 'dramatic' ? 'Present the problem or concept with visual impact' : data.tone === 'energetic' ? 'Introduce with engaging, dynamic visuals' : 'Present clearly and understandably'}.`,
-        `Scene 2: Break down the concept or show the first step. Use visual aids or demonstrations. ${data.tone === 'dramatic' ? 'Make the explanation visually compelling' : data.tone === 'energetic' ? 'Show the step with dynamic visuals' : 'Present the step clearly and simply'}.`,
-        `Scene 3: Continue the explanation or show the main concept. Build understanding. ${data.tone === 'dramatic' ? 'Emphasize key points with strong visuals' : data.tone === 'energetic' ? 'Keep the explanation engaging and dynamic' : 'Present information clearly and calmly'}.`,
-        `Scene 4: Summarize or show the complete picture. Reinforce the main takeaway. ${data.tone === 'dramatic' ? 'End with a memorable visual summary' : data.tone === 'energetic' ? 'Conclude with engaging, dynamic visuals' : 'End with a clear, peaceful summary'}.`,
-      ],
     }
-
-    const templates = sceneTemplates[data.style] || sceneTemplates.explainer
-    return templates.slice(0, sceneCount).map((template, i) => `Scene ${i + 1}: ${template}`)
   }
 
-  const generateHook = (data: typeof formData): string => {
-    const hookTemplates = {
-      dramatic: `Hook (0-2s): Open with a powerful, attention-grabbing visual that immediately establishes the intensity of "${data.topic}". Use high contrast, dramatic lighting, or a striking visual element that creates instant intrigue. The first frame should make viewers stop scrolling. Consider: a close-up of a key element, a dramatic transformation, or a visually striking moment that relates to your topic.`,
-      calm: `Hook (0-2s): Begin with a visually pleasing, peaceful introduction to "${data.topic}" that draws viewers in through aesthetic appeal. Use soft lighting, smooth composition, or a beautiful visual that creates immediate interest. The opening should feel inviting and professional. Consider: a serene establishing shot, a smooth reveal, or an aesthetically pleasing detail related to your topic.`,
-      energetic: `Hook (0-2s): Start with high-energy, dynamic visuals that immediately capture attention through movement and vibrancy. Show action, transformation, or an exciting moment related to "${data.topic}" in the first 2 seconds. Use fast cuts, vibrant colors, or dynamic camera movement. The opening should feel exciting and engaging. Consider: action in progress, a dynamic reveal, or energetic movement that relates to your topic.`,
-    }
-    
-    return hookTemplates[data.tone] || hookTemplates.calm
-  }
-
-  const generatePacing = (data: typeof formData): string[] => {
-    const duration = parseInt(data.duration)
-    return [
-      `0-${Math.floor(duration * 0.1)}s: Hook - immediate visual impact`,
-      `${Math.floor(duration * 0.1)}-${Math.floor(duration * 0.4)}s: Setup - establish context`,
-      `${Math.floor(duration * 0.4)}-${Math.floor(duration * 0.9)}s: Main content - deliver value`,
-      `${Math.floor(duration * 0.9)}-${duration}s: CTA - call to action`,
-    ]
-  }
+  // Helper functions moved to backend or deprecated
+  // const generateScenes...
+  // const generateHook...
+  // const generatePacing...
 
   const copyToClipboard = (text: string, id: string) => {
     navigator.clipboard.writeText(text)

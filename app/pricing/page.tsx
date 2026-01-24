@@ -28,8 +28,9 @@ export default function PricingPage() {
           .select('id')
           .eq('user_id', user.id)
           .limit(1)
+          .maybeSingle()
 
-        if (!error && payments && payments.length > 0) {
+        if (!error && payments) {
           setHasPreviousPayments(true)
         } else {
           setHasPreviousPayments(false)

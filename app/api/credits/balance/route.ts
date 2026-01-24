@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
     // Admin always has unlimited credits
     if (profile.is_admin) {
       return NextResponse.json({
-        credits: -1, // -1 means unlimited
+        credits: 999999, // Display a high number instead of -1 for better UX
         isPaid: true,
         unlimited: true,
         isAdmin: true,
@@ -91,9 +91,9 @@ export async function POST(request: NextRequest) {
       new Date(profile.plan_expiry) > new Date()
 
     return NextResponse.json({
-      credits: isPaid ? -1 : profile.credits || 0, // -1 means unlimited
-      isPaid,
-      unlimited: isPaid,
+      credits: isPaid ? 999999 : profile.credits || 0,
+      isPaid: !!isPaid, // Ensure boolean
+      unlimited: !!isPaid,
     })
   } catch (error) {
     console.error('❌ [CREDITS] Error:', error)
