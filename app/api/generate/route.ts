@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { generateAIContent } from '@/lib/ai-service';
 import { createClient } from '@supabase/supabase-js';
 import { FEATURE_CREDITS, FeatureName } from '@/lib/credits';
+import { generateScript } from '@/lib/scriptTemplates';
+import { generatePromptStudioData, generateHookCaptionData, generateContentIdeasData } from '@/lib/generators';
 
 // Service role client for credit deduction
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -26,6 +28,9 @@ export async function POST(request: NextRequest) {
     // 1. Verify Credits (Backend Enforcement)
     const supabase = getServiceRoleClient();
     if (!supabase) {
+      // If we can't check credits, we shouldn't proceed in a paid app, 
+      // but to avoid blocking the user if config is broken, we might allow it or fail.
+      // Failing safely:
       return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
     }
 
@@ -51,11 +56,14 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // 2. Generate Content via OpenAI
+    // 2. Generate Content via OpenAI (or Fallback)
+    let aiResult: string | null = null;
+    let fallbackData: any = null;
+
+    // Define prompts based on feature
     let systemPrompt = '';
     let userPrompt = '';
 
-    // Define prompts based on feature
     switch (feature) {
       case 'prompt-studio':
         systemPrompt = `You are an expert AI Video Prompt Engineer. Create a detailed, professional prompt for AI video generators like Sora or Runway. Output JSON format with keys: "mainPrompt", "scenes" (array), "hook", "pacing" (array).`;
@@ -68,7 +76,7 @@ export async function POST(request: NextRequest) {
         break;
 
       case 'hook-caption':
-        systemPrompt = `You are a social media expert. Generate viral hooks and captions. Output JSON with keys: "hooks" (array of 3), "caption", "hashtags" (array).`;
+        systemPrompt = `You are a social media expert. Generate viral hooks and captions. Output JSON with keys: "hooks" (array of 3), "caption", "hashtags" (array), "emphasis" (array), "timing" (array), "cta" (array).`;
         userPrompt = `Topic: ${data.topic}. Platform: ${data.platform}.`;
         break;
 
@@ -81,27 +89,55 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'Invalid feature' }, { status: 400 });
     }
 
-    // Call AI Service
-    const aiResult = await generateAIContent({
-      systemPrompt,
-      userPrompt,
-      model: 'gpt-4o-mini', // Fast & efficient
-      temperature: 0.8,
-    });
-
-    // Fallback to templates if AI fails (e.g. no key)
-    if (!aiResult) {
-      return NextResponse.json({ 
-        success: false, 
-        fallback: true, 
-        message: 'AI service unavailable, using templates' 
+    // Try AI Generation
+    try {
+      aiResult = await generateAIContent({
+        systemPrompt,
+        userPrompt,
+        model: 'gpt-4o-mini',
+        temperature: 0.8,
       });
+    } catch (e) {
+      console.warn('AI Generation failed, using fallback');
     }
 
-    // 3. Deduct Credits (only if AI generation worked and user is not free/admin)
+    // Prepare Response Data
+    let finalData;
+
+    if (aiResult) {
+      try {
+        finalData = JSON.parse(aiResult);
+      } catch (e) {
+        console.error('Failed to parse AI JSON', e);
+        aiResult = null; // Trigger fallback
+      }
+    }
+
+    // Fallback Logic
+    if (!aiResult) {
+      console.log(`Using fallback generator for ${feature}`);
+      switch (feature) {
+        case 'prompt-studio':
+          finalData = generatePromptStudioData(data);
+          break;
+        case 'scripts':
+          finalData = generateScript(data); // Uses existing template logic
+          break;
+        case 'hook-caption':
+          finalData = generateHookCaptionData(data);
+          break;
+        case 'content-ideas':
+          finalData = generateContentIdeasData(data);
+          break;
+      }
+    }
+
+    // 3. Deduct Credits (only if user is not free/admin)
+    // Note: We deduct credits even for fallback content as it provides value
+    let newCredits = profile.credits;
     if (!profile.is_admin && !isPaid) {
       const cost = FEATURE_CREDITS[feature as FeatureName] || 0;
-      const newCredits = (profile.credits || 0) - cost;
+      newCredits = (profile.credits || 0) - cost;
       
       await supabase.from('profiles').update({ credits: newCredits }).eq('user_id', userId);
       await supabase.from('credits_transactions').insert({
@@ -110,18 +146,13 @@ export async function POST(request: NextRequest) {
         credits_used: cost,
         credits_remaining: newCredits
       });
-      
-      return NextResponse.json({ 
-        success: true, 
-        data: JSON.parse(aiResult), 
-        creditsRemaining: newCredits 
-      });
     }
 
     return NextResponse.json({ 
       success: true, 
-      data: JSON.parse(aiResult), 
-      creditsRemaining: profile.credits // No deduction
+      data: finalData, 
+      creditsRemaining: newCredits,
+      usedFallback: !aiResult 
     });
 
   } catch (error: any) {
@@ -129,3 +160,4 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
