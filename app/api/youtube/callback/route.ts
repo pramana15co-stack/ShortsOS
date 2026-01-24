@@ -8,7 +8,7 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const googleClientId = process.env.GOOGLE_CLIENT_ID;
 const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+// baseUrl removed - using request.nextUrl.origin instead for reliability
 
 function getServiceRoleClient() {
   if (!supabaseUrl || !supabaseServiceKey) return null;
@@ -19,17 +19,20 @@ function getServiceRoleClient() {
 
 export async function GET(request: NextRequest) {
   try {
+    // Get base URL from request (more reliable than env var)
+    const origin = request.nextUrl.origin;
+    
     const searchParams = request.nextUrl.searchParams;
     const code = searchParams.get('code');
     const state = searchParams.get('state');
     const error = searchParams.get('error');
 
     if (error) {
-      return NextResponse.redirect(`${baseUrl}/analytics?error=${encodeURIComponent(error)}`);
+      return NextResponse.redirect(`${origin}/analytics?error=${encodeURIComponent(error)}`);
     }
 
     if (!code || !state) {
-      return NextResponse.redirect(`${baseUrl}/analytics?error=missing_params`);
+      return NextResponse.redirect(`${origin}/analytics?error=missing_params`);
     }
 
     // Decode state to get userId
@@ -38,12 +41,12 @@ export async function GET(request: NextRequest) {
       const decodedState = JSON.parse(Buffer.from(state, 'base64').toString());
       userId = decodedState.userId;
     } catch {
-      return NextResponse.redirect(`${baseUrl}/analytics?error=invalid_state`);
+      return NextResponse.redirect(`${origin}/analytics?error=invalid_state`);
     }
 
     // Verify user session
     if (!supabaseUrl || !supabaseAnonKey) {
-      return NextResponse.redirect(`${baseUrl}/analytics?error=server_config_error`);
+      return NextResponse.redirect(`${origin}/analytics?error=server_config_error`);
     }
 
     const cookieStore = await cookies();
@@ -67,15 +70,15 @@ export async function GET(request: NextRequest) {
     const { data: { user }, error: authError } = await supabase.auth.getUser();
 
     if (authError || !user || user.id !== userId) {
-      return NextResponse.redirect(`${baseUrl}/analytics?error=unauthorized`);
+      return NextResponse.redirect(`${origin}/analytics?error=unauthorized`);
     }
 
     if (!googleClientId || !googleClientSecret) {
-      return NextResponse.redirect(`${baseUrl}/analytics?error=oauth_not_configured`);
+      return NextResponse.redirect(`${origin}/analytics?error=oauth_not_configured`);
     }
 
     // Exchange code for tokens
-    const redirectUri = `${baseUrl}/api/youtube/callback`;
+    const redirectUri = `${origin}/api/youtube/callback`;
     const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
       method: 'POST',
       headers: {
@@ -93,7 +96,7 @@ export async function GET(request: NextRequest) {
     if (!tokenResponse.ok) {
       const errorData = await tokenResponse.json();
       console.error('Token exchange error:', errorData);
-      return NextResponse.redirect(`${baseUrl}/analytics?error=token_exchange_failed`);
+      return NextResponse.redirect(`${origin}/analytics?error=token_exchange_failed`);
     }
 
     const tokens = await tokenResponse.json();
@@ -111,14 +114,14 @@ export async function GET(request: NextRequest) {
 
     if (!channelResponse.ok) {
       console.error('Channel fetch error:', await channelResponse.text());
-      return NextResponse.redirect(`${baseUrl}/analytics?error=channel_fetch_failed`);
+      return NextResponse.redirect(`${origin}/analytics?error=channel_fetch_failed`);
     }
 
     const channelData = await channelResponse.json();
     const channel = channelData.items?.[0];
 
     if (!channel) {
-      return NextResponse.redirect(`${baseUrl}/analytics?error=no_channel_found`);
+      return NextResponse.redirect(`${origin}/analytics?error=no_channel_found`);
     }
 
     const channelInfo = {
@@ -132,7 +135,7 @@ export async function GET(request: NextRequest) {
     // Save to database
     const supabaseAdmin = getServiceRoleClient();
     if (!supabaseAdmin) {
-      return NextResponse.redirect(`${baseUrl}/analytics?error=db_error`);
+      return NextResponse.redirect(`${origin}/analytics?error=db_error`);
     }
 
     // Check if channel already exists
@@ -156,7 +159,7 @@ export async function GET(request: NextRequest) {
 
       if (updateError) {
         console.error('Update error:', updateError);
-        return NextResponse.redirect(`${baseUrl}/analytics?error=update_failed`);
+        return NextResponse.redirect(`${origin}/analytics?error=update_failed`);
       }
     } else {
       // Insert new
@@ -171,13 +174,13 @@ export async function GET(request: NextRequest) {
 
       if (insertError) {
         console.error('Insert error:', insertError);
-        return NextResponse.redirect(`${baseUrl}/analytics?error=insert_failed`);
+        return NextResponse.redirect(`${origin}/analytics?error=insert_failed`);
       }
     }
 
-    return NextResponse.redirect(`${baseUrl}/analytics?linked=success`);
+    return NextResponse.redirect(`${origin}/analytics?linked=success`);
   } catch (error: any) {
     console.error('Callback error:', error);
-    return NextResponse.redirect(`${baseUrl}/analytics?error=callback_error`);
+    return NextResponse.redirect(`${origin}/analytics?error=callback_error`);
   }
 }

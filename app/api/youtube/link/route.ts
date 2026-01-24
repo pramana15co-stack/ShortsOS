@@ -8,7 +8,7 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const googleClientId = process.env.GOOGLE_CLIENT_ID;
 const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET;
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+// baseUrl removed - using request.nextUrl.origin instead for reliability
 
 function getServiceRoleClient() {
   if (!supabaseUrl || !supabaseServiceKey) return null;
@@ -51,8 +51,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Build OAuth URL
-    const redirectUri = `${baseUrl}/api/youtube/callback`;
+    // Get base URL from request (more reliable than env var)
+    const origin = request.nextUrl.origin;
+    const redirectUri = `${origin}/api/youtube/callback`;
     const scope = 'https://www.googleapis.com/auth/youtube.readonly';
     const state = Buffer.from(JSON.stringify({ userId: user.id })).toString('base64');
 
