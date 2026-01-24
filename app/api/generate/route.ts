@@ -34,11 +34,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
     }
 
-    let { data: profile } = await supabase
+    const { data: fetchedProfile } = await supabase
       .from('profiles')
       .select('credits, subscription_status, plan_expiry, is_admin')
       .eq('user_id', userId)
       .maybeSingle();
+
+    let profile: any = fetchedProfile;
 
     if (!profile) {
       console.log(`⚠️ [GENERATE] Profile missing for user ${userId}, creating default profile...`);
