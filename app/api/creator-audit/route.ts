@@ -144,6 +144,7 @@ export async function POST(request: NextRequest) {
 
     let channelData: any = null;
     let analyticsData: any = null;
+    let channelSnippet: any = null;
     
     if (channel) {
       let accessToken = channel.access_token;
@@ -174,7 +175,7 @@ export async function POST(request: NextRequest) {
           if (statsResponse.ok) {
             const statsData = await statsResponse.json();
             const stats = statsData.items?.[0]?.statistics;
-            const snippet = statsData.items?.[0]?.snippet;
+            channelSnippet = statsData.items?.[0]?.snippet;
             
             if (stats) {
               analyticsData = {
@@ -182,7 +183,7 @@ export async function POST(request: NextRequest) {
                 totalViews: parseInt(stats.viewCount || '0'),
                 videoCount: parseInt(stats.videoCount || '0'),
                 avgViewsPerVideo: Math.round(parseInt(stats.viewCount || '0') / Math.max(parseInt(stats.videoCount || '1'), 1)),
-                channelCreated: snippet?.publishedAt || null,
+                channelCreated: channelSnippet?.publishedAt || null,
               };
             }
           }
@@ -200,7 +201,7 @@ export async function POST(request: NextRequest) {
           if (videosResponse.ok) {
             const videosData = await videosResponse.json();
             channelData = {
-              channelTitle: channel.title || snippet?.title || 'Unknown Channel',
+              channelTitle: channel.title || channelSnippet?.title || 'Unknown Channel',
               subscribers: analyticsData?.subscribers || channel.subscribers || 0,
               totalViews: analyticsData?.totalViews || channel.views || 0,
               videoCount: analyticsData?.videoCount || channel.video_count || 0,
