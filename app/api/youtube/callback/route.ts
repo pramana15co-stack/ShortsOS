@@ -139,11 +139,20 @@ export async function GET(request: NextRequest) {
     }
 
     // Check if channel already exists
-    const { data: existing } = await supabaseAdmin
+    const { data: existing, error: checkError } = await supabaseAdmin
       .from('youtube_channels')
       .select('id')
       .eq('user_id', userId)
       .maybeSingle();
+
+    if (checkError) {
+      console.error('Check existing channel error:', checkError);
+      // If table doesn't exist, provide helpful error
+      if (checkError.code === '42P01' || checkError.message?.includes('does not exist')) {
+        return NextResponse.redirect(`${origin}/analytics?error=table_not_found&message=${encodeURIComponent('Please run the database migration in Supabase SQL Editor')}`);
+      }
+      return NextResponse.redirect(`${origin}/analytics?error=check_failed&message=${encodeURIComponent(checkError.message || 'Unknown error')}`);
+    }
 
     if (existing) {
       // Update existing
@@ -159,7 +168,8 @@ export async function GET(request: NextRequest) {
 
       if (updateError) {
         console.error('Update error:', updateError);
-        return NextResponse.redirect(`${origin}/analytics?error=update_failed`);
+        const errorMessage = updateError.message || JSON.stringify(updateError);
+        return NextResponse.redirect(`${origin}/analytics?error=update_failed&message=${encodeURIComponent(errorMessage)}`);
       }
     } else {
       // Insert new
@@ -174,7 +184,29 @@ export async function GET(request: NextRequest) {
 
       if (insertError) {
         console.error('Insert error:', insertError);
-        return NextResponse.redirect(`${origin}/analytics?error=insert_failed`);
+        const errorMessage = insertError.message || JSON.stringify(insertError);
+        // Check for specific error types
+        if (insertError.code === '23505') { // Unique constraint violation
+          // Try update instead
+          const { error: updateError } = await supabaseAdmin
+            .from('youtube_channels')
+            .update({
+              ...channelInfo,
+              access_token,
+              refresh_token,
+              updated_at: new Date().toISOString(),
+            })
+            .eq('user_id', userId);
+          
+          if (updateError) {
+            return NextResponse.redirect(`${origin}/analytics?error=insert_failed&message=${encodeURIComponent(updateError.message || 'Failed to update existing channel')}`);
+          }
+          // Update succeeded, continue
+        } else if (insertError.code === '42P01' || insertError.message?.includes('does not exist')) {
+          return NextResponse.redirect(`${origin}/analytics?error=table_not_found&message=${encodeURIComponent('Please run the database migration: supabase/migrations/create_youtube_channels.sql')}`);
+        } else {
+          return NextResponse.redirect(`${origin}/analytics?error=insert_failed&message=${encodeURIComponent(errorMessage)}`);
+        }
       }
     }
 

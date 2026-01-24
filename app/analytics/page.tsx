@@ -120,7 +120,24 @@ export default function AnalyticsPage() {
       window.history.replaceState({}, '', '/analytics')
     }
     if (params.get('error')) {
-      setError(params.get('error') || 'Unknown error')
+      const errorCode = params.get('error')
+      const errorMessage = params.get('message') || errorCode
+      
+      // Format error message
+      let displayError = errorCode
+      if (errorCode === 'table_not_found') {
+        displayError = 'Database table not found. Please run the migration in Supabase SQL Editor.'
+      } else if (errorCode === 'insert_failed') {
+        displayError = `Insert failed: ${errorMessage}`
+      } else if (errorCode === 'update_failed') {
+        displayError = `Update failed: ${errorMessage}`
+      } else if (errorMessage && errorMessage !== errorCode) {
+        displayError = `${errorCode}: ${errorMessage}`
+      }
+      
+      setError(displayError)
+      // Clear error from URL after displaying
+      window.history.replaceState({}, '', '/analytics')
     }
   }, [])
 
