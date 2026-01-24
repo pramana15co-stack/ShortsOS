@@ -186,26 +186,193 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Generate AI audit for paid users
+    // Fetch additional video statistics if channel is linked
+    let videoStats: any = null;
+    if (channelData && channel) {
+      try {
+        let accessToken = channel.access_token;
+        if (channel.refresh_token) {
+          const refreshed = await refreshAccessToken(channel.refresh_token);
+          if (refreshed) accessToken = refreshed;
+        }
+
+        if (accessToken && channelData.recentVideos.length > 0) {
+          // Get video IDs from recent videos
+          const videoIds = channelData.recentVideos
+            .slice(0, 5)
+            .map((v: any) => {
+              // Extract video ID from title or fetch from search results
+              return null; // We'll use a different approach
+            })
+            .filter(Boolean);
+
+          // Try to get video statistics
+          const statsResponse = await fetch(
+            `https://www.googleapis.com/youtube/v3/channels?part=statistics&id=${channel.channel_id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+
+          if (statsResponse.ok) {
+            const statsData = await statsResponse.json();
+            const stats = statsData.items?.[0]?.statistics;
+            if (stats) {
+              videoStats = {
+                totalViews: parseInt(stats.viewCount || '0'),
+                subscriberCount: parseInt(stats.subscriberCount || '0'),
+                videoCount: parseInt(stats.videoCount || '0'),
+                avgViewsPerVideo: Math.round(parseInt(stats.viewCount || '0') / Math.max(parseInt(stats.videoCount || '1'), 1)),
+              };
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching video stats:', error);
+      }
+    }
+
+    // Generate comprehensive AI audit for paid users
     let aiAudit = null;
     try {
-      const systemPrompt = `You are an expert YouTube Creator Intelligence Analyst. Analyze the provided channel data and generate a comprehensive, personalized audit. Output JSON format with keys: "creator_stage" (string), "content_gaps" (array of strings), "what_to_post_next" (array of 5-10 strings), "what_to_avoid" (array of strings), "monetization_readiness" (string), "algorithm_optimization" (array of strings), "platform_strategy" (object with "youtube" and "instagram" keys).`;
+      const systemPrompt = `You are an elite YouTube Creator Intelligence Analyst with 10+ years of experience analyzing successful channels. Your audits are used by top creators and agencies. 
+
+Generate a COMPREHENSIVE, PROFESSIONAL audit that provides:
+1. Detailed creator stage analysis with specific metrics and benchmarks
+2. Actionable content gaps with priority levels
+3. Strategic content recommendations with specific video ideas
+4. Monetization roadmap with clear milestones
+5. Algorithm optimization tactics based on current YouTube trends
+6. Platform-specific strategies with tactical advice
+7. Growth projections and next steps
+
+Output MUST be valid JSON with this exact structure:
+{
+  "creator_stage": {
+    "stage": "string (e.g., 'Micro-Influencer', 'Growing Creator', 'Established Creator')",
+    "description": "Detailed 2-3 sentence explanation of their current stage",
+    "subscriber_range": "string (e.g., '1K-10K', '10K-100K')",
+    "next_milestone": "string (specific next goal)",
+    "time_to_next": "string (realistic timeline)"
+  },
+  "content_analysis": {
+    "strengths": ["array of 3-5 specific strengths"],
+    "weaknesses": ["array of 3-5 specific weaknesses"],
+    "content_gaps": ["array of 5-7 prioritized gaps with explanations"],
+    "niche_positioning": "string (where they stand in their niche)"
+  },
+  "content_recommendations": {
+    "what_to_post_next": [
+      {
+        "title": "string (specific video idea)",
+        "reason": "string (why this will work)",
+        "priority": "string (High/Medium/Low)"
+      }
+    ],
+    "trending_opportunities": ["array of 3-5 trending topics in their niche"],
+    "evergreen_content": ["array of 3-5 evergreen ideas"]
+  },
+  "what_to_avoid": [
+    {
+      "mistake": "string (specific mistake)",
+      "impact": "string (why it's harmful)",
+      "alternative": "string (what to do instead)"
+    }
+  ],
+  "monetization_roadmap": {
+    "current_readiness": "string (percentage and explanation)",
+    "requirements_met": ["array of requirements they've met"],
+    "requirements_missing": ["array of requirements they need"],
+    "next_steps": ["array of 3-5 specific monetization steps"],
+    "potential_revenue": "string (realistic estimate based on their metrics)"
+  },
+  "algorithm_optimization": {
+    "retention_strategies": ["array of 5-7 specific retention tactics"],
+    "ctr_improvements": ["array of 3-5 CTR optimization tips"],
+    "engagement_tactics": ["array of 3-5 engagement boosters"],
+    "posting_schedule": "string (optimal posting frequency and times)"
+  },
+  "platform_strategy": {
+    "youtube": {
+      "primary_focus": "string (main strategy)",
+      "shorts_strategy": "string (how to use Shorts)",
+      "long_form_strategy": "string (long-form approach)",
+      "community_tab": "string (community engagement)"
+    },
+    "instagram": {
+      "reels_strategy": "string (Reels approach)",
+      "cross_promotion": "string (how to drive traffic)",
+      "stories_tactics": "string (Stories usage)"
+    },
+    "tiktok": {
+      "strategy": "string (TikTok approach if relevant)"
+    }
+  },
+  "growth_projections": {
+    "current_trajectory": "string (where they're heading)",
+    "optimized_trajectory": "string (where they could be)",
+    "key_levers": ["array of 3-5 growth levers to pull"],
+    "timeline_to_10k": "string (realistic timeline)",
+    "timeline_to_100k": "string (realistic timeline)"
+  },
+  "action_plan": {
+    "immediate_actions": ["array of 3-5 things to do this week"],
+    "30_day_plan": ["array of 3-5 monthly goals"],
+    "90_day_vision": "string (where they should be in 90 days)"
+  }
+}
+
+Be SPECIFIC, ACTIONABLE, and DATA-DRIVEN. Use their actual metrics to inform recommendations.`;
 
       const userPrompt = channelData
-        ? `Channel: ${channelData.channelTitle}. Subscribers: ${channelData.subscribers}. Recent videos: ${JSON.stringify(channelData.recentVideos.map((v: any) => v.title))}. Provide personalized recommendations.`
-        : `Provide general creator audit recommendations for a growing YouTube channel.`;
+        ? `Analyze this YouTube channel in detail:
+
+CHANNEL DATA:
+- Channel Name: ${channelData.channelTitle}
+- Subscribers: ${channelData.subscribers.toLocaleString()}
+${videoStats ? `- Total Views: ${videoStats.totalViews.toLocaleString()}\n- Total Videos: ${videoStats.videoCount}\n- Avg Views/Video: ${videoStats.avgViewsPerVideo.toLocaleString()}` : ''}
+- Recent Video Titles:
+${channelData.recentVideos.slice(0, 10).map((v: any, i: number) => `${i + 1}. ${v.title}`).join('\n')}
+
+Provide a COMPREHENSIVE, PROFESSIONAL audit with:
+- Specific, actionable recommendations based on their actual content
+- Realistic growth projections based on their current metrics
+- Monetization strategy tailored to their subscriber count
+- Content gaps specific to their recent uploads
+- Algorithm tactics for their niche and audience size
+
+Be DETAILED and PROFESSIONAL. This is for a paying customer who expects premium insights.`
+        : `Provide a comprehensive creator audit for a growing YouTube channel. The creator is serious about growth and monetization. Give detailed, professional recommendations that feel premium and actionable. Include specific strategies, timelines, and next steps.`;
 
       aiAudit = await generateAIContent({
         systemPrompt,
         userPrompt,
         model: 'gpt-4o-mini',
-        temperature: 0.8,
+        temperature: 0.7, // Lower for more consistent, professional output
       });
 
       if (aiAudit) {
         try {
-          aiAudit = JSON.parse(aiAudit);
-        } catch {
+          // Clean up the response - remove markdown code blocks if present
+          let cleanedAudit = aiAudit.trim();
+          if (cleanedAudit.startsWith('```json')) {
+            cleanedAudit = cleanedAudit.replace(/```json\n?/g, '').replace(/```\n?/g, '');
+          } else if (cleanedAudit.startsWith('```')) {
+            cleanedAudit = cleanedAudit.replace(/```\n?/g, '');
+          }
+          
+          aiAudit = JSON.parse(cleanedAudit);
+          
+          // Validate structure
+          if (!aiAudit.creator_stage || typeof aiAudit.creator_stage !== 'object') {
+            console.warn('Invalid audit structure, using fallback');
+            aiAudit = null;
+          }
+        } catch (parseError) {
+          console.error('Failed to parse AI audit JSON:', parseError);
+          console.error('Raw AI response:', aiAudit);
           aiAudit = null;
         }
       }
