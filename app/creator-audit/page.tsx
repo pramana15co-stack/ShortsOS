@@ -610,63 +610,96 @@ export default function CreatorAuditPage() {
             )}
 
             {/* Platform Strategy */}
-            {audit.platform_strategy && typeof audit.platform_strategy === 'object' && (
+            {audit.platform_strategy && (
               <div className="card border-2 border-indigo-200">
                 <h2 className="text-2xl font-bold mb-6 text-gray-900 flex items-center gap-2">
                   <span className="text-2xl">🌐</span> Multi-Platform Strategy
                 </h2>
                 
-                <div className="space-y-6">
-                  {/* YouTube */}
-                  {audit.platform_strategy.youtube && (
-                    <div className="p-4 bg-red-50 rounded-lg border border-red-200">
-                      <h3 className="text-xl font-bold mb-3 text-gray-900 flex items-center gap-2">
-                        <span>▶️</span> YouTube Strategy
-                      </h3>
-                      <div className="space-y-3">
-                        <div>
-                          <p className="font-semibold text-gray-900 mb-1">Primary Focus:</p>
-                          <p className="text-gray-700">{audit.platform_strategy.youtube.primary_focus}</p>
-                        </div>
-                        <div>
-                          <p className="font-semibold text-gray-900 mb-1">Shorts Strategy:</p>
-                          <p className="text-gray-700">{audit.platform_strategy.youtube.shorts_strategy}</p>
-                        </div>
-                        <div>
-                          <p className="font-semibold text-gray-900 mb-1">Long-Form Strategy:</p>
-                          <p className="text-gray-700">{audit.platform_strategy.youtube.long_form_strategy}</p>
-                        </div>
-                        <div>
-                          <p className="font-semibold text-gray-900 mb-1">Community Engagement:</p>
-                          <p className="text-gray-700">{audit.platform_strategy.youtube.community_tab}</p>
+                {typeof audit.platform_strategy === 'object' && 'youtube' in audit.platform_strategy && typeof audit.platform_strategy.youtube === 'object' && 'primary_focus' in audit.platform_strategy.youtube ? (
+                  // New format: PlatformStrategy object with detailed properties
+                  <div className="space-y-6">
+                    {/* YouTube */}
+                    {audit.platform_strategy.youtube && (
+                      <div className="p-4 bg-red-50 rounded-lg border border-red-200">
+                        <h3 className="text-xl font-bold mb-3 text-gray-900 flex items-center gap-2">
+                          <span>▶️</span> YouTube Strategy
+                        </h3>
+                        <div className="space-y-3">
+                          {audit.platform_strategy.youtube.primary_focus && (
+                            <div>
+                              <p className="font-semibold text-gray-900 mb-1">Primary Focus:</p>
+                              <p className="text-gray-700">{audit.platform_strategy.youtube.primary_focus}</p>
+                            </div>
+                          )}
+                          {audit.platform_strategy.youtube.shorts_strategy && (
+                            <div>
+                              <p className="font-semibold text-gray-900 mb-1">Shorts Strategy:</p>
+                              <p className="text-gray-700">{audit.platform_strategy.youtube.shorts_strategy}</p>
+                            </div>
+                          )}
+                          {audit.platform_strategy.youtube.long_form_strategy && (
+                            <div>
+                              <p className="font-semibold text-gray-900 mb-1">Long-Form Strategy:</p>
+                              <p className="text-gray-700">{audit.platform_strategy.youtube.long_form_strategy}</p>
+                            </div>
+                          )}
+                          {audit.platform_strategy.youtube.community_tab && (
+                            <div>
+                              <p className="font-semibold text-gray-900 mb-1">Community Engagement:</p>
+                              <p className="text-gray-700">{audit.platform_strategy.youtube.community_tab}</p>
+                            </div>
+                          )}
                         </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
-                  {/* Instagram */}
-                  {audit.platform_strategy.instagram && (
-                    <div className="p-4 bg-pink-50 rounded-lg border border-pink-200">
-                      <h3 className="text-xl font-bold mb-3 text-gray-900 flex items-center gap-2">
-                        <span>📷</span> Instagram Strategy
-                      </h3>
-                      <div className="space-y-3">
-                        <div>
-                          <p className="font-semibold text-gray-900 mb-1">Reels Strategy:</p>
-                          <p className="text-gray-700">{audit.platform_strategy.instagram.reels_strategy}</p>
-                        </div>
-                        <div>
-                          <p className="font-semibold text-gray-900 mb-1">Cross-Promotion:</p>
-                          <p className="text-gray-700">{audit.platform_strategy.instagram.cross_promotion}</p>
-                        </div>
-                        <div>
-                          <p className="font-semibold text-gray-900 mb-1">Stories Tactics:</p>
-                          <p className="text-gray-700">{audit.platform_strategy.instagram.stories_tactics}</p>
+                    {/* Instagram */}
+                    {audit.platform_strategy.instagram && typeof audit.platform_strategy.instagram === 'object' && (
+                      <div className="p-4 bg-pink-50 rounded-lg border border-pink-200">
+                        <h3 className="text-xl font-bold mb-3 text-gray-900 flex items-center gap-2">
+                          <span>📷</span> Instagram Strategy
+                        </h3>
+                        <div className="space-y-3">
+                          {audit.platform_strategy.instagram.reels_strategy && (
+                            <div>
+                              <p className="font-semibold text-gray-900 mb-1">Reels Strategy:</p>
+                              <p className="text-gray-700">{audit.platform_strategy.instagram.reels_strategy}</p>
+                            </div>
+                          )}
+                          {audit.platform_strategy.instagram.cross_promotion && (
+                            <div>
+                              <p className="font-semibold text-gray-900 mb-1">Cross-Promotion:</p>
+                              <p className="text-gray-700">{audit.platform_strategy.instagram.cross_promotion}</p>
+                            </div>
+                          )}
+                          {audit.platform_strategy.instagram.stories_tactics && (
+                            <div>
+                              <p className="font-semibold text-gray-900 mb-1">Stories Tactics:</p>
+                              <p className="text-gray-700">{audit.platform_strategy.instagram.stories_tactics}</p>
+                            </div>
+                          )}
                         </div>
                       </div>
-                    </div>
-                  )}
-                </div>
+                    )}
+                  </div>
+                ) : (
+                  // Legacy format: simple object with youtube and instagram strings
+                  <div className="space-y-4">
+                    {audit.platform_strategy.youtube && (
+                      <div>
+                        <h3 className="font-semibold text-gray-900 mb-2">YouTube</h3>
+                        <p className="text-gray-700">{typeof audit.platform_strategy.youtube === 'string' ? audit.platform_strategy.youtube : JSON.stringify(audit.platform_strategy.youtube)}</p>
+                      </div>
+                    )}
+                    {audit.platform_strategy.instagram && (
+                      <div>
+                        <h3 className="font-semibold text-gray-900 mb-2">Instagram</h3>
+                        <p className="text-gray-700">{typeof audit.platform_strategy.instagram === 'string' ? audit.platform_strategy.instagram : JSON.stringify(audit.platform_strategy.instagram)}</p>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
 
