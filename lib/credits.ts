@@ -46,13 +46,27 @@ export async function getCreditsInfo(
   }
 
   try {
-    const response = await fetch('/api/credits/balance', {
+    let response = await fetch('/api/credits/balance', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ userId }),
     })
+
+    // Retry logic for 404 (Profile missing)
+    if (response.status === 404) {
+      console.log('⚠️ Profile missing, attempting bootstrap...')
+      await fetch('/api/bootstrap-profile', { method: 'POST' })
+      // Retry the balance check
+      response = await fetch('/api/credits/balance', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId }),
+      })
+    }
 
     if (!response.ok) {
       return {
@@ -65,8 +79,8 @@ export async function getCreditsInfo(
     const data = await response.json()
     return {
       credits: data.credits || 0,
-      isPaid: false,
-      unlimited: false,
+      isPaid: !!data.is_admin, // Admin gets unlimited
+      unlimited: !!data.is_admin,
     }
   } catch (error) {
     console.error('Error fetching credits:', error)

@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
           updated_at: new Date().toISOString()
         })
         .select('credits, subscription_status, plan_expiry, is_admin')
-        .single();
+        .maybeSingle();
       
       if (createError || !newProfile) {
         console.error('❌ [GENERATE] Failed to auto-create profile:', createError);

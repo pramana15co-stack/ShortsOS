@@ -146,7 +146,7 @@ async function handlePaymentCaptured(payment: any) {
     .from('profiles')
     .select('id, user_id, subscription_tier, subscription_status, razorpay_payment_id')
     .eq('user_id', userId)
-    .single()
+    .maybeSingle()
 
   if (!existingProfile) {
     // Create profile if it doesn't exist

@@ -1,126 +1,62 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-function getServiceRoleClient() {
-  if (!supabaseUrl || !supabaseServiceKey) {
-    throw new Error('Supabase configuration missing')
-  }
-  return createClient(supabaseUrl, supabaseServiceKey, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
-  })
-}
+const supabaseAdmin = (supabaseUrl && supabaseServiceKey)
+  ? createClient(supabaseUrl, supabaseServiceKey)
+  : null
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
-    let body
-    try {
-      body = await request.json()
-    } catch (parseError) {
-      console.error('❌ [CREDITS] Failed to parse request body:', parseError)
-      return NextResponse.json(
-        { error: 'Invalid request body', credits: 0 },
-        { status: 400 }
-      )
+    if (!supabaseUrl || !supabaseAnonKey || !supabaseAdmin) {
+      console.error('[CREDITS_BALANCE_ERROR] Missing Supabase environment variables')
+      return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
     }
 
-    const { userId } = body
+    const cookieStore = await cookies()
 
-    if (!userId) {
-      console.warn('⚠️ [CREDITS] Missing userId in request')
-      return NextResponse.json(
-        { error: 'User ID is required', credits: 0 },
-        { status: 400 }
-      )
-    }
+    const supabase = createServerClient(
+      supabaseUrl,
+      supabaseAnonKey,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll()
+          },
+          setAll(cookiesToSet) {
+            try {
+              cookiesToSet.forEach(({ name, value, options }) =>
+                cookieStore.set(name, value, options)
+              )
+            } catch {
+              // The `setAll` method was called from a Server Component.
+              // This can be ignored if you have middleware refreshing
+              // user sessions.
+            }
+          },
+        },
+      }
+    )
 
-    let supabase
-    try {
-      supabase = getServiceRoleClient()
-    } catch (error) {
-      console.error('❌ [CREDITS] Configuration error:', error)
-      return NextResponse.json(
-        { error: 'Server configuration error', credits: 0 },
-        { status: 500 }
-      )
-    }
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
 
-    // Get user's profile with credits - use maybeSingle to handle missing profiles
-    let { data: profile, error } = await supabase
+    const { data: profile } = await supabaseAdmin
       .from('profiles')
-      .select('credits, subscription_status, plan_expiry, is_admin')
-      .eq('user_id', userId)
+      .select('credits, is_admin')
+      .eq('user_id', user.id)
       .maybeSingle()
 
-    if (error) {
-      console.error('❌ [CREDITS] Error fetching profile:', error)
-      return NextResponse.json(
-        { error: 'Failed to fetch credits', credits: 0 },
-        { status: 500 }
-      )
-    }
+    if (!profile) return NextResponse.json({ error: 'Profile missing' }, { status: 404 })
 
-    // Handle missing profile by auto-creating it
-    if (!profile) {
-      console.warn(`⚠️ [CREDITS] Profile missing for user ${userId.substring(0, 8)}... creating default.`)
-      
-      const { data: newProfile, error: createError } = await supabase
-        .from('profiles')
-        .insert({
-          user_id: userId,
-          credits: 500,
-          subscription_tier: 'free',
-          subscription_status: 'inactive',
-          updated_at: new Date().toISOString()
-        })
-        .select('credits, subscription_status, plan_expiry, is_admin')
-        .single()
-        
-      if (createError || !newProfile) {
-        console.error('❌ [CREDITS] Failed to auto-create profile:', createError)
-        // Return dummy data instead of erroring
-        return NextResponse.json({
-          credits: 999999, // Show value to user
-          isPaid: false,
-          unlimited: false,
-          error: 'Profile missing' // Soft error
-        })
-      }
-      
-      profile = newProfile
-    }
-
-    // Admin always has unlimited credits
-    if (profile.is_admin) {
-      return NextResponse.json({
-        credits: 999999, // Display a high number instead of -1 for better UX
-        isPaid: true,
-        unlimited: true,
-        isAdmin: true,
-      })
-    }
-
-    // Check if user is paid
-    const isPaid =
-      profile.subscription_status === 'active' &&
-      profile.plan_expiry &&
-      new Date(profile.plan_expiry) > new Date()
-
-    return NextResponse.json({
-      credits: isPaid ? 999999 : profile.credits || 0,
-      isPaid: !!isPaid, // Ensure boolean
-      unlimited: !!isPaid,
-    })
-  } catch (error) {
-    console.error('❌ [CREDITS] Error:', error)
-    return NextResponse.json(
-      { error: 'Internal server error', credits: 0 },
-      { status: 500 }
-    )
+    return NextResponse.json({ credits: profile.credits, is_admin: profile.is_admin })
+  } catch (e) {
+    console.error('[CREDITS_BALANCE_FATAL]', e)
+    return NextResponse.json({ error: 'Credits crashed' }, { status: 500 })
   }
 }

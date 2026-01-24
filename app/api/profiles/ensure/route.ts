@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
       .from('profiles')
       .select('id, user_id, subscription_tier, subscription_status, created_at')
       .eq('user_id', userId)
-      .single()
+      .maybeSingle()
 
     // If profile exists, return success (idempotent) - no retry needed
     if (existingProfile) {
@@ -182,7 +182,7 @@ export async function POST(request: NextRequest) {
         updated_at: new Date().toISOString(),
       })
       .select()
-      .single()
+      .maybeSingle()
 
     if (insertError) {
       // If it's a duplicate key error, profile was created between check and insert (race condition) - idempotent
@@ -195,7 +195,7 @@ export async function POST(request: NextRequest) {
           .from('profiles')
           .select('id, user_id, subscription_tier, subscription_status')
           .eq('user_id', userId)
-          .single()
+          .maybeSingle()
         
         return NextResponse.json({
           success: true,
@@ -298,7 +298,7 @@ export async function GET(request: NextRequest) {
       .from('profiles')
       .select('*')
       .eq('user_id', userId)
-      .single()
+      .maybeSingle()
 
     if (error && error.code !== 'PGRST116') {
       return NextResponse.json(

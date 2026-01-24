@@ -255,7 +255,7 @@ export async function POST(request: NextRequest) {
       .from('profiles')
       .select('id, user_id, subscription_tier, subscription_status, plan_expiry, razorpay_payment_id')
       .eq('user_id', userId)
-      .single()
+      .maybeSingle()
 
     if (currentProfileError && currentProfileError.code !== 'PGRST116') {
       console.error(`❌ [VERIFY ${requestId}] Error checking profile:`, {
@@ -288,7 +288,7 @@ export async function POST(request: NextRequest) {
           updated_at: new Date().toISOString(),
         })
         .select()
-        .single()
+        .maybeSingle()
 
       if (createError) {
         if (createError.code === '23505') {
@@ -298,7 +298,7 @@ export async function POST(request: NextRequest) {
             .from('profiles')
             .select('id, user_id, subscription_tier, subscription_status, plan_expiry, razorpay_payment_id')
             .eq('user_id', userId)
-            .single()
+            .maybeSingle()
           
           if (existingProfile) {
             currentProfile = existingProfile
@@ -388,7 +388,7 @@ export async function POST(request: NextRequest) {
       })
       .eq('user_id', userId)
       .select()
-      .single()
+      .maybeSingle()
 
     if (profileError) {
       console.error(`❌ [VERIFY ${requestId}] Error updating profile:`, {

@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
       .from('profiles')
       .select('id, user_id')
       .eq('user_id', userId)
-      .single()
+      .maybeSingle()
 
     if (!existingProfile) {
       // Profile doesn't exist in public.profiles - create with defaults
@@ -265,7 +265,7 @@ export async function POST(request: NextRequest) {
       .from('profiles')
       .select('id, user_id, subscription_tier, subscription_status, plan_expiry, razorpay_payment_id')
       .eq('user_id', userId)
-      .single()
+      .maybeSingle()
 
     if (currentProfileError && currentProfileError.code !== 'PGRST116') {
       console.error(`❌ [PAYMENT ${requestId}] Error checking profile:`, {
@@ -341,7 +341,7 @@ export async function POST(request: NextRequest) {
       })
       .eq('user_id', userId)
       .select()
-      .single()
+      .maybeSingle()
 
     if (profileError) {
       console.error(`❌ [PAYMENT ${requestId}] Error updating profile subscription:`, {

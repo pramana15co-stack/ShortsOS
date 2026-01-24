@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
       })
       .eq('user_id', userId)
       .select()
-      .single()
+      .maybeSingle()
 
     if (updateError) {
       console.error(`❌ [CANCEL ${requestId}] Error cancelling subscription:`, updateError)
