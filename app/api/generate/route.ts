@@ -149,26 +149,27 @@ export async function POST(request: NextRequest) {
     let systemPrompt = '';
     let userPrompt = '';
     let aiResult: string | null = null;
+    const randomSeed = Math.random().toString(36).substring(7);
 
     switch (feature) {
       case 'prompt-studio':
-        systemPrompt = `You are an expert AI Video Prompt Engineer. Create a detailed, professional prompt for AI video generators like Sora or Runway. Output JSON format with keys: "mainPrompt", "scenes" (array), "hook", "pacing" (array).`;
-        userPrompt = `Topic: ${data.topic}. Style: ${data.style}. Tone: ${data.tone}. Duration: ${data.duration}. Platform: ${data.platform}.`;
+        systemPrompt = `You are an expert AI Video Prompt Engineer. Create a detailed, professional prompt for AI video generators like Sora or Runway. Avoid clichés and repetitive patterns. Output JSON format with keys: "mainPrompt", "scenes" (array), "hook", "pacing" (array).`;
+        userPrompt = `Topic: ${data.topic}. Style: ${data.style}. Tone: ${data.tone}. Duration: ${data.duration}. Platform: ${data.platform}. Provide a unique perspective. Ref: ${randomSeed}`;
         break;
       
       case 'scripts':
-        systemPrompt = `You are a viral YouTube Shorts scriptwriter. Write a script that hooks viewers instantly. Output JSON format with keys: "hook", "body", "cta", "fullScript", "estimatedSeconds" (number).`;
-        userPrompt = `Topic: ${data.topic}. Format: ${data.formatSlug}. Make it engaging and fast-paced.`;
+        systemPrompt = `You are a viral YouTube Shorts scriptwriter. Write a unique, engaging script that hooks viewers instantly. Avoid common openings. Output JSON format with keys: "hook", "body", "cta", "fullScript", "estimatedSeconds" (number).`;
+        userPrompt = `Topic: ${data.topic}. Format: ${data.formatSlug}. Make it engaging and fast-paced. Ensure it feels fresh and not templated. Ref: ${randomSeed}`;
         break;
 
       case 'hook-caption':
-        systemPrompt = `You are a social media expert. Generate viral hooks and captions. Output JSON with keys: "hooks" (array of 3), "caption", "hashtags" (array), "emphasis" (array), "timing" (array), "cta" (array).`;
-        userPrompt = `Topic: ${data.topic}. Platform: ${data.platform}.`;
+        systemPrompt = `You are a social media expert. Generate 3 distinct and viral hooks and captions. Ensure variety in tone and structure. Output JSON with keys: "hooks" (array of 3), "caption", "hashtags" (array), "emphasis" (array), "timing" (array), "cta" (array).`;
+        userPrompt = `Topic: ${data.topic}. Platform: ${data.platform}. Provide 3 very different hook angles (e.g. controversial, question, story). Ref: ${randomSeed}`;
         break;
 
       case 'content-ideas':
-        systemPrompt = `You are a content strategist. Generate viral video ideas. Output JSON with key "ideas" containing an array of objects with "title", "description", "category", "tags".`;
-        userPrompt = `Niche/Topic: ${data.topic}. Category: ${data.category}. Generate 5 ideas.`;
+        systemPrompt = `You are a content strategist. Generate 5 unique and viral video ideas. Avoid generic suggestions. Output JSON with key "ideas" containing an array of objects with "title", "description", "category", "tags".`;
+        userPrompt = `Niche/Topic: ${data.topic}. Category: ${data.category}. Generate 5 fresh ideas that stand out. Ref: ${randomSeed}`;
         break;
 
       default:
@@ -181,7 +182,7 @@ export async function POST(request: NextRequest) {
         systemPrompt,
         userPrompt,
         model: 'gpt-4o-mini',
-        temperature: 0.8,
+        temperature: 0.9, // Increased for more variety
       });
     } catch (e) {
       console.warn('AI Generation failed, using fallback');
