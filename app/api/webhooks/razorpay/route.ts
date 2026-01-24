@@ -162,6 +162,7 @@ async function handlePaymentCaptured(payment: any) {
         razorpay_order_id: orderId,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
+        credits: plan === 'pro' ? 999999 : 500, // Update credits based on plan
       })
 
     if (createError && createError.code !== '23505') {
@@ -188,6 +189,7 @@ async function handlePaymentCaptured(payment: any) {
         razorpay_payment_id: paymentId,
         razorpay_order_id: orderId,
         updated_at: new Date().toISOString(),
+        credits: plan === 'pro' ? 999999 : 500, // Update credits based on plan
       })
       .eq('user_id', userId)
 

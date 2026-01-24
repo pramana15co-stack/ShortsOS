@@ -338,6 +338,7 @@ export async function POST(request: NextRequest) {
         razorpay_payment_id: paymentId,
         razorpay_order_id: orderId,
         updated_at: new Date().toISOString(),
+        credits: plan === 'pro' ? 999999 : 500, // Update credits based on plan
       })
       .eq('user_id', userId)
       .select()

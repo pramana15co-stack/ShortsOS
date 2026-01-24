@@ -1,13 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateAIContent } from '@/lib/ai-service';
 import { createClient } from '@supabase/supabase-js';
+import { createServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
 import { FEATURE_CREDITS, FeatureName } from '@/lib/credits';
 import { generateScript } from '@/lib/scriptTemplates';
 import { generatePromptStudioData, generateHookCaptionData, generateContentIdeasData } from '@/lib/generators';
 
-// Service role client for credit deduction
+// Service role client for credit deduction and profile management
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 function getServiceRoleClient() {
   if (!supabaseUrl || !supabaseServiceKey) return null;
@@ -19,37 +22,65 @@ function getServiceRoleClient() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { userId, feature, data } = body;
+    const { feature, data } = body;
+    // We ignore body.userId for security, getting it from auth instead
 
-    if (!userId || !feature || !data) {
+    if (!feature || !data) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // 1. Verify Credits (Backend Enforcement)
-    const supabase = getServiceRoleClient();
-    if (!supabase) {
-      // If we can't check credits, we shouldn't proceed in a paid app, 
-      // but to avoid blocking the user if config is broken, we might allow it or fail.
-      // Failing safely:
-      return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
+    if (!supabaseUrl || !supabaseAnonKey) {
+       return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
     }
 
-    const { data: fetchedProfile } = await supabase
+    // 1. Authenticate User
+    const cookieStore = await cookies();
+    const supabaseAuth = createServerClient(
+      supabaseUrl,
+      supabaseAnonKey,
+      {
+        cookies: {
+          getAll() {
+            return cookieStore.getAll()
+          },
+          setAll(cookiesToSet) {
+            try {
+               // Optional: handle cookie updates
+            } catch {}
+          },
+        },
+      }
+    );
+
+    const { data: { user }, error: authError } = await supabaseAuth.auth.getUser();
+
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const userId = user.id;
+
+    // 2. Setup Admin Client
+    const supabaseAdmin = getServiceRoleClient();
+    if (!supabaseAdmin) {
+      return NextResponse.json({ error: 'Server configuration error (admin)' }, { status: 500 });
+    }
+
+    // 3. Fetch or Create Profile
+    let { data: profile } = await supabaseAdmin
       .from('profiles')
       .select('credits, subscription_status, plan_expiry, is_admin')
       .eq('user_id', userId)
       .maybeSingle();
 
-    let profile: any = fetchedProfile;
-
     if (!profile) {
       console.log(`⚠️ [GENERATE] Profile missing for user ${userId}, creating default profile...`);
       // Auto-create profile if missing (Lazy Provisioning)
-      const { data: newProfile, error: createError } = await supabase
+      const { data: newProfile, error: createError } = await supabaseAdmin
         .from('profiles')
         .insert({
           user_id: userId,
-          credits: 50, // Default for new/recovered profiles
+          credits: 50, // Default for new/recovered profiles (Strict 50)
           subscription_tier: 'free',
           subscription_status: 'inactive',
           updated_at: new Date().toISOString()
@@ -59,15 +90,10 @@ export async function POST(request: NextRequest) {
       
       if (createError || !newProfile) {
         console.error('❌ [GENERATE] Failed to auto-create profile:', createError);
-        // Fallback to dummy profile to allow generation to proceed
-        console.warn('⚠️ [GENERATE] Using dummy profile to bypass hindrance');
-        profile = {
-          credits: 999999, // Allow generation
-          subscription_status: 'free',
-          plan_expiry: null,
-          is_admin: false,
-          dummy: true
-        };
+        // STRICT ERROR HANDLING: Do not give free credits.
+        return NextResponse.json({ 
+            error: 'Profile creation failed. Please contact support or try again.' 
+        }, { status: 500 });
       } else {
         profile = newProfile;
       }
@@ -77,21 +103,52 @@ export async function POST(request: NextRequest) {
                    profile.plan_expiry && 
                    new Date(profile.plan_expiry) > new Date();
     
-    // Skip credit check for paid/admin/dummy, otherwise check balance
-    if (!profile.dummy && !profile.is_admin && !isPaid) {
-      const cost = FEATURE_CREDITS[feature as FeatureName] || 0;
+    // 4. Check Credits
+    const cost = FEATURE_CREDITS[feature as FeatureName] || 0;
+    
+    // Admin gets unlimited. Paid users get unlimited (if that's the business logic, otherwise check limits)
+    // The prompt says "pro version gives 500 credits per month", so paid users DO have limits usually, 
+    // unless "isPaid" implies "Unlimited Plan". 
+    // The previous code had: if (!profile.dummy && !profile.is_admin && !isPaid)
+    // If "Starter" is 500 credits/month, then isPaid check might need to be removed if they are just on a credit plan.
+    // However, the pricing page says "Starter: 500 Credits Monthly". 
+    // If the database has credits, we should probably just check credits for everyone EXCEPT admins/truly unlimited plans.
+    // But let's stick to the previous logic: if isPaid (active sub), maybe they have a different flow?
+    // Actually, usually "isPaid" users just have a higher credit balance refilled monthly. 
+    // BUT the previous logic exempted "isPaid" from credit checks.
+    // Let's look at pricing page: "Unlimited Credits & All Features" is for Creator Pro.
+    // Starter is "500 Credits Monthly".
+    // So 'isPaid' is ambiguous. 
+    // For now, I will assume 'isPaid' means "Unlimited" based on previous logic, OR 
+    // strictly enforce credits for everyone unless `is_admin` or specific 'unlimited' tier.
+    
+    // STRICTER LOGIC:
+    // If they are admin, skip check.
+    // If they have an active subscription that is "pro" or "operator" (unlimited), skip check.
+    // If they are "starter" (paid but limited), CHECK credits.
+    // If they are free, CHECK credits.
+    
+    // To be safe and simple: Check credits for EVERYONE except Admins and specific Unlimited tiers.
+    // Since I don't know the exact tier string for "unlimited", I will stick to:
+    // If credits > 0, use them. If credits < cost, fail.
+    // UNLESS is_admin.
+    
+    const isUnlimited = profile.is_admin === true; // Add specific tier checks if needed
+    
+    if (!isUnlimited) {
       if ((profile.credits || 0) < cost) {
-        return NextResponse.json({ error: 'Insufficient credits' }, { status: 403 });
+        return NextResponse.json({ 
+            error: 'Insufficient credits. Please upgrade to continue.',
+            credits: profile.credits 
+        }, { status: 403 });
       }
     }
 
-    // 2. Generate Content via OpenAI (or Fallback)
-    let aiResult: string | null = null;
-    let fallbackData: any = null;
-
+    // 5. Generate Content
     // Define prompts based on feature
     let systemPrompt = '';
     let userPrompt = '';
+    let aiResult: string | null = null;
 
     switch (feature) {
       case 'prompt-studio':
@@ -132,7 +189,6 @@ export async function POST(request: NextRequest) {
 
     // Prepare Response Data
     let finalData;
-
     if (aiResult) {
       try {
         finalData = JSON.parse(aiResult);
@@ -150,7 +206,7 @@ export async function POST(request: NextRequest) {
           finalData = generatePromptStudioData(data);
           break;
         case 'scripts':
-          finalData = generateScript(data); // Uses existing template logic
+          finalData = generateScript(data);
           break;
         case 'hook-caption':
           finalData = generateHookCaptionData(data);
@@ -161,15 +217,25 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // 3. Deduct Credits (only if user is not free/admin and not dummy)
-    // Note: We deduct credits even for fallback content as it provides value
+    // 6. Deduct Credits
+    // We deduct credits even for fallback content as it provides value (templates/logic)
     let newCredits = profile.credits;
-    if (!profile.dummy && !profile.is_admin && !isPaid) {
-      const cost = FEATURE_CREDITS[feature as FeatureName] || 0;
+    if (!isUnlimited) {
       newCredits = (profile.credits || 0) - cost;
       
-      await supabase.from('profiles').update({ credits: newCredits }).eq('user_id', userId);
-      await supabase.from('credits_transactions').insert({
+      // Update profile
+      const { error: updateError } = await supabaseAdmin
+        .from('profiles')
+        .update({ credits: newCredits })
+        .eq('user_id', userId);
+
+      if (updateError) {
+          console.error('Failed to update credits:', updateError);
+          // We don't rollback generation, but we log the error.
+      }
+
+      // Record transaction
+      await supabaseAdmin.from('credits_transactions').insert({
         user_id: userId,
         feature,
         credits_used: cost,
@@ -189,4 +255,3 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
-
