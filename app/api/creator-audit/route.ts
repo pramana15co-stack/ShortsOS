@@ -309,7 +309,7 @@ Output MUST be valid JSON with this exact structure:
   "content_analysis": {
     "strengths": ["array of 3-5 specific strengths"],
     "weaknesses": ["array of 3-5 specific weaknesses"],
-    "content_gaps": ["array of 5-7 prioritized gaps with explanations"],
+    "content_gaps": ["array of 5-7 strings describing prioritized gaps"],
     "niche_positioning": "string (where they stand in their niche)"
   },
   "content_recommendations": {

@@ -324,12 +324,15 @@ export default function CreatorAuditPage() {
                     <span className="text-2xl">✅</span> Strengths
                   </h3>
                   <ul className="space-y-3">
-                    {audit.content_analysis.strengths.map((strength, idx) => (
-                      <li key={idx} className="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
-                        <span className="text-green-600 font-bold mt-1">✓</span>
-                        <span className="text-gray-700">{strength}</span>
-                      </li>
-                    ))}
+                    {audit.content_analysis.strengths.map((strength, idx) => {
+                      const strengthText = typeof strength === 'string' ? strength : JSON.stringify(strength);
+                      return (
+                        <li key={idx} className="flex items-start gap-3 p-3 bg-green-50 rounded-lg">
+                          <span className="text-green-600 font-bold mt-1">✓</span>
+                          <span className="text-gray-700">{strengthText}</span>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
 
@@ -338,12 +341,15 @@ export default function CreatorAuditPage() {
                     <span className="text-2xl">⚠️</span> Areas for Improvement
                   </h3>
                   <ul className="space-y-3">
-                    {audit.content_analysis.weaknesses.map((weakness, idx) => (
-                      <li key={idx} className="flex items-start gap-3 p-3 bg-orange-50 rounded-lg">
-                        <span className="text-orange-600 font-bold mt-1">•</span>
-                        <span className="text-gray-700">{weakness}</span>
-                      </li>
-                    ))}
+                    {audit.content_analysis.weaknesses.map((weakness, idx) => {
+                      const weaknessText = typeof weakness === 'string' ? weakness : JSON.stringify(weakness);
+                      return (
+                        <li key={idx} className="flex items-start gap-3 p-3 bg-orange-50 rounded-lg">
+                          <span className="text-orange-600 font-bold mt-1">•</span>
+                          <span className="text-gray-700">{weaknessText}</span>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               </div>
@@ -356,12 +362,23 @@ export default function CreatorAuditPage() {
                   <span className="text-2xl">🔍</span> Content Gaps & Opportunities
                 </h2>
                 <div className="space-y-3">
-                  {(audit.content_analysis?.content_gaps || audit.content_gaps || []).map((gap, idx) => (
-                    <div key={idx} className="flex items-start gap-3 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                      <span className="text-blue-600 font-bold text-xl mt-1">{idx + 1}.</span>
-                      <span className="text-gray-700 flex-1">{gap}</span>
-                    </div>
-                  ))}
+                  {(audit.content_analysis?.content_gaps || audit.content_gaps || []).map((gap, idx) => {
+                    // Handle both string and object formats
+                    const gapText = typeof gap === 'string' ? gap : (gap as any)?.gap || (gap as any)?.explanation || JSON.stringify(gap);
+                    const gapExplanation = typeof gap === 'object' && (gap as any)?.explanation ? (gap as any).explanation : null;
+                    
+                    return (
+                      <div key={idx} className="flex items-start gap-3 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                        <span className="text-blue-600 font-bold text-xl mt-1">{idx + 1}.</span>
+                        <div className="flex-1">
+                          <span className="text-gray-700">{gapText}</span>
+                          {gapExplanation && gapExplanation !== gapText && (
+                            <p className="text-sm text-gray-600 mt-1">{gapExplanation}</p>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
                 {audit.content_analysis?.niche_positioning && (
                   <div className="mt-6 p-4 bg-indigo-50 rounded-lg border border-indigo-200">
@@ -793,12 +810,15 @@ export default function CreatorAuditPage() {
                   <div className="card">
                     <h2 className="text-2xl font-bold mb-4 text-gray-900">Content Gaps</h2>
                     <ul className="space-y-2">
-                      {audit.content_gaps.map((gap, idx) => (
-                        <li key={idx} className="flex items-start gap-3">
-                          <span className="text-indigo-600 font-bold mt-1">•</span>
-                          <span className="text-gray-700">{gap}</span>
-                        </li>
-                      ))}
+                      {audit.content_gaps.map((gap, idx) => {
+                        const gapText = typeof gap === 'string' ? gap : (gap as any)?.gap || (gap as any)?.explanation || JSON.stringify(gap);
+                        return (
+                          <li key={idx} className="flex items-start gap-3">
+                            <span className="text-indigo-600 font-bold mt-1">•</span>
+                            <span className="text-gray-700">{gapText}</span>
+                          </li>
+                        );
+                      })}
                     </ul>
                   </div>
                 )}
