@@ -1,4 +1,5 @@
-import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { createBrowserClient } from '@supabase/ssr'
+import { SupabaseClient } from '@supabase/supabase-js'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -28,13 +29,6 @@ function validateSupabaseConfig(): { valid: boolean; error?: string } {
     }
   }
 
-  if (supabaseAnonKey.length < 50) {
-    return {
-      valid: false,
-      error: 'NEXT_PUBLIC_SUPABASE_ANON_KEY appears to be invalid',
-    }
-  }
-
   return { valid: true }
 }
 
@@ -51,14 +45,18 @@ if (typeof window !== 'undefined') {
     // Don't create client if config is invalid
     supabase = null
   } else if (supabaseUrl && supabaseAnonKey) {
-    supabase = createClient(supabaseUrl, supabaseAnonKey)
-    console.log('✅ [AUTH] Supabase client initialized successfully')
+    // Use createBrowserClient for better Next.js integration (cookies)
+    supabase = createBrowserClient(supabaseUrl, supabaseAnonKey)
+    console.log('✅ [AUTH] Supabase client initialized successfully (Browser)')
   }
 } else {
   // Server-side: validate but don't block
   const validation = validateSupabaseConfig()
   if (validation.valid && supabaseUrl && supabaseAnonKey) {
-    supabase = createClient(supabaseUrl, supabaseAnonKey)
+    // Note: On server side, we should use createServerClient usually, 
+    // but this file is often imported in shared contexts. 
+    // For specific server operations, use the API route approach.
+    supabase = createBrowserClient(supabaseUrl, supabaseAnonKey)
   }
 }
 
@@ -66,7 +64,7 @@ if (typeof window !== 'undefined') {
  * Get Supabase client with validation check
  */
 export function getSupabaseClient(): SupabaseClient {
-  if (!configValidated) {
+  if (!configValidated && typeof window !== 'undefined') {
     const validation = validateSupabaseConfig()
     if (!validation.valid) {
       throw new Error(`Auth service misconfigured: ${validation.error}. Please contact support.`)
@@ -74,6 +72,11 @@ export function getSupabaseClient(): SupabaseClient {
   }
 
   if (!supabase) {
+    if (typeof window === 'undefined') {
+        // Fallback for build time if env vars are missing
+        console.warn('Supabase client accessed on server without configuration')
+        return null as any
+    }
     throw new Error('Auth service misconfigured. Please contact support.')
   }
 
@@ -81,5 +84,3 @@ export function getSupabaseClient(): SupabaseClient {
 }
 
 export { supabase }
-
-
