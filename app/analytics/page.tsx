@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import { useAccess } from '@/lib/useAccess'
 import { useAuth } from '@/app/providers/AuthProvider'
 import Link from 'next/link'
-import CreditsDisplay from '@/components/CreditsDisplay'
 
 interface ChannelData {
   channel_id: string
@@ -139,9 +138,6 @@ export default function AnalyticsPage() {
               <p className="text-xl text-gray-600 max-w-3xl leading-relaxed">
                 Track your channel performance and get insights to grow your audience.
               </p>
-            </div>
-            <div className="ml-4">
-              <CreditsDisplay feature="analytics" />
             </div>
           </div>
         </div>
