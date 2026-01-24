@@ -537,53 +537,74 @@ export default function CreatorAuditPage() {
             )}
 
             {/* Algorithm Optimization */}
-            {audit.algorithm_optimization && typeof audit.algorithm_optimization === 'object' && (
+            {audit.algorithm_optimization && (
               <div className="card border-2 border-purple-200">
                 <h2 className="text-2xl font-bold mb-6 text-gray-900 flex items-center gap-2">
                   <span className="text-2xl">⚡</span> Algorithm Optimization Strategy
                 </h2>
                 
-                <div className="grid md:grid-cols-3 gap-6 mb-6">
-                  <div>
-                    <h3 className="font-bold text-gray-900 mb-3">📊 Retention Strategies</h3>
-                    <ul className="space-y-2">
-                      {audit.algorithm_optimization.retention_strategies.map((strategy, idx) => (
-                        <li key={idx} className="text-sm text-gray-700 flex items-start gap-2">
-                          <span className="text-purple-600 mt-1">•</span>
-                          <span>{strategy}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-gray-900 mb-3">👆 CTR Improvements</h3>
-                    <ul className="space-y-2">
-                      {audit.algorithm_optimization.ctr_improvements.map((tip, idx) => (
-                        <li key={idx} className="text-sm text-gray-700 flex items-start gap-2">
-                          <span className="text-purple-600 mt-1">•</span>
-                          <span>{tip}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-gray-900 mb-3">💬 Engagement Tactics</h3>
-                    <ul className="space-y-2">
-                      {audit.algorithm_optimization.engagement_tactics.map((tactic, idx) => (
-                        <li key={idx} className="text-sm text-gray-700 flex items-start gap-2">
-                          <span className="text-purple-600 mt-1">•</span>
-                          <span>{tactic}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
+                {Array.isArray(audit.algorithm_optimization) ? (
+                  // Legacy format: array of strings
+                  <ul className="space-y-2">
+                    {audit.algorithm_optimization.map((tip, idx) => (
+                      <li key={idx} className="flex items-start gap-3 p-3 bg-purple-50 rounded-lg">
+                        <span className="text-purple-600 font-bold mt-1">⚡</span>
+                        <span className="text-gray-700">{tip}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  // New format: AlgorithmOptimization object
+                  <>
+                    <div className="grid md:grid-cols-3 gap-6 mb-6">
+                      {audit.algorithm_optimization.retention_strategies && (
+                        <div>
+                          <h3 className="font-bold text-gray-900 mb-3">📊 Retention Strategies</h3>
+                          <ul className="space-y-2">
+                            {audit.algorithm_optimization.retention_strategies.map((strategy, idx) => (
+                              <li key={idx} className="text-sm text-gray-700 flex items-start gap-2">
+                                <span className="text-purple-600 mt-1">•</span>
+                                <span>{strategy}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      {audit.algorithm_optimization.ctr_improvements && (
+                        <div>
+                          <h3 className="font-bold text-gray-900 mb-3">👆 CTR Improvements</h3>
+                          <ul className="space-y-2">
+                            {audit.algorithm_optimization.ctr_improvements.map((tip, idx) => (
+                              <li key={idx} className="text-sm text-gray-700 flex items-start gap-2">
+                                <span className="text-purple-600 mt-1">•</span>
+                                <span>{tip}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      {audit.algorithm_optimization.engagement_tactics && (
+                        <div>
+                          <h3 className="font-bold text-gray-900 mb-3">💬 Engagement Tactics</h3>
+                          <ul className="space-y-2">
+                            {audit.algorithm_optimization.engagement_tactics.map((tactic, idx) => (
+                              <li key={idx} className="text-sm text-gray-700 flex items-start gap-2">
+                                <span className="text-purple-600 mt-1">•</span>
+                                <span>{tactic}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
 
-                {audit.algorithm_optimization.posting_schedule && (
-                  <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-                    <p className="font-bold text-gray-900 mb-1">📅 Optimal Posting Schedule</p>
-                    <p className="text-gray-700">{audit.algorithm_optimization.posting_schedule}</p>
-                  </div>
+                    {audit.algorithm_optimization.posting_schedule && (
+                      <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
+                        <p className="font-bold text-gray-900 mb-1">📅 Optimal Posting Schedule</p>
+                        <p className="text-gray-700">{audit.algorithm_optimization.posting_schedule}</p>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             )}
