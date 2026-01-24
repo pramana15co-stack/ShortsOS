@@ -42,10 +42,14 @@ export async function GET(request: NextRequest) {
     }
 
     // Verify user session
+    if (!supabaseUrl || !supabaseAnonKey) {
+      return NextResponse.redirect(`${baseUrl}/analytics?error=server_config_error`);
+    }
+
     const cookieStore = await cookies();
     const supabase = createServerClient(
-      supabaseUrl,
-      supabaseAnonKey,
+      supabaseUrl as string,
+      supabaseAnonKey as string,
       {
         cookies: {
           getAll() {

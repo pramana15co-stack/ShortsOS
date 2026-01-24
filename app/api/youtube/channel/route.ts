@@ -22,8 +22,8 @@ export async function GET(request: NextRequest) {
 
     const cookieStore = await cookies();
     const supabase = createServerClient(
-      supabaseUrl,
-      supabaseAnonKey,
+      supabaseUrl as string,
+      supabaseAnonKey as string,
       {
         cookies: {
           getAll() {
