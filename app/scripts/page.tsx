@@ -1,16 +1,20 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { generateScript, ScriptInput } from '@/lib/scriptTemplates'
 import { formats } from '@/data/formats'
 import { useRequireAuth } from '@/lib/requireAuth'
 import { useAuth } from '@/app/providers/AuthProvider'
 import { saveScript } from '@/lib/saveScript'
+import { useAccess } from '@/lib/useAccess'
+import { getCreditsInfo, hasEnoughCredits, getCreditCost } from '@/lib/credits'
+import CreditsDisplay from '@/components/CreditsDisplay'
 
 export default function ScriptsPage() {
   const { loading } = useRequireAuth()
   const { user } = useAuth()
+  const { isPaid } = useAccess()
   const [formData, setFormData] = useState<ScriptInput>({
     topic: '',
     formatSlug: '',
@@ -20,6 +24,26 @@ export default function ScriptsPage() {
   const [copiedSection, setCopiedSection] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
+  const [credits, setCredits] = useState<number | null>(null)
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
+  const [isGenerating, setIsGenerating] = useState(false)
+
+  // Check credits on mount
+  useEffect(() => {
+    if (user) {
+      checkCredits()
+    }
+  }, [user, isPaid])
+
+  const checkCredits = async () => {
+    if (!user?.id) return
+    try {
+      const info = await getCreditsInfo(user.id, isPaid)
+      setCredits(info.credits)
+    } catch (error) {
+      console.error('Error checking credits:', error)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,7 +55,57 @@ export default function ScriptsPage() {
       alert('Please select a format')
       return
     }
+
+    // Check credits for free users
+    if (!isPaid && user) {
+      await checkCredits()
+      const currentCredits = credits !== null ? credits : 0
+      if (!hasEnoughCredits(currentCredits, 'scripts', isPaid)) {
+        setShowUpgradeModal(true)
+        return
+      }
+    }
+
+    setIsGenerating(true)
+
+    // Use credits for free users
+    if (!isPaid && user) {
+      try {
+        const response = await fetch('/api/credits/use', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: user.id,
+            feature: 'scripts',
+          }),
+        })
+
+        const data = await response.json()
+        if (!data.success) {
+          setIsGenerating(false)
+          if (data.error === 'Insufficient credits') {
+            setShowUpgradeModal(true)
+          } else {
+            alert(data.error || 'Failed to use credits')
+          }
+          return
+        }
+
+        setCredits(data.creditsRemaining)
+        window.dispatchEvent(new CustomEvent('credits-updated', { detail: { credits: data.creditsRemaining } }))
+      } catch (error) {
+        console.error('Error using credits:', error)
+        setIsGenerating(false)
+        alert('Failed to process request. Please try again.')
+        return
+      }
+    }
+
     const script = generateScript(formData)
+    setIsGenerating(false)
+    
     if (script) {
       setGeneratedScript(script)
       setIsSubmitted(true)
@@ -100,20 +174,61 @@ export default function ScriptsPage() {
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-white to-purple-50/30 pointer-events-none"></div>
       
       <div className="container mx-auto px-4 max-w-6xl relative z-10">
+        {/* Upgrade Modal */}
+        {showUpgradeModal && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="card max-w-md w-full">
+              <div className="w-16 h-16 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-3xl">💎</span>
+              </div>
+              <h3 className="text-2xl font-bold mb-2 text-gray-900 text-center">Insufficient Credits</h3>
+              <p className="text-gray-600 mb-4 text-center">
+                This feature costs <span className="font-bold text-indigo-600">{getCreditCost('scripts')} credits</span>. 
+                You have <span className="font-bold">{credits || 0} credits</span> remaining.
+              </p>
+              <p className="text-sm text-gray-500 mb-6 text-center">
+                Upgrade to Starter or Pro for unlimited access to all features.
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowUpgradeModal(false)}
+                  className="btn-secondary flex-1 py-3"
+                >
+                  Maybe Later
+                </button>
+                <Link
+                  href="/pricing"
+                  className="btn-primary flex-1 py-3 text-center"
+                  onClick={() => setShowUpgradeModal(false)}
+                >
+                  Upgrade Now
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900">
-            Script Generator
-          </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mb-4">
-            Generate production-ready scripts for your YouTube Shorts. Our templates are format-specific and topic-aware, giving you scripts that actually work—not generic fill-in-the-blank templates.
-          </p>
-          <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 rounded-lg p-4 max-w-3xl">
-            <p className="text-sm font-semibold text-green-900 mb-1">💰 How This Helps You Profit:</p>
-            <p className="text-sm text-green-800">
-              Well-structured scripts with proven hooks can increase video completion rates by 50-70%, directly boosting 
-              your algorithm performance. Higher completion rates = more views, better subscriber conversion, and increased 
-              ad revenue. Save 2-3 hours per video with production-ready scripts optimized for Shorts.
-            </p>
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+              <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900">
+                Script Generator
+              </h1>
+              <p className="text-xl text-gray-600 max-w-3xl mb-4">
+                Generate production-ready scripts for your YouTube Shorts. Our templates are format-specific and topic-aware, giving you scripts that actually work—not generic fill-in-the-blank templates.
+              </p>
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 rounded-lg p-4 max-w-3xl">
+                <p className="text-sm font-semibold text-green-900 mb-1">💰 How This Helps You Profit:</p>
+                <p className="text-sm text-green-800">
+                  Well-structured scripts with proven hooks can increase video completion rates by 50-70%, directly boosting 
+                  your algorithm performance. Higher completion rates = more views, better subscriber conversion, and increased 
+                  ad revenue. Save 2-3 hours per video with production-ready scripts optimized for Shorts.
+                </p>
+              </div>
+            </div>
+            <div className="ml-4">
+              <CreditsDisplay feature="scripts" />
+            </div>
           </div>
         </div>
 
@@ -172,9 +287,10 @@ export default function ScriptsPage() {
 
             <button
               type="submit"
-              className="btn-primary w-full py-4 text-lg"
+              disabled={isGenerating}
+              className="btn-primary w-full py-4 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Generate Script
+              {isGenerating ? 'Generating...' : 'Generate Script'}
             </button>
           </div>
         </form>

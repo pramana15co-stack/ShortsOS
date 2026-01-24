@@ -1,6 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useAuth } from '@/app/providers/AuthProvider'
+import { useAccess } from '@/lib/useAccess'
+import { getCreditsInfo, hasEnoughCredits, getCreditCost } from '@/lib/credits'
+import Link from 'next/link'
+import CreditsDisplay from '@/components/CreditsDisplay'
 
 interface ContentIdea {
   id: string
@@ -104,15 +109,84 @@ trendingCategories.forEach(category => {
 })
 
 export default function ContentIdeas() {
+  const { user } = useAuth()
+  const { isPaid } = useAccess()
   const [selectedCategory, setSelectedCategory] = useState<string>('')
   const [topic, setTopic] = useState('')
   const [generatedIdeas, setGeneratedIdeas] = useState<ContentIdea[]>([])
   const [savedIdeas, setSavedIdeas] = useState<ContentIdea[]>([])
+  const [credits, setCredits] = useState<number | null>(null)
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
+  const [isGenerating, setIsGenerating] = useState(false)
 
-  const generateIdeas = () => {
+  // Check credits on mount
+  useEffect(() => {
+    if (user) {
+      checkCredits()
+    }
+  }, [user, isPaid])
+
+  const checkCredits = async () => {
+    if (!user?.id) return
+    try {
+      const info = await getCreditsInfo(user.id, isPaid)
+      setCredits(info.credits)
+    } catch (error) {
+      console.error('Error checking credits:', error)
+    }
+  }
+
+  const generateIdeas = async () => {
     if (!selectedCategory || !topic) {
       alert('Please select a category and enter a topic')
       return
+    }
+
+    // Check credits for free users
+    if (!isPaid && user) {
+      await checkCredits()
+      const currentCredits = credits !== null ? credits : 0
+      if (!hasEnoughCredits(currentCredits, 'content-ideas', isPaid)) {
+        setShowUpgradeModal(true)
+        return
+      }
+    }
+
+    setIsGenerating(true)
+
+    // Use credits for free users
+    if (!isPaid && user) {
+      try {
+        const response = await fetch('/api/credits/use', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: user.id,
+            feature: 'content-ideas',
+          }),
+        })
+
+        const data = await response.json()
+        if (!data.success) {
+          setIsGenerating(false)
+          if (data.error === 'Insufficient credits') {
+            setShowUpgradeModal(true)
+          } else {
+            alert(data.error || 'Failed to use credits')
+          }
+          return
+        }
+
+        setCredits(data.creditsRemaining)
+        window.dispatchEvent(new CustomEvent('credits-updated', { detail: { credits: data.creditsRemaining } }))
+      } catch (error) {
+        console.error('Error using credits:', error)
+        setIsGenerating(false)
+        alert('Failed to process request. Please try again.')
+        return
+      }
     }
 
     const templates = ideaTemplates[selectedCategory as keyof typeof ideaTemplates] || ideaTemplates['Tech Tips']
@@ -164,6 +238,7 @@ export default function ContentIdeas() {
     })
 
     setGeneratedIdeas(newIdeas)
+    setIsGenerating(false)
   }
 
   const saveIdea = (idea: ContentIdea) => {
@@ -179,18 +254,59 @@ export default function ContentIdeas() {
       <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-white to-purple-50/30 pointer-events-none"></div>
       
       <div className="container mx-auto px-4 max-w-7xl relative z-10">
+        {/* Upgrade Modal */}
+        {showUpgradeModal && (
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="card max-w-md w-full">
+              <div className="w-16 h-16 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-3xl">💎</span>
+              </div>
+              <h3 className="text-2xl font-bold mb-2 text-gray-900 text-center">Insufficient Credits</h3>
+              <p className="text-gray-600 mb-4 text-center">
+                This feature costs <span className="font-bold text-indigo-600">{getCreditCost('content-ideas')} credits</span>. 
+                You have <span className="font-bold">{credits || 0} credits</span> remaining.
+              </p>
+              <p className="text-sm text-gray-500 mb-6 text-center">
+                Upgrade to Starter or Pro for unlimited access to all features.
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowUpgradeModal(false)}
+                  className="btn-secondary flex-1 py-3"
+                >
+                  Maybe Later
+                </button>
+                <Link
+                  href="/pricing"
+                  className="btn-primary flex-1 py-3 text-center"
+                  onClick={() => setShowUpgradeModal(false)}
+                >
+                  Upgrade Now
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="mb-12">
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900">Content Ideas Generator</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mb-4">
-            Generate specific, actionable content ideas tailored to your niche. Get beyond generic templates with ideas that actually work for Shorts creators.
-          </p>
-          <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 rounded-lg p-4 max-w-3xl">
-            <p className="text-sm font-semibold text-green-900 mb-1">💰 How This Helps You Profit:</p>
-            <p className="text-sm text-green-800">
-              Never run out of content ideas again. A consistent content pipeline is the #1 factor in channel growth. 
-              Our niche-specific ideas are designed to drive engagement and views, helping you build a sustainable content 
-              calendar that keeps your audience engaged and your channel growing. More consistent content = more views = more revenue.
-            </p>
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+              <h1 className="text-4xl md:text-5xl font-extrabold mb-4 text-gray-900">Content Ideas Generator</h1>
+              <p className="text-xl text-gray-600 max-w-3xl mb-4">
+                Generate specific, actionable content ideas tailored to your niche. Get beyond generic templates with ideas that actually work for Shorts creators.
+              </p>
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 rounded-lg p-4 max-w-3xl">
+                <p className="text-sm font-semibold text-green-900 mb-1">💰 How This Helps You Profit:</p>
+                <p className="text-sm text-green-800">
+                  Never run out of content ideas again. A consistent content pipeline is the #1 factor in channel growth. 
+                  Our niche-specific ideas are designed to drive engagement and views, helping you build a sustainable content 
+                  calendar that keeps your audience engaged and your channel growing. More consistent content = more views = more revenue.
+                </p>
+              </div>
+            </div>
+            <div className="ml-4">
+              <CreditsDisplay feature="content-ideas" />
+            </div>
           </div>
         </div>
 
@@ -235,9 +351,10 @@ export default function ContentIdeas() {
 
             <button
               onClick={generateIdeas}
-              className="w-full bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition"
+              disabled={isGenerating}
+              className="w-full bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Generate Ideas
+              {isGenerating ? 'Generating...' : 'Generate Ideas'}
             </button>
           </div>
 

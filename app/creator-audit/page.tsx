@@ -160,6 +160,8 @@ export default function CreatorAuditPage() {
         }
 
         setCredits(data.creditsRemaining)
+        // Trigger a refresh of CreditsDisplay component
+        window.dispatchEvent(new CustomEvent('credits-updated', { detail: { credits: data.creditsRemaining } }))
       } catch (error) {
         console.error('Error using credits:', error)
         setIsAnalyzing(false)
