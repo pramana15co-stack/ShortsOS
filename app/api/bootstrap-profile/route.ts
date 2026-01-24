@@ -58,7 +58,7 @@ export async function POST() {
         subscription_tier: 'free',
         subscription_status: 'inactive',
         plan_expiry: null,
-        credits: 100,
+        credits: 50,
         is_admin: false
       })
 
@@ -67,7 +67,7 @@ export async function POST() {
         return NextResponse.json({ error: 'Failed to create profile' }, { status: 500 })
       }
 
-      return NextResponse.json({ ok: true, credits: 100 })
+      return NextResponse.json({ ok: true, credits: 50 })
     }
 
     return NextResponse.json({ ok: true, credits: existing.credits })

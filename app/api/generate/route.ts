@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
         .from('profiles')
         .insert({
           user_id: userId,
-          credits: 500, // Default for new/recovered profiles
+          credits: 50, // Default for new/recovered profiles
           subscription_tier: 'free',
           subscription_status: 'inactive',
           updated_at: new Date().toISOString()

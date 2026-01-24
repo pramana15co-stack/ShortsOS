@@ -177,7 +177,7 @@ export async function POST(request: NextRequest) {
         user_id: userId,
         subscription_tier: 'free',
         subscription_status: 'inactive',
-        credits: 500, // Default 500 credits
+        credits: 50, // Default 50 credits
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })
